@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "509773065963",
+    "project_id": "slide-it-rating",
+    "storage_bucket": "slide-it-rating.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509773065963:android:e11cd1bc133fa59a7218ae",
+        "android_client_info": {
+          "package_name": "de.timdavidfriedrich.rating"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509773065963-ntv238k86to405u0nkv4ipgudlmr2fe3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB44RFSppi1j6Rb7CtpyBGfxcFQOoZC2io"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509773065963-ntv238k86to405u0nkv4ipgudlmr2fe3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
