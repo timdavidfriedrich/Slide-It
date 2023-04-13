@@ -23,7 +23,7 @@ class RatingApp extends StatelessWidget {
     return MaterialApp(
       title: "Slide it",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, brightness: Brightness.light),
+      theme: ThemeData(useMaterial3: true, brightness: Brightness.light, platform: TargetPlatform.iOS),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       initialRoute: Root.routeName,
       routes: {
