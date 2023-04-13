@@ -21,11 +21,19 @@ class AddScreen extends StatefulWidget implements Screen {
 }
 
 class _AddScreenState extends State<AddScreen> {
+  final TextEditingController _nameTextController = TextEditingController();
+  final TextEditingController _groupTextController = TextEditingController();
+  final TextEditingController _categoryTextController = TextEditingController();
+
   double _sliderValue = Constants.minRating;
   final double _minValue = Constants.minRating;
   final double _maxValue = Constants.maxRating;
 
   void _camera() {}
+
+  void _rebuild() {
+    setState(() {});
+  }
 
   void _save() {}
 
@@ -38,7 +46,6 @@ class _AddScreenState extends State<AddScreen> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
         children: [
-          const SizedBox(height: Constants.largePadding),
           AspectRatio(
             aspectRatio: 3 / 2,
             child: OutlinedButton(
@@ -48,11 +55,37 @@ class _AddScreenState extends State<AddScreen> {
             ),
           ),
           const SizedBox(height: Constants.mediumPadding),
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            controller: _nameTextController,
+            onChanged: (value) => _rebuild(),
+            decoration: const InputDecoration(
               labelText: "Name",
               border: OutlineInputBorder(),
             ),
+          ),
+          const SizedBox(height: Constants.normalPadding),
+          Autocomplete<String>(
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              return <String>["MIB-Gang", "Familie"];
+            },
+            fieldViewBuilder: (
+              BuildContext context,
+              TextEditingController textEditingController,
+              FocusNode focusNode,
+              VoidCallback onFieldSubmitted,
+            ) {
+              return TextField(
+                controller: _groupTextController,
+                focusNode: focusNode,
+                decoration: const InputDecoration(
+                  labelText: "Gruppe",
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (String value) {
+                  onFieldSubmitted();
+                },
+              );
+            },
           ),
           const SizedBox(height: Constants.normalPadding),
           Autocomplete<String>(
@@ -66,7 +99,7 @@ class _AddScreenState extends State<AddScreen> {
               VoidCallback onFieldSubmitted,
             ) {
               return TextField(
-                controller: textEditingController,
+                controller: _categoryTextController,
                 focusNode: focusNode,
                 decoration: const InputDecoration(
                   labelText: "Kategorie",
@@ -78,7 +111,7 @@ class _AddScreenState extends State<AddScreen> {
               );
             },
           ),
-          const SizedBox(height: Constants.largePadding),
+          const SizedBox(height: Constants.mediumPadding),
           Text("Deine Bewertung: ${_sliderValue.toStringAsFixed(1)}"),
           const SizedBox(height: Constants.smallPadding),
           Slider.adaptive(
@@ -87,8 +120,9 @@ class _AddScreenState extends State<AddScreen> {
             value: _sliderValue,
             onChanged: (value) => setState(() => _sliderValue = value),
           ),
+          const SizedBox(height: Constants.mediumPadding),
+          FilledButton(onPressed: _nameTextController.text.isEmpty ? null : () => _save(), child: const Text("Speichern")),
           const SizedBox(height: Constants.largePadding),
-          FilledButton(onPressed: () => _save(), child: const Text("Speichern")),
         ],
       ),
     );
