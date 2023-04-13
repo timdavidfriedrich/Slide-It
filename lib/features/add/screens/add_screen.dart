@@ -29,7 +29,7 @@ class _AddScreenState extends State<AddScreen> {
   final double _minValue = Constants.minRating;
   final double _maxValue = Constants.maxRating;
 
-  void _camera() {}
+  void _openCamera() {}
 
   void _rebuild() {
     setState(() {});
@@ -50,7 +50,7 @@ class _AddScreenState extends State<AddScreen> {
             aspectRatio: 3 / 2,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
-              onPressed: () => _camera(),
+              onPressed: () => _openCamera(),
               child: const Icon(Icons.camera_alt_outlined, size: Constants.mediumPadding),
             ),
           ),

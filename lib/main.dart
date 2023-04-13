@@ -51,7 +51,7 @@ class _RootState extends State<Root> {
     SettingsScreen(),
   ];
 
-  void _add() {
+  void _navigateToAdd() {
     Navigator.pushNamed(context, AddScreen.routeName);
   }
 
@@ -78,7 +78,7 @@ class _RootState extends State<Root> {
                       navigationBar: CupertinoNavigationBar(
                         middle: Text(_screens[_selectedIndex].displayName),
                         trailing: FilledButton.icon(
-                          onPressed: () => _add(),
+                          onPressed: () => _navigateToAdd(),
                           icon: const AddScreen().cupertinoIcon,
                           label: Text(const AddScreen().displayName),
                         ),
@@ -103,7 +103,7 @@ class _RootState extends State<Root> {
                   );
                 }),
               ),
-              floatingActionButton: FloatingActionButton(onPressed: () => _add(), child: const AddScreen().icon),
+              floatingActionButton: FloatingActionButton(onPressed: () => _navigateToAdd(), child: const AddScreen().icon),
             ),
     );
   }
