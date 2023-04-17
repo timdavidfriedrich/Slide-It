@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rating/features/core/screen.dart';
+import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/screens/screen.dart';
 
 class CategoriesScreen extends StatefulWidget implements Screen {
   const CategoriesScreen({Key? key}) : super(key: key);
@@ -12,7 +13,14 @@ class CategoriesScreen extends StatefulWidget implements Screen {
   String get displayName => "Kategorien";
 
   @override
-  Icon get icon => const Icon(Icons.category_outlined);
+  Icon get icon {
+    bool isIos = Theme.of(Global.context).platform == TargetPlatform.iOS;
+    bool isMacOs = Theme.of(Global.context).platform == TargetPlatform.macOS;
+    return isIos || isMacOs ? cupertinoIcon : materialIcon;
+  }
+
+  @override
+  Icon get materialIcon => const Icon(Icons.category_outlined);
 
   @override
   Icon get cupertinoIcon => const Icon(CupertinoIcons.list_bullet);

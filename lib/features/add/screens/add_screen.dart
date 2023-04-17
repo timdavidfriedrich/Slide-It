@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/screen.dart';
+import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/screens/screen.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
   static const routeName = "/add";
@@ -14,16 +16,24 @@ class AddScreen extends StatefulWidget implements Screen {
   String get displayName => "Hinzufügen";
 
   @override
-  Icon get icon => const Icon(Icons.add);
+  Icon get icon {
+    bool isIos = Theme.of(Global.context).platform == TargetPlatform.iOS;
+    bool isMacOs = Theme.of(Global.context).platform == TargetPlatform.macOS;
+    return isIos || isMacOs ? cupertinoIcon : materialIcon;
+  }
+
+  @override
+  Icon get materialIcon => const Icon(Icons.add);
 
   @override
   Icon get cupertinoIcon => const Icon(CupertinoIcons.add, size: 20);
 }
 
 class _AddScreenState extends State<AddScreen> {
-  final TextEditingController _nameTextController = TextEditingController();
-  final TextEditingController _groupTextController = TextEditingController();
-  final TextEditingController _categoryTextController = TextEditingController();
+  String _nameText = "";
+  String _groupText = "Choose a group";
+  String _categoryText = "Choose a category";
+  bool _isInputValid = false;
 
   double _sliderValue = Constants.minRating;
   final double _minValue = Constants.minRating;
@@ -31,8 +41,23 @@ class _AddScreenState extends State<AddScreen> {
 
   void _openCamera() {}
 
-  void _rebuild() {
-    setState(() {});
+  void _setNameText(String text) {
+    setState(() => _nameText = text);
+    _checkIfInputValid();
+  }
+
+  void _setGroupText(String text) {
+    setState(() => _groupText = text);
+    _checkIfInputValid();
+  }
+
+  void _setCategoryText(String category) {
+    setState(() => _categoryText = category);
+    _checkIfInputValid();
+  }
+
+  void _checkIfInputValid() {
+    setState(() => _isInputValid = _nameText.isNotEmpty && _groupText.isNotEmpty && _categoryText.isNotEmpty);
   }
 
   void _save() {}
@@ -43,87 +68,76 @@ class _AddScreenState extends State<AddScreen> {
       appBar: Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS
           ? CupertinoNavigationBar(middle: Text(widget.displayName))
           : AppBar(title: Text(widget.displayName)) as PreferredSizeWidget?,
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
-        children: [
-          AspectRatio(
-            aspectRatio: 3 / 2,
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
-              onPressed: () => _openCamera(),
-              child: const Icon(Icons.camera_alt_outlined, size: Constants.mediumPadding),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
+          children: [
+            AspectRatio(
+              aspectRatio: 3 / 2,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+                onPressed: () => _openCamera(),
+                child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
+              ),
             ),
-          ),
-          const SizedBox(height: Constants.mediumPadding),
-          TextField(
-            controller: _nameTextController,
-            onChanged: (value) => _rebuild(),
-            decoration: const InputDecoration(
-              labelText: "Name",
-              border: OutlineInputBorder(),
+            const SizedBox(height: Constants.mediumPadding),
+            PlatformTextField(
+              material: (context, platform) {
+                return MaterialTextFieldData(
+                  decoration: const InputDecoration(
+                    labelText: "Name",
+                    border: OutlineInputBorder(),
+                  ),
+                );
+              },
+              cupertino: (context, platform) {
+                return CupertinoTextFieldData(placeholder: "Name");
+              },
+              onChanged: (value) => _setNameText(value),
             ),
-          ),
-          const SizedBox(height: Constants.normalPadding),
-          Autocomplete<String>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              return <String>["MIB-Gang", "Familie"];
-            },
-            fieldViewBuilder: (
-              BuildContext context,
-              TextEditingController textEditingController,
-              FocusNode focusNode,
-              VoidCallback onFieldSubmitted,
-            ) {
-              return TextField(
-                controller: _groupTextController,
-                focusNode: focusNode,
-                decoration: const InputDecoration(
-                  labelText: "Gruppe",
-                  border: OutlineInputBorder(),
-                ),
-                onSubmitted: (String value) {
-                  onFieldSubmitted();
-                },
-              );
-            },
-          ),
-          const SizedBox(height: Constants.normalPadding),
-          Autocomplete<String>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              return <String>["Deckenrating", "Mensa-Essen", "Red Bull"];
-            },
-            fieldViewBuilder: (
-              BuildContext context,
-              TextEditingController textEditingController,
-              FocusNode focusNode,
-              VoidCallback onFieldSubmitted,
-            ) {
-              return TextField(
-                controller: _categoryTextController,
-                focusNode: focusNode,
-                decoration: const InputDecoration(
-                  labelText: "Kategorie",
-                  border: OutlineInputBorder(),
-                ),
-                onSubmitted: (String value) {
-                  onFieldSubmitted();
-                },
-              );
-            },
-          ),
-          const SizedBox(height: Constants.mediumPadding),
-          Text("Deine Bewertung: ${_sliderValue.toStringAsFixed(1)}"),
-          const SizedBox(height: Constants.smallPadding),
-          Slider.adaptive(
-            min: _minValue,
-            max: _maxValue,
-            value: _sliderValue,
-            onChanged: (value) => setState(() => _sliderValue = value),
-          ),
-          const SizedBox(height: Constants.mediumPadding),
-          FilledButton(onPressed: _nameTextController.text.isEmpty ? null : () => _save(), child: const Text("Speichern")),
-          const SizedBox(height: Constants.largePadding),
-        ],
+            const SizedBox(height: Constants.normalPadding),
+            PlatformListTile(
+              title: Text(_groupText),
+              material: (context, platform) => MaterialListTileData(
+                shape: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).dividerColor)),
+              ),
+              trailing: PlatformPopupMenu(
+                icon: Icon(PlatformIcons(context).downArrow),
+                options: [
+                  PopupMenuOption(label: "MIB-Gang", onTap: (value) => _setGroupText(value.label!)),
+                  PopupMenuOption(label: "Familie", onTap: (value) => _setGroupText(value.label!)),
+                ],
+              ),
+            ),
+            const SizedBox(height: Constants.normalPadding),
+            PlatformListTile(
+              title: Text(_categoryText),
+              material: (context, platform) => MaterialListTileData(
+                shape: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).dividerColor)),
+              ),
+              trailing: PlatformPopupMenu(
+                icon: Icon(PlatformIcons(context).downArrow),
+                options: [
+                  PopupMenuOption(label: "Deckenrating", onTap: (value) => _setCategoryText(value.label!)),
+                  PopupMenuOption(label: "Mensa-Essen", onTap: (value) => _setCategoryText(value.label!)),
+                  PopupMenuOption(label: "Red Bull", onTap: (value) => _setCategoryText(value.label!)),
+                ],
+              ),
+            ),
+            const SizedBox(height: Constants.mediumPadding),
+            Text("Deine Bewertung: ${_sliderValue.toStringAsFixed(1)}"),
+            const SizedBox(height: Constants.smallPadding),
+            PlatformSlider(
+              min: _minValue,
+              max: _maxValue,
+              value: _sliderValue,
+              onChanged: (value) => setState(() => _sliderValue = value),
+            ),
+            const SizedBox(height: Constants.mediumPadding),
+            PlatformElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
+            const SizedBox(height: Constants.largePadding),
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/screen.dart';
+import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/screens/screen.dart';
 
 class HomeScreen extends StatefulWidget implements Screen {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,7 +14,14 @@ class HomeScreen extends StatefulWidget implements Screen {
   String get displayName => "Home";
 
   @override
-  Icon get icon => const Icon(Icons.home_outlined);
+  Icon get icon {
+    bool isIos = Theme.of(Global.context).platform == TargetPlatform.iOS;
+    bool isMacOs = Theme.of(Global.context).platform == TargetPlatform.macOS;
+    return isIos || isMacOs ? cupertinoIcon : materialIcon;
+  }
+
+  @override
+  Icon get materialIcon => const Icon(Icons.home_outlined);
 
   @override
   Icon get cupertinoIcon => const Icon(CupertinoIcons.home);
@@ -22,19 +30,13 @@ class HomeScreen extends StatefulWidget implements Screen {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
-          child: ListView(
-            children: const [
-              SizedBox(height: Constants.largePadding),
-              Card(
-                child: Placeholder(),
-              ),
-            ],
-          ),
-        ),
+    return SafeArea(
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
+        children: const [
+          SizedBox(height: Constants.largePadding),
+          Card(child: Placeholder()),
+        ],
       ),
     );
   }
