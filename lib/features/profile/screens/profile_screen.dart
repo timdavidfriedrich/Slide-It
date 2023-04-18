@@ -17,7 +17,7 @@ class ProfileScreen extends StatefulWidget implements Screen {
   State<ProfileScreen> createState() => _ProfileScreenState();
 
   @override
-  String get displayName => "Profil";
+  String get displayName => "Soziales";
 
   @override
   Icon get icon {
@@ -49,13 +49,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
         children: [
           const SizedBox(height: Constants.normalPadding),
+          Text("Mein Profil", style: Theme.of(context).textTheme.headlineSmall),
           const AspectRatio(aspectRatio: 3 / 1, child: Card()),
           const SizedBox(height: Constants.mediumPadding),
-          Text("Gruppen", style: Theme.of(context).textTheme.headlineSmall),
+          Text("Meine Gruppen", style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: Constants.smallPadding),
           for (Group group in Provider.of<DataProvider>(context).userGroups)
             Card(
-              color: group.color,
+              // ? color: group.color,
               child: ListTile(
                 leading: group.avatar,
                 title: Text(group.name),
