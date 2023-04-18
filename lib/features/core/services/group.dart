@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/features/categories/services/category.dart';
-import 'package:rating/features/core/services/rating.dart';
 import 'package:uuid/uuid.dart';
 
 class Group {
@@ -11,20 +10,7 @@ class Group {
   // ? Keep color ?
   // Color color = Theme.of(Global.context).cardColor;
   List<String> users = [];
-  List<Category> categories = [
-    Category(
-      name: "Deckenrating",
-      description: "Welcher Raum hat die krasseste Decke?",
-      ratings: [
-        Rating(name: "Küche", value: 4.5),
-        Rating(name: "Wohnzimmer", value: 7.5),
-        Rating(name: "Schlafzimmer", value: 10.0),
-        Rating(name: "Badezimmer", value: 3.1),
-        Rating(name: "Flur", value: 2.5),
-        Rating(name: "Keller", value: 9.0),
-      ],
-    ),
-  ];
+  List<Category> categories = [];
 
   Group({required this.name, bool autoJoin = true}) : id = const Uuid().v4() {
     if (autoJoin) users.add(FirebaseAuth.instance.currentUser!.uid);

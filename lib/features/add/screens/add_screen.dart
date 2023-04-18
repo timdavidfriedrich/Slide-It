@@ -6,10 +6,13 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/add/screens/choose_category_screen.dart';
 import 'package:rating/features/add/services/add_screen_arguments.dart';
+import 'package:rating/features/add/widget/change_category_dialog.dart';
 import 'package:rating/features/categories/services/category.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/screens/screen.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
 import 'package:rating/features/core/services/group.dart';
+import 'package:rating/features/core/services/rating.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
   static const routeName = "/add";
@@ -36,7 +39,8 @@ class AddScreen extends StatefulWidget implements Screen {
 }
 
 class _AddScreenState extends State<AddScreen> {
-  String _nameText = "";
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
   Group? _group;
   Category? _category;
   bool _isInputValid = false;
@@ -55,49 +59,25 @@ class _AddScreenState extends State<AddScreen> {
 
   void _openCamera() {}
 
-  void _setNameText(String text) {
-    setState(() => _nameText = text);
+  void _openChangeCategoryDialog() {
+    showDialog(context: context, builder: (context) => const ChangeCategoryDialog());
+  }
+
+  void _updateSliderValue(double value) {
+    setState(() => _sliderValue = value);
     _checkIfInputValid();
   }
 
-  void _openChangeCategoryDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => PlatformAlertDialog(
-        title: const Text("Kategorie wechseln"),
-        content: const Text("Möchtest du die Kategorie wirklich wechseln? Die bisherigen Änderungen gehen verloren."),
-        material: (context, platform) {
-          return MaterialAlertDialogData(
-            actionsPadding: const EdgeInsets.symmetric(
-              horizontal: Constants.normalPadding,
-              vertical: Constants.smallPadding,
-            ),
-          );
-        },
-        actions: [
-          PlatformDialogAction(
-            child: const Text("Abbrechen"),
-            onPressed: () => Navigator.pop(context),
-          ),
-          PlatformDialogAction(
-            child: const Text("Wechseln"),
-            onPressed: () => _changeCategory(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _changeCategory() {
-    Navigator.popUntil(context, ModalRoute.withName(AppScaffold.routeName));
-    Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
-  }
-
   void _checkIfInputValid() {
-    setState(() => _isInputValid = _nameText.isNotEmpty);
+    setState(() => _isInputValid = _nameController.text.isNotEmpty);
   }
 
-  void _save() {}
+  void _save() {
+    if (_category == null) return;
+    Rating rating = Rating(name: _nameController.text, value: _sliderValue, comment: _commentController.text);
+    CloudService.addRating(category: _category!, rating: rating);
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
@@ -117,6 +97,7 @@ class _AddScreenState extends State<AddScreen> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
           children: [
+            const SizedBox(height: Constants.normalPadding),
             AspectRatio(
               aspectRatio: 3 / 2,
               child: OutlinedButton(
@@ -125,8 +106,33 @@ class _AddScreenState extends State<AddScreen> {
                 child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
               ),
             ),
+            const SizedBox(height: Constants.normalPadding),
+            if (_group != null && _category != null)
+              Card(
+                child: ListTile(
+                  title: Text(_category!.name),
+                  trailing: Text(_group!.name),
+                  onTap: () => _openChangeCategoryDialog(),
+                ),
+              ),
+            const SizedBox(height: Constants.normalPadding),
+            Row(
+              children: [
+                Expanded(
+                  child: PlatformSlider(
+                    min: _minValue,
+                    max: _maxValue,
+                    value: _sliderValue,
+                    onChanged: (value) => _updateSliderValue(value),
+                  ),
+                ),
+                const SizedBox(width: Constants.normalPadding),
+                Text(_sliderValue.toStringAsFixed(1), style: Theme.of(context).textTheme.bodyLarge),
+              ],
+            ),
             const SizedBox(height: Constants.mediumPadding),
             PlatformTextField(
+              controller: _nameController,
               material: (context, platform) {
                 return MaterialTextFieldData(
                   decoration: const InputDecoration(
@@ -138,32 +144,24 @@ class _AddScreenState extends State<AddScreen> {
               cupertino: (context, platform) {
                 return CupertinoTextFieldData(placeholder: "Name");
               },
-              onChanged: (value) => _setNameText(value),
-            ),
-            const SizedBox(height: Constants.mediumPadding),
-            Row(
-              children: [
-                Expanded(
-                  child: PlatformSlider(
-                    min: _minValue,
-                    max: _maxValue,
-                    value: _sliderValue,
-                    onChanged: (value) => setState(() => _sliderValue = value),
-                  ),
-                ),
-                const SizedBox(width: Constants.normalPadding),
-                Text(_sliderValue.toStringAsFixed(1), style: Theme.of(context).textTheme.bodyLarge),
-              ],
+              onChanged: (_) => _checkIfInputValid(),
             ),
             const SizedBox(height: Constants.normalPadding),
-            if (_group != null && _category != null)
-              Card(
-                child: ListTile(
-                  title: Text(_category!.name),
-                  trailing: Text(_group!.name),
-                  onTap: () => _openChangeCategoryDialog(),
-                ),
-              ),
+            PlatformTextField(
+              controller: _commentController,
+              material: (context, platform) {
+                return MaterialTextFieldData(
+                  decoration: const InputDecoration(
+                    labelText: "Begründung (optional)",
+                    border: OutlineInputBorder(),
+                  ),
+                );
+              },
+              cupertino: (context, platform) {
+                return CupertinoTextFieldData(placeholder: "Name");
+              },
+              onChanged: (_) => _checkIfInputValid(),
+            ),
             const SizedBox(height: Constants.largePadding),
             PlatformElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
             const SizedBox(height: Constants.largePadding),

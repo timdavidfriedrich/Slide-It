@@ -4,30 +4,34 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/categories/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/group.dart';
+import 'package:rating/features/core/services/rating.dart';
 
 class CloudService {
   static final _userCollection = FirebaseFirestore.instance.collection("users");
   static final _groupCollection = FirebaseFirestore.instance.collection("groups");
 
-  static Future saveUserData() async {
+  static Future<void> saveUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
     // final AppUser appUser = AppUser.instance;
-    await _userCollection.doc(user!.uid).set({
+    await _userCollection.doc(user.uid).set({
       // ! saveUserData only gets called when the user is signed in for the first time (or when the user data is deleted)
       // ! => token is always the same and no newer tokens are added
-      // TODO: Implement a way to update the token
+      // TODO: Implement a way to update the token.
       "firebaseMessagingTokens": FieldValue.arrayUnion(List<String?>.from([await FirebaseMessaging.instance.getToken()])),
       "groups": [user.uid],
     }, SetOptions(merge: true));
     Log.hint("User data saved (UID: ${user.uid}).");
   }
 
-  static Future loadUserData() async {
+  static Future<void> loadUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
     // final AppUser appUser = AppUser.instance;
-    DocumentSnapshot snapshot = await _userCollection.doc(user!.uid).get();
+    DocumentSnapshot snapshot = await _userCollection.doc(user.uid).get();
     if (!snapshot.exists) {
       // appUser.signOut();
       saveUserData();
@@ -38,29 +42,71 @@ class CloudService {
     // appUser.loadFromJson(data);
   }
 
-  static Future<List<Group>> getGroupData() async {
-    List<Group> groups = [];
+  static Future<List<Group>> getUserGroupData() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return [];
+    List<Group> result = [];
     final QuerySnapshot<Map<String, dynamic>> rawData = await _groupCollection.get();
     final rawGroups = rawData.docs.map((doc) => doc.data()).toList();
     for (Map<String, dynamic> rawGroup in rawGroups) {
-      groups.add(Group.fromJson(rawGroup));
+      result.add(Group.fromJson(rawGroup));
     }
-    return groups;
+    for (Group group in result) {
+      if (!group.users.contains(user.uid)) {
+        result.remove(group);
+      }
+    }
+    return result;
   }
 
-  static Future createGroup(String name) async {
+  static Future<void> createGroup(String name) async {
     final Group group = Group(name: name);
     await _groupCollection.doc(group.id).set(group.toJson(), SetOptions(merge: true));
     await joinGroup(group.id);
-    Provider.of<DataProvider>(Global.context, listen: false).loadData();
+    Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
   }
 
-  static Future joinGroup(String id) async {
+  static Future<void> removeGroup(Group group) async {
+    await _groupCollection.doc(group.id).delete();
+    Provider.of<DataProvider>(Global.context, listen: false).removeGroup(group);
+  }
+
+  static Future<void> joinGroup(String id) async {
     final User? user = FirebaseAuth.instance.currentUser;
     await _userCollection.doc(user!.uid).set({
       "groups": FieldValue.arrayUnion(List<String>.from([id])),
     }, SetOptions(merge: true));
     FirebaseMessaging.instance.subscribeToTopic(id);
+    // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
+  }
+
+  static Future<void> createCategory({required String name, required Group group}) async {
+    final Category category = Category(groupId: group.id, name: name);
+    await _groupCollection.doc(group.id).set({
+      "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
+    }, SetOptions(merge: true));
+    Provider.of<DataProvider>(Global.context, listen: false).addCategory(category: category, group: group);
+  }
+
+  static Future<void> removeCategory(Category category) async {
+    await _groupCollection.doc(category.groupId).set({
+      "categories": FieldValue.arrayRemove(List<Map<String, dynamic>>.from([category.toJson()])),
+    }, SetOptions(merge: true));
+    Provider.of<DataProvider>(Global.context, listen: false).removeCategory(category);
+  }
+
+  static Future<void> addRating({required Category category, required Rating rating}) async {
+    Provider.of<DataProvider>(Global.context, listen: false).addRating(category: category, rating: rating);
+    await _groupCollection.doc(category.groupId).set({
+      "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
+    }, SetOptions(merge: true));
+  }
+
+  static Future<void> removeRating({required Category category, required Rating rating}) async {
+    Provider.of<DataProvider>(Global.context, listen: false).removeRating(category: category, rating: rating);
+    await _groupCollection.doc(category.groupId).set({
+      "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
+    }, SetOptions(merge: true));
   }
 }
