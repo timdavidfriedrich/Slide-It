@@ -53,8 +53,6 @@ class CloudService {
       if (!group.users.contains(user.uid)) continue;
       result.add(group);
     }
-    Log.error("rawGroups: $rawGroups");
-    Log.error("result: $result");
     return result;
   }
 
