@@ -30,17 +30,14 @@ class SettingsScreen extends StatefulWidget implements Screen {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  void _signOut() {
-    AuthService.signOut();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
-        children: [
-          PlatformElevatedButton(onPressed: () => _signOut(), child: const Text("Sign out")),
+        children: const [
+          SizedBox(height: Constants.largePadding),
+          Card(child: Placeholder()),
         ],
       ),
     );

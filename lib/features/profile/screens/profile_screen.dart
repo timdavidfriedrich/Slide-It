@@ -8,7 +8,7 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/screen.dart';
 import 'package:rating/features/core/services/group.dart';
 import 'package:rating/features/profile/widgets/create_group_dialog.dart';
-import 'package:rating/features/profile/widgets/join_group_dialog.dart';
+import 'package:rating/features/profile/widgets/profile_card.dart';
 
 class ProfileScreen extends StatefulWidget implements Screen {
   const ProfileScreen({super.key});
@@ -34,10 +34,6 @@ class ProfileScreen extends StatefulWidget implements Screen {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  void _addGroup() {
-    showDialog(context: context, builder: (context) => const JoinGroupDialog());
-  }
-
   void _createGroup() {
     showDialog(context: context, builder: (context) => const CreateGroupDialog());
   }
@@ -50,10 +46,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           const SizedBox(height: Constants.normalPadding),
           Text("Mein Profil", style: Theme.of(context).textTheme.headlineSmall),
-          const AspectRatio(aspectRatio: 3 / 1, child: Card()),
+          const SizedBox(height: Constants.smallPadding),
+          const ProfileCard(),
           const SizedBox(height: Constants.mediumPadding),
           Text("Meine Gruppen", style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: Constants.smallPadding),
+          PlatformElevatedButton(
+            onPressed: () => _createGroup(),
+            child: const Text("Gruppe erstellen"),
+          ),
+          const SizedBox(height: Constants.normalPadding),
           for (Group group in Provider.of<DataProvider>(context).userGroups)
             Card(
               // ? Keep color ?
@@ -65,15 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           const SizedBox(height: Constants.mediumPadding),
-          PlatformElevatedButton(
-            onPressed: () => _addGroup(),
-            child: const Text("Gruppe beitreten"),
-          ),
-          const SizedBox(height: Constants.smallPadding),
-          PlatformTextButton(
-            onPressed: () => _createGroup(),
-            child: const Text("Gruppe erstellen"),
-          ),
         ],
       ),
     );
