@@ -1,5 +1,5 @@
-import 'package:rating/features/categories/services/category.dart';
-import 'package:rating/features/core/services/group.dart';
+import 'package:rating/features/ratings/services/category.dart';
+import 'package:rating/features/social/services/group.dart';
 
 class AddScreenArguments {
   final Group group;

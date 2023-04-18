@@ -4,14 +4,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/add/screens/choose_category_screen.dart';
-import 'package:rating/features/add/services/add_screen_arguments.dart';
-import 'package:rating/features/add/widget/change_category_dialog.dart';
-import 'package:rating/features/categories/services/category.dart';
+import 'package:rating/features/ratings/screens/choose_category_screen.dart';
+import 'package:rating/features/ratings/services/add_screen_arguments.dart';
+import 'package:rating/features/ratings/widget/change_category_dialog.dart';
+import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
-import 'package:rating/features/core/screens/screen.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
-import 'package:rating/features/core/services/group.dart';
+import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/core/services/firebase/cloud_service.dart';
+import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/core/services/rating.dart';
 
 class AddScreen extends StatefulWidget implements Screen {

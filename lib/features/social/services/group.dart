@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/categories/services/category.dart';
+import 'package:rating/features/ratings/services/category.dart';
 import 'package:uuid/uuid.dart';
 
 class Group {

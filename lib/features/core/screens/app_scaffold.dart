@@ -2,15 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rating/features/add/screens/add_screen.dart';
-import 'package:rating/features/add/screens/choose_category_screen.dart';
-import 'package:rating/features/categories/screens/categories_screen.dart';
+import 'package:rating/features/ratings/screens/add_screen.dart';
+import 'package:rating/features/ratings/screens/choose_category_screen.dart';
+import 'package:rating/features/ratings/screens/categories_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/screens/screen.dart';
+import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/home/home_screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
-import 'package:rating/features/profile/screens/profile_screen.dart';
+import 'package:rating/features/social/screens/profile_screen.dart';
 import 'package:rating/features/settings/screens/settings_screen.dart';
 
 class AppScaffold extends StatefulWidget {

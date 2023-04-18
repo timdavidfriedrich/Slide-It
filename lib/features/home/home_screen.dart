@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/screens/screen.dart';
+import 'package:rating/features/core/services/screen.dart';
 
 class HomeScreen extends StatefulWidget implements Screen {
   const HomeScreen({Key? key}) : super(key: key);

@@ -4,11 +4,11 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/categories/services/category.dart';
-import 'package:rating/features/categories/widgets/create_category_dialog.dart';
+import 'package:rating/features/ratings/services/category.dart';
+import 'package:rating/features/ratings/widget/create_category_dialog.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/screens/screen.dart';
-import 'package:rating/features/core/services/group.dart';
+import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/social/services/group.dart';
 
 class CategoriesScreen extends StatefulWidget implements Screen {
   const CategoriesScreen({Key? key}) : super(key: key);

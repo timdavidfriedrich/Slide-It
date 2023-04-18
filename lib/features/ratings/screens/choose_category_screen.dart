@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/add/screens/add_screen.dart';
-import 'package:rating/features/add/services/add_screen_arguments.dart';
-import 'package:rating/features/categories/services/category.dart';
+import 'package:rating/features/ratings/screens/add_screen.dart';
+import 'package:rating/features/ratings/services/add_screen_arguments.dart';
+import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
-import 'package:rating/features/core/services/group.dart';
+import 'package:rating/features/social/services/group.dart';
 
 class ChooseCategoryScreen extends StatelessWidget {
   static const routeName = "/ChooseCategory";

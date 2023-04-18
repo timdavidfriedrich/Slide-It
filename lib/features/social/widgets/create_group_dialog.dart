@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/services/firebase/cloud_service.dart';
 
 class CreateGroupDialog extends StatelessWidget {
   const CreateGroupDialog({super.key});

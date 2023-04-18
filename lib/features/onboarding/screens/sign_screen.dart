@@ -2,7 +2,7 @@ import 'package:flutter/scheduler.dart';
 // import 'package:rating/constants/asset_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:rating/features/core/services/auth_service.dart';
+import 'package:rating/features/core/services/firebase/auth_service.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/onboarding/services/email_validator.dart';

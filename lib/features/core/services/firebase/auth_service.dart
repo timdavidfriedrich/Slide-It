@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/onboarding/widgets/password_reset_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_in_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_up_failed_dialog.dart';

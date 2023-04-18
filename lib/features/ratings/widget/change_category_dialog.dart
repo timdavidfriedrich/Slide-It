@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/add/screens/choose_category_screen.dart';
+import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 
 class ChangeCategoryDialog extends StatelessWidget {
