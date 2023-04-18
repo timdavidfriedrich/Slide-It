@@ -44,7 +44,6 @@ class CloudService {
     for (Map<String, dynamic> rawGroup in rawGroups) {
       groups.add(Group.fromJson(rawGroup));
     }
-    Log.warning(groups);
     return groups;
   }
 

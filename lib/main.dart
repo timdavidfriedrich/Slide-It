@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/config/themes/theme_config.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/add/screens/add_screen.dart';
+import 'package:rating/features/add/screens/choose_category_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/services/notification_service.dart';
@@ -40,6 +41,7 @@ class RatingApp extends StatelessWidget {
             initialRoute: AppScaffold.routeName,
             routes: {
               AppScaffold.routeName: (context) => const AppScaffold(),
+              ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
               AddScreen.routeName: (context) => const AddScreen(),
               WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               SignScreen.routeName: (context) => const SignScreen(),

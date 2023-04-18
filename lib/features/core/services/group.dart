@@ -58,4 +58,11 @@ class Group {
     PaletteGenerator generator = await PaletteGenerator.fromImageProvider(NetworkImage(avatarUrl!));
     return generator.mutedColor?.color ?? color;
   }
+
+  Widget get avatar {
+    return CircleAvatar(
+      backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+      child: avatarUrl != null ? null : const Text("?"),
+    );
+  }
 }

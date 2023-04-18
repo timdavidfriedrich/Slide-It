@@ -1,28 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/features/core/services/cloud_service.dart';
 import 'package:rating/features/core/services/group.dart';
 
 class DataProvider extends ChangeNotifier {
-  List<Group> _groups = [];
-  List<Group> get groups => _groups;
+  List<Group> allGroups = [];
+  final List<Group> _userGroups = [];
+  List<Group> get userGroups => _userGroups;
 
   Future<void> loadData() async {
-    _groups = await CloudService.getGroupData();
+    if (FirebaseAuth.instance.currentUser == null) return;
+    allGroups = await CloudService.getGroupData();
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    for (Group group in allGroups) {
+      if (group.users.contains(userId)) {
+        _userGroups.add(group);
+      }
+    }
     notifyListeners();
   }
 
   void addGroup(Group group) {
-    _groups.add(group);
+    _userGroups.add(group);
     notifyListeners();
   }
 
   void removeGroup(Group group) {
-    _groups.remove(group);
+    _userGroups.remove(group);
     notifyListeners();
   }
 
   void clearGroups() {
-    _groups.clear();
+    _userGroups.clear();
     notifyListeners();
   }
 }

@@ -56,16 +56,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: Constants.mediumPadding),
           Text("Gruppen", style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: Constants.smallPadding),
-          for (Group group in Provider.of<DataProvider>(context).groups)
+          for (Group group in Provider.of<DataProvider>(context).userGroups)
             Card(
               color: group.color,
               child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: group.avatarUrl != null ? NetworkImage(group.avatarUrl!) : null,
-                  child: group.avatarUrl != null ? null : const Text("?"),
-                ),
+                leading: group.avatar,
                 title: Text(group.name),
-                subtitle: Text("${group.users.length} Mitglieder"),
+                subtitle: Text(group.users.length == 1 ? "1 Mitglied" : "${group.users.length} Mitglieder"),
               ),
             ),
           const SizedBox(height: Constants.mediumPadding),

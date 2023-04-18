@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/add/screens/choose_category_screen.dart';
+import 'package:rating/features/add/services/add_screen_arguments.dart';
+import 'package:rating/features/categories/services/category.dart';
+import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/screens/screen.dart';
+import 'package:rating/features/core/services/group.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
   static const routeName = "/add";
@@ -31,13 +37,21 @@ class AddScreen extends StatefulWidget implements Screen {
 
 class _AddScreenState extends State<AddScreen> {
   String _nameText = "";
-  String _groupText = "Choose a group";
-  String _categoryText = "Choose a category";
+  Group? _group;
+  Category? _category;
   bool _isInputValid = false;
 
   double _sliderValue = Constants.minRating;
   final double _minValue = Constants.minRating;
   final double _maxValue = Constants.maxRating;
+
+  void _loadArguments() {
+    AddScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as AddScreenArguments;
+    setState(() {
+      _group = arguments.group;
+      _category = arguments.category;
+    });
+  }
 
   void _openCamera() {}
 
@@ -46,21 +60,52 @@ class _AddScreenState extends State<AddScreen> {
     _checkIfInputValid();
   }
 
-  void _setGroupText(String text) {
-    setState(() => _groupText = text);
-    _checkIfInputValid();
+  void _openChangeCategoryDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => PlatformAlertDialog(
+        title: const Text("Kategorie wechseln"),
+        content: const Text("Möchtest du die Kategorie wirklich wechseln? Die bisherigen Änderungen gehen verloren."),
+        material: (context, platform) {
+          return MaterialAlertDialogData(
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: Constants.normalPadding,
+              vertical: Constants.smallPadding,
+            ),
+          );
+        },
+        actions: [
+          PlatformDialogAction(
+            child: const Text("Abbrechen"),
+            onPressed: () => Navigator.pop(context),
+          ),
+          PlatformDialogAction(
+            child: const Text("Wechseln"),
+            onPressed: () => _changeCategory(),
+          ),
+        ],
+      ),
+    );
   }
 
-  void _setCategoryText(String category) {
-    setState(() => _categoryText = category);
-    _checkIfInputValid();
+  void _changeCategory() {
+    Navigator.popUntil(context, ModalRoute.withName(AppScaffold.routeName));
+    Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
   }
 
   void _checkIfInputValid() {
-    setState(() => _isInputValid = _nameText.isNotEmpty && _groupText.isNotEmpty && _categoryText.isNotEmpty);
+    setState(() => _isInputValid = _nameText.isNotEmpty);
   }
 
   void _save() {}
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _loadArguments();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +115,7 @@ class _AddScreenState extends State<AddScreen> {
           : AppBar(title: Text(widget.displayName)) as PreferredSizeWidget?,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
+          padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
           children: [
             AspectRatio(
               aspectRatio: 3 / 2,
@@ -95,45 +140,31 @@ class _AddScreenState extends State<AddScreen> {
               },
               onChanged: (value) => _setNameText(value),
             ),
-            const SizedBox(height: Constants.normalPadding),
-            PlatformListTile(
-              title: Text(_groupText),
-              material: (context, platform) => MaterialListTileData(
-                shape: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).dividerColor)),
-              ),
-              trailing: PlatformPopupMenu(
-                icon: Icon(PlatformIcons(context).downArrow),
-                options: [
-                  PopupMenuOption(label: "MIB-Gang", onTap: (value) => _setGroupText(value.label!)),
-                  PopupMenuOption(label: "Familie", onTap: (value) => _setGroupText(value.label!)),
-                ],
-              ),
-            ),
-            const SizedBox(height: Constants.normalPadding),
-            PlatformListTile(
-              title: Text(_categoryText),
-              material: (context, platform) => MaterialListTileData(
-                shape: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).dividerColor)),
-              ),
-              trailing: PlatformPopupMenu(
-                icon: Icon(PlatformIcons(context).downArrow),
-                options: [
-                  PopupMenuOption(label: "Deckenrating", onTap: (value) => _setCategoryText(value.label!)),
-                  PopupMenuOption(label: "Mensa-Essen", onTap: (value) => _setCategoryText(value.label!)),
-                  PopupMenuOption(label: "Red Bull", onTap: (value) => _setCategoryText(value.label!)),
-                ],
-              ),
-            ),
             const SizedBox(height: Constants.mediumPadding),
-            Text("Deine Bewertung: ${_sliderValue.toStringAsFixed(1)}"),
-            const SizedBox(height: Constants.smallPadding),
-            PlatformSlider(
-              min: _minValue,
-              max: _maxValue,
-              value: _sliderValue,
-              onChanged: (value) => setState(() => _sliderValue = value),
+            Row(
+              children: [
+                Expanded(
+                  child: PlatformSlider(
+                    min: _minValue,
+                    max: _maxValue,
+                    value: _sliderValue,
+                    onChanged: (value) => setState(() => _sliderValue = value),
+                  ),
+                ),
+                const SizedBox(width: Constants.normalPadding),
+                Text(_sliderValue.toStringAsFixed(1), style: Theme.of(context).textTheme.bodyLarge),
+              ],
             ),
-            const SizedBox(height: Constants.mediumPadding),
+            const SizedBox(height: Constants.normalPadding),
+            if (_group != null && _category != null)
+              Card(
+                child: ListTile(
+                  title: Text(_category!.name),
+                  trailing: Text(_group!.name),
+                  onTap: () => _openChangeCategoryDialog(),
+                ),
+              ),
+            const SizedBox(height: Constants.largePadding),
             PlatformElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
             const SizedBox(height: Constants.largePadding),
           ],

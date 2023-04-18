@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/add/screens/add_screen.dart';
+import 'package:rating/features/add/screens/choose_category_screen.dart';
 import 'package:rating/features/categories/screens/categories_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/screen.dart';
@@ -32,7 +33,7 @@ class _AppScaffoldState extends State<AppScaffold> {
   ];
 
   void _navigateToAdd() {
-    Navigator.pushNamed(context, AddScreen.routeName);
+    Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
   }
 
   @override
