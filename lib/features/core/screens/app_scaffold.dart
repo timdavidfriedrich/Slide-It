@@ -45,7 +45,7 @@ class _AppScaffoldState extends State<AppScaffold> {
     return StreamBuilder(
       stream: FirebaseAuth.instance.userChanges(),
       builder: (context, snapshot) {
-        // TODO: Find a solution (interupts the regular scaffold)
+        // TODO: Find a solution (interupts the regular scaffold).
         // if (snapshot.connectionState == ConnectionState.waiting) {
         //   return const Scaffold(body: Center(child: CircularProgressIndicator()));
         // }
