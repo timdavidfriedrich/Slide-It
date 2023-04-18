@@ -1,14 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/add/screens/add_screen.dart';
 import 'package:rating/features/add/screens/choose_category_screen.dart';
 import 'package:rating/features/categories/screens/categories_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/screen.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
 import 'package:rating/features/home/home_screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';

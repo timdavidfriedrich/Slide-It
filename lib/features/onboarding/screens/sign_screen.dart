@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 // import 'package:rating/constants/asset_path.dart';
 import 'package:flutter/material.dart';
@@ -100,14 +99,12 @@ class _SignScreenState extends State<SignScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  // TODO: Replace with arb
                   signType == SignType.signIn ? "Great to see\nyou again!" : "Welcome!",
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(height: 48),
                 PlatformTextField(
-                  // TODO: Replace with arb
                   material: (context, platform) {
                     return MaterialTextFieldData(
                       decoration: const InputDecoration(
@@ -177,12 +174,10 @@ class _SignScreenState extends State<SignScreen> {
                 signType == SignType.signIn
                     ? PlatformElevatedButton(
                         onPressed: !_isEmailValid || _password.isEmpty ? null : () => _signIn(),
-                        // TODO: Replace with arb
                         child: const Text("Sign in"),
                       )
                     : PlatformElevatedButton(
                         onPressed: !_isEmailValid || _password.isEmpty || _repeatedPassword.isEmpty ? null : () => _signUp(),
-                        // TODO: Replace with arb
                         child: const Text("Sign up"),
                       ),
                 const SizedBox(height: 8),
@@ -190,7 +185,6 @@ class _SignScreenState extends State<SignScreen> {
                     ? PlatformTextButton(
                         onPressed: () => _navigateToForgotPasswordScreen(),
                         child: Text(
-                          // TODO: Replace with arb
                           "Forgot password?",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).hintColor),

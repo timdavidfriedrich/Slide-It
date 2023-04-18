@@ -75,15 +75,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // TODO: Replace with arb
               Text("Verify your email", style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 16),
-              // TODO: Replace with arb
               const Text("We sent you an email with a link. Please, click on it to verify your email address."),
               const SizedBox(height: 32),
               PlatformElevatedButton(
                 onPressed: _sendButtonBlocked ? null : () => _sendVerificationEmail(),
-                // TODO: Replace with arb
                 child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Resend verification email"),
               ),
             ],

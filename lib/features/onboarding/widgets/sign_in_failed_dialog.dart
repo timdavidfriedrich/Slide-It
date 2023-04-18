@@ -13,7 +13,6 @@ class SignInFailedDialog extends StatelessWidget {
     }
 
     String errorMessage() {
-      // TODO: Replace with arb
       switch (error.code) {
         case "invalid-email":
         case "user-not-found":
@@ -27,13 +26,11 @@ class SignInFailedDialog extends StatelessWidget {
     }
 
     return AlertDialog(
-      // TODO: Replace with arb
       title: const Text("Sign in failed"),
       content: Text(errorMessage()),
       actions: [
         ElevatedButton(
           onPressed: () => okay(),
-          // TODO: Replace with arb
           child: const Text("Okay"),
         ),
       ],

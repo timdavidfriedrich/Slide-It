@@ -17,6 +17,7 @@ class CloudService {
     await _userCollection.doc(user!.uid).set({
       // ! saveUserData only gets called when the user is signed in for the first time (or when the user data is deleted)
       // ! => token is always the same and no newer tokens are added
+      // TODO: Implement a way to update the token
       "firebaseMessagingTokens": FieldValue.arrayUnion(List<String?>.from([await FirebaseMessaging.instance.getToken()])),
       "groups": [user.uid],
     }, SetOptions(merge: true));

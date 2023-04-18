@@ -65,16 +65,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // TODO: Replace with arb
                   Text("Password reset", style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 16),
-                  // TODO: Replace with arb
                   const Text("Enter your email address to receive a link to reset your password."),
                   const SizedBox(height: 16),
                   PlatformTextField(
                     material: (context, platform) {
                       return MaterialTextFieldData(
-                        // TODO: Replace with arb
                         decoration: const InputDecoration(
                           label: Text("Email"),
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -82,7 +79,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       );
                     },
                     cupertino: (context, platform) {
-                      // TODO: Replace with arb
                       return CupertinoTextFieldData(placeholder: "Email");
                     },
                     keyboardType: TextInputType.emailAddress,
@@ -92,7 +88,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(height: 32),
                   PlatformElevatedButton(
                     onPressed: _sendButtonBlocked ? null : () => _sendPasswordResetEmail(_emailController.text),
-                    // TODO: Replace with arb
                     child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Send link"),
                   ),
                 ],

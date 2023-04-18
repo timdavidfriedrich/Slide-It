@@ -13,7 +13,6 @@ class PasswordResetFailedDialog extends StatelessWidget {
     }
 
     String errorMessage() {
-      // TODO: Replace with arb
       switch (error.code) {
         case "auth/invalid-email":
         case "auth/user-not-found":
@@ -29,9 +28,7 @@ class PasswordResetFailedDialog extends StatelessWidget {
     }
 
     return AlertDialog(
-      // TODO: Replace with arb
       title: const Text('Password reset failed'),
-      // TODO: Replace with arb
       content: Text(errorMessage()),
       actions: [
         ElevatedButton(

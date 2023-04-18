@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:log/log.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/screen.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
 import 'package:rating/features/core/services/group.dart';
 import 'package:rating/features/profile/widgets/create_group_dialog.dart';
 import 'package:rating/features/profile/widgets/join_group_dialog.dart';

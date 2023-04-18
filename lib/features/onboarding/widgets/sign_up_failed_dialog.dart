@@ -13,7 +13,6 @@ class SignUpFailedDialog extends StatelessWidget {
     }
 
     String errorMessage() {
-      // TODO: Replace with arb
       switch (error.code) {
         case "email-already-in-use":
           return "The email is already in use. Try signing in.";
@@ -29,13 +28,11 @@ class SignUpFailedDialog extends StatelessWidget {
     }
 
     return AlertDialog(
-      // TODO: Replace with arb
       title: const Text("Sign up failed"),
       content: Text(errorMessage()),
       actions: [
         ElevatedButton(
           onPressed: () => okay(),
-          // TODO: Replace with arb
           child: const Text("Okay"),
         ),
       ],
