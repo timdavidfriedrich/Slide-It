@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
-import 'package:rating/constants/global.dart';
 import 'package:rating/features/categories/services/category.dart';
 import 'package:rating/features/core/services/rating.dart';
 import 'package:uuid/uuid.dart';
@@ -10,7 +8,8 @@ class Group {
   final String id;
   final String name;
   String? avatarUrl;
-  Color color = Theme.of(Global.context).colorScheme.surface;
+  // ? Keep color ?
+  // Color color = Theme.of(Global.context).cardColor;
   List<String> users = [];
   List<Category> categories = [
     Category(
@@ -48,16 +47,17 @@ class Group {
         users = List<String>.from(json['users']),
         categories = (json['categories'] as List).map((category) => Category.fromJson(category)).toList();
 
-  Future<void> updateAvatar(String url) async {
-    avatarUrl = url;
-    color = await generateGroupColor();
-  }
+  // ? Keep color ?
+  // Future<void> updateAvatar(String url) async {
+  //   avatarUrl = url;
+  //   color = await generateGroupColor();
+  // }
 
-  Future<Color> generateGroupColor() async {
-    if (avatarUrl == null) return color;
-    PaletteGenerator generator = await PaletteGenerator.fromImageProvider(NetworkImage(avatarUrl!));
-    return generator.mutedColor?.color ?? color;
-  }
+  // Future<Color> generateGroupColor() async {
+  //   if (avatarUrl == null) return color;
+  //   PaletteGenerator generator = await PaletteGenerator.fromImageProvider(NetworkImage(avatarUrl!));
+  //   return generator.mutedColor?.color ?? color;
+  // }
 
   Widget get avatar {
     return CircleAvatar(
