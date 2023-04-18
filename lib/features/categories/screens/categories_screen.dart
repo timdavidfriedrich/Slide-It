@@ -58,7 +58,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             child: ListTile(
               leading: currentGroup?.avatar,
               title: Text(currentGroup?.name ?? "Keine Gruppe ausgewählt"),
-              subtitle: Text(currentGroup?.users.length == 1 ? "1 Mitglied" : "${currentGroup?.users.length ?? 0} Mitglieder"),
+              subtitle: const Text("(Ausgewählte Gruppe)"),
             ),
           ),
           const SizedBox(height: Constants.smallPadding),
