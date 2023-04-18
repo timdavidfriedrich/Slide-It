@@ -56,7 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: Constants.smallPadding),
           for (Group group in Provider.of<DataProvider>(context).userGroups)
             Card(
-              // ? color: group.color,
+              // ? Keep color ?
+              // color: group.color,
               child: ListTile(
                 leading: group.avatar,
                 title: Text(group.name),
