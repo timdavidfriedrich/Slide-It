@@ -17,7 +17,7 @@ class CategoriesScreen extends StatefulWidget implements Screen {
   State<CategoriesScreen> createState() => _CategoriesScreenState();
 
   @override
-  String get displayName => "Kategorien";
+  String get displayName => "Bewertungen";
 
   @override
   Icon get icon {
@@ -69,8 +69,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ),
           const SizedBox(height: Constants.smallPadding),
           PlatformElevatedButton(
+            onPressed: currentGroup == null ? null : () => _createCategory(),
             child: const Text("Kategorie erstellen"),
-            onPressed: () => _createCategory(),
           ),
           const SizedBox(height: Constants.normalPadding),
           if (currentGroup != null)

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/ratings/screens/add_screen.dart';
+import 'package:rating/features/ratings/screens/categories_screen.dart';
 import 'package:rating/features/ratings/services/add_screen_arguments.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -25,6 +27,11 @@ class ChooseCategoryScreen extends StatelessWidget {
         AddScreen.routeName,
         arguments: AddScreenArguments(group: group, category: category),
       );
+    }
+
+    void addCategory() {
+      Navigator.pushNamedAndRemoveUntil(context, AppScaffold.routeName, (route) => false,
+          arguments: const AppScaffoldArguments(selectedScreen: CategoriesScreen()));
     }
 
     void cancel() {
@@ -51,6 +58,13 @@ class ChooseCategoryScreen extends StatelessWidget {
                           onTap: () => chooseCategory(group, category),
                         ),
                       ),
+                  Card(
+                    child: ListTile(
+                      leading: Icon(PlatformIcons(context).add),
+                      title: const Text("Neue Kategorie erstellen"),
+                      onTap: () => addCategory(),
+                    ),
+                  ),
                 ],
               ),
             ),

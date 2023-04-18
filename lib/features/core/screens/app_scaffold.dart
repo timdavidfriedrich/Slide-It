@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/ratings/screens/add_screen.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/ratings/screens/categories_screen.dart';
@@ -24,11 +26,22 @@ class AppScaffold extends StatefulWidget {
 class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
   final List<Screen> _screens = const [
-    HomeScreen(),
+    // HomeScreen(),
     CategoriesScreen(),
     ProfileScreen(),
-    SettingsScreen(),
+    // SettingsScreen(),
   ];
+
+  void _initSelectedIndex() {
+    AppScaffoldArguments? arguments = ModalRoute.of(context)!.settings.arguments as AppScaffoldArguments?;
+    int selectedIndex = 0;
+    if (arguments != null) {
+      selectedIndex = _screens.indexWhere((screen) => screen.runtimeType == arguments.selectedScreen.runtimeType);
+      if (selectedIndex != -1) {
+        setState(() => _selectedIndex = selectedIndex);
+      }
+    }
+  }
 
   void _navigateToAdd() {
     Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
@@ -38,6 +51,9 @@ class _AppScaffoldState extends State<AppScaffold> {
   void initState() {
     super.initState();
     Provider.of<DataProvider>(context, listen: false).loadData();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _initSelectedIndex();
+    });
   }
 
   @override
