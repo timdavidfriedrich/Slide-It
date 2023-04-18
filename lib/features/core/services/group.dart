@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:rating/constants/global.dart';
 import 'package:rating/features/categories/services/category.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,7 +50,7 @@ class Group {
   Widget get avatar {
     return CircleAvatar(
       backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
-      child: avatarUrl != null ? null : const Text("?"),
+      child: avatarUrl != null ? null : Icon(PlatformIcons(Global.context).group),
     );
   }
 }
