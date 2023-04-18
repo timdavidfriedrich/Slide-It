@@ -14,7 +14,7 @@ class Group {
   List<String> users = [];
   List<Category> categories = [];
 
-  Group({required this.name, bool autoJoin = true}) : id = const Uuid().v4() {
+  Group({required this.name, bool autoJoin = true}) : id = "group--${const Uuid().v4()}" {
     if (autoJoin) users.add(FirebaseAuth.instance.currentUser!.uid);
   }
 

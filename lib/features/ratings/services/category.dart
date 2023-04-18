@@ -9,7 +9,7 @@ class Category {
   List<Rating> ratings;
 
   Category({required this.groupId, required this.name, this.description, List<Rating>? ratings})
-      : id = const Uuid().v4(),
+      : id = "category--${const Uuid().v4()}",
         ratings = ratings ?? [];
 
   Map<String, dynamic> toJson() {

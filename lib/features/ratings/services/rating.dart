@@ -10,7 +10,7 @@ class Rating {
     required this.name,
     required this.value,
     this.comment,
-  }) : id = const Uuid().v4();
+  }) : id = "rating--${const Uuid().v4()}";
 
   Map<String, dynamic> toJson() {
     return {
