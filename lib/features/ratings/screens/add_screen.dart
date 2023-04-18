@@ -12,7 +12,7 @@ import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/social/services/group.dart';
-import 'package:rating/features/core/services/rating.dart';
+import 'package:rating/features/ratings/services/rating.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
   static const routeName = "/add";

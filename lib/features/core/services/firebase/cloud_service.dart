@@ -7,7 +7,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/social/services/group.dart';
-import 'package:rating/features/core/services/rating.dart';
+import 'package:rating/features/ratings/services/rating.dart';
 
 class CloudService {
   static final _userCollection = FirebaseFirestore.instance.collection("users");
@@ -95,15 +95,17 @@ class CloudService {
 
   static Future<void> addRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).addRating(category: category, rating: rating);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).groups.firstWhere((element) => element.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
-      "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
+      "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
   }
 
   static Future<void> removeRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).removeRating(category: category, rating: rating);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).groups.firstWhere((element) => element.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
-      "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
+      "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:rating/features/core/services/rating.dart';
+import 'package:rating/features/ratings/services/rating.dart';
 import 'package:uuid/uuid.dart';
 
 class Category {
