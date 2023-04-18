@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:log/log.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
@@ -15,17 +16,39 @@ class AuthService {
     await user!.reload();
   }
 
-  static Future signInAnonymously() async {
-    // Messenger.loadingAnimation();
+  // ? Should anonymous sign in be implemented?
+  // static Future signInAnonymously() async {
+  //   // Messenger.loadingAnimation();
+  //   try {
+  //     await _firebaseAuth.signInAnonymously();
+  //   } catch (error) {
+  //     Log.error(error);
+  //   }
+  //   // Navigator.pop(Global.context);
+  // }
+
+  static Future<void> signInWithGoogle() async {
     try {
-      await _firebaseAuth.signInAnonymously();
+      Log.warning("vamos");
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      Log.warning("signed in with google");
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      Log.warning("got auth status");
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      Log.warning("got credentials");
+      await _firebaseAuth.signInWithCredential(credential);
+      Log.warning("signed in");
+      await CloudService.loadUserData();
+      Log.warning("loaded user data");
     } catch (error) {
       Log.error(error);
     }
-    // Navigator.pop(Global.context);
   }
 
-  static Future createUserWithEmailAndPassword(String email, String password) async {
+  static Future<void> createUserWithEmailAndPassword(String email, String password) async {
     // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password);
@@ -37,7 +60,7 @@ class AuthService {
     }
   }
 
-  static Future sendVerificationEmail() async {
+  static Future<void> sendVerificationEmail() async {
     try {
       await user!.sendEmailVerification();
     } catch (error) {
@@ -45,7 +68,7 @@ class AuthService {
     }
   }
 
-  static Future signInWithEmailAndPassword(String email, String password) async {
+  static Future<void> signInWithEmailAndPassword(String email, String password) async {
     // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password);
@@ -57,7 +80,7 @@ class AuthService {
     }
   }
 
-  static Future signOut() async {
+  static Future<void> signOut() async {
     // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.signOut();

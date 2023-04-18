@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:rating/features/core/services/firebase/auth_service.dart';
 // import 'package:rating/constants/asset_path.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/services/sign_arguments.dart';
@@ -17,8 +18,8 @@ class WelcomeScreen extends StatelessWidget {
     Navigator.of(context).pushNamed(SignScreen.routeName, arguments: SignArguments(signType: SignType.signUp));
   }
 
-  void _continueAsGuest(BuildContext context) {
-    // Navigator.of(context).pushNamed(SelectLanguageScreen.routeName);
+  void _signInWithGoogle() async {
+    await AuthService.signInWithGoogle();
   }
 
   @override
@@ -51,8 +52,8 @@ class WelcomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             PlatformTextButton(
-              onPressed: () => _continueAsGuest(context),
-              child: Text("Continue as guest", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+              onPressed: () => _signInWithGoogle(),
+              child: Text("Mit Google anmelden", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
             ),
             const SizedBox(height: 48),
           ],

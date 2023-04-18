@@ -36,6 +36,12 @@ class CategoriesScreen extends StatefulWidget implements Screen {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   Group? currentGroup;
 
+  void _initCurrentGroup() {
+    List<Group> groups = Provider.of<DataProvider>(context, listen: false).groups;
+    if (groups.isEmpty) return;
+    currentGroup = Provider.of<DataProvider>(context, listen: false).groups.first;
+  }
+
   void _createCategory() {
     showDialog(context: context, builder: (context) => CreateCategoryDialog(group: currentGroup!));
   }
@@ -44,7 +50,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    currentGroup = Provider.of<DataProvider>(context, listen: false).groups.first;
+    _initCurrentGroup();
   }
 
   @override
@@ -58,7 +64,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             child: ListTile(
               leading: currentGroup?.avatar,
               title: Text(currentGroup?.name ?? "Keine Gruppe ausgewählt"),
-              subtitle: const Text("(Ausgewählte Gruppe)"),
+              subtitle: currentGroup == null ? null : const Text("(Ausgewählte Gruppe)"),
             ),
           ),
           const SizedBox(height: Constants.smallPadding),
@@ -67,20 +73,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             onPressed: () => _createCategory(),
           ),
           const SizedBox(height: Constants.normalPadding),
-          for (Category c in Provider.of<DataProvider>(context).getCategoriesFromGroup(currentGroup!))
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(c.name, style: Theme.of(context).textTheme.headlineSmall),
-                const SizedBox(height: Constants.smallPadding),
-                AspectRatio(
-                  aspectRatio: 4 / 1,
-                  child: Card(child: Center(child: Text("${c.ratings.length}"))),
-                ),
-                const SizedBox(height: Constants.normalPadding),
-              ],
-            ),
+          if (currentGroup != null)
+            for (Category c in Provider.of<DataProvider>(context).getCategoriesFromGroup(currentGroup!))
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(c.name, style: Theme.of(context).textTheme.headlineSmall),
+                  const SizedBox(height: Constants.smallPadding),
+                  AspectRatio(
+                    aspectRatio: 4 / 1,
+                    child: Card(child: Center(child: Text("${c.ratings.length}"))),
+                  ),
+                  const SizedBox(height: Constants.normalPadding),
+                ],
+              ),
         ],
       ),
     );

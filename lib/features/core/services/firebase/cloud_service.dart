@@ -22,7 +22,7 @@ class CloudService {
       // ! => token is always the same and no newer tokens are added
       // TODO: Implement a way to update the token.
       "firebaseMessagingTokens": FieldValue.arrayUnion(List<String?>.from([await FirebaseMessaging.instance.getToken()])),
-      "groups": [user.uid],
+      "groups": [],
     }, SetOptions(merge: true));
     Log.hint("User data saved (UID: ${user.uid}).");
   }
@@ -49,13 +49,12 @@ class CloudService {
     final QuerySnapshot<Map<String, dynamic>> rawData = await _groupCollection.get();
     final rawGroups = rawData.docs.map((doc) => doc.data()).toList();
     for (Map<String, dynamic> rawGroup in rawGroups) {
-      result.add(Group.fromJson(rawGroup));
+      Group group = Group.fromJson(rawGroup);
+      if (!group.users.contains(user.uid)) continue;
+      result.add(group);
     }
-    for (Group group in result) {
-      if (!group.users.contains(user.uid)) {
-        result.remove(group);
-      }
-    }
+    Log.error("rawGroups: $rawGroups");
+    Log.error("result: $result");
     return result;
   }
 
