@@ -65,7 +65,6 @@ class _AddScreenState extends State<AddScreen> {
 
   void _updateSliderValue(double value) {
     setState(() => _sliderValue = value);
-    _checkIfInputValid();
   }
 
   void _checkIfInputValid() {
@@ -149,6 +148,7 @@ class _AddScreenState extends State<AddScreen> {
             const SizedBox(height: Constants.normalPadding),
             PlatformTextField(
               controller: _commentController,
+              maxLines: 3,
               material: (context, platform) {
                 return MaterialTextFieldData(
                   decoration: const InputDecoration(
@@ -158,7 +158,7 @@ class _AddScreenState extends State<AddScreen> {
                 );
               },
               cupertino: (context, platform) {
-                return CupertinoTextFieldData(placeholder: "Name");
+                return CupertinoTextFieldData(placeholder: "Begründung (optional)");
               },
               onChanged: (_) => _checkIfInputValid(),
             ),
