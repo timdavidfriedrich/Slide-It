@@ -22,7 +22,7 @@ class ProfileCard extends StatelessWidget {
           backgroundImage: user != null && user.photoURL != null ? NetworkImage(user.photoURL!) : null,
           child: user != null && user.photoURL != null ? null : Icon(PlatformIcons(context).person),
         ),
-        title: Text(user?.displayName ?? "Unbenannter User"),
+        title: Text(user?.displayName ?? "Unbenannt"),
         subtitle: Text(user?.email ?? "Nicht angemeldet."),
         trailing: PlatformIconButton(
           onPressed: () => signOut(),
