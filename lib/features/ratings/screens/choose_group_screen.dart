@@ -3,7 +3,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
-import 'package:rating/features/ratings/providers/selected_provider.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/social/screens/profile_screen.dart';
@@ -19,7 +18,7 @@ class ChooseGroupScreen extends StatelessWidget {
     final List<Group> userGroups = Provider.of<DataProvider>(context).userGroups;
 
     void chooseGroup(Group group) {
-      Provider.of<SelectedProvider>(context, listen: false).selectGroup(group);
+      Provider.of<DataProvider>(context, listen: false).selectGroup(group);
       Navigator.pop(context);
     }
 
