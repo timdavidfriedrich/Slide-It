@@ -10,6 +10,7 @@ import 'package:rating/features/ratings/services/rating.dart';
 /// Manages the local data for the app to minimize the amount of requests to the cloud.
 /// Note, that this is only temporary data.
 class DataProvider extends ChangeNotifier {
+  Group? _selectedGroup;
   List<Group> groups = [];
   List<Group> get userGroups {
     final List<Group> result = [];
@@ -21,12 +22,22 @@ class DataProvider extends ChangeNotifier {
     return result;
   }
 
+  Group? get selectedGroup => _selectedGroup;
+
+  void selectGroup(Group group) {
+    _selectedGroup = group;
+    notifyListeners();
+  }
+
   List<Category> getCategoriesFromGroup(Group group) {
+    if (groups.isEmpty) return [];
     return groups.firstWhere((element) => element.id == group.id).categories;
   }
 
   Future<void> loadData() async {
     groups = await CloudService.getUserGroupData();
+    if (userGroups.isEmpty) return;
+    _selectedGroup = userGroups.first;
     notifyListeners();
   }
 

@@ -12,6 +12,7 @@ import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
+import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/firebase_options.dart';
 
 void main() async {
@@ -28,7 +29,7 @@ class RatingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => DataProvider()),
+        ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
@@ -41,6 +42,7 @@ class RatingApp extends StatelessWidget {
             initialRoute: AppScaffold.routeName,
             routes: {
               AppScaffold.routeName: (context) => const AppScaffold(),
+              ChooseGroupScreen.routeName: (context) => const ChooseGroupScreen(),
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
               AddScreen.routeName: (context) => const AddScreen(),
               WelcomeScreen.routeName: (context) => const WelcomeScreen(),

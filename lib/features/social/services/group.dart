@@ -18,6 +18,10 @@ class Group {
     if (autoJoin) users.add(FirebaseAuth.instance.currentUser!.uid);
   }
 
+  Group.empty()
+      : id = "empty-group--${const Uuid().v4()}",
+        name = "Empty";
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

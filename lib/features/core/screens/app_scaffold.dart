@@ -9,11 +9,9 @@ import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/ratings/screens/categories_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/screen.dart';
-import 'package:rating/features/home/home_screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/social/screens/profile_screen.dart';
-import 'package:rating/features/settings/screens/settings_screen.dart';
 
 class AppScaffold extends StatefulWidget {
   static const routeName = "/";
@@ -47,10 +45,14 @@ class _AppScaffoldState extends State<AppScaffold> {
     Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
   }
 
+  Future<void> initData() async {
+    await Provider.of<DataProvider>(context, listen: false).loadData();
+  }
+
   @override
   void initState() {
     super.initState();
-    Provider.of<DataProvider>(context, listen: false).loadData();
+    initData();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _initSelectedIndex();
     });

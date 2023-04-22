@@ -29,4 +29,13 @@ class Item {
         categoryId = json['categoryId'] ?? "",
         name = json['name'] ?? "",
         ratings = ((json['ratings'] ?? []) as List).map((rating) => Rating.fromJson(rating)).toList();
+
+  double get averageRating {
+    if (ratings.isEmpty) return 0.0;
+    double sum = 0.0;
+    for (Rating rating in ratings) {
+      sum += rating.value;
+    }
+    return sum / ratings.length;
+  }
 }
