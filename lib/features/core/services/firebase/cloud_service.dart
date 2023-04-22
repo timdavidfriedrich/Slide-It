@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -93,18 +94,36 @@ class CloudService {
     Provider.of<DataProvider>(Global.context, listen: false).removeCategory(category);
   }
 
+  static Future<void> addItem({required Category category, required Item item}) async {
+    Provider.of<DataProvider>(Global.context, listen: false).addItem(category: category, item: item);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
+    await _groupCollection.doc(category.groupId).set({
+      "categories": group.toJson()["categories"],
+    }, SetOptions(merge: true));
+  }
+
+  static Future<void> removeItem({required Category category, required Item item}) async {
+    Provider.of<DataProvider>(Global.context, listen: false).removeItem(category: category, item: item);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
+    await _groupCollection.doc(category.groupId).set({
+      "categories": group.toJson()["categories"],
+    }, SetOptions(merge: true));
+  }
+
   static Future<void> addRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).addRating(category: category, rating: rating);
-    Group group = Provider.of<DataProvider>(Global.context, listen: false).groups.firstWhere((element) => element.id == category.groupId);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
+      // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
   }
 
   static Future<void> removeRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).removeRating(category: category, rating: rating);
-    Group group = Provider.of<DataProvider>(Global.context, listen: false).groups.firstWhere((element) => element.id == category.groupId);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
+      // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
   }

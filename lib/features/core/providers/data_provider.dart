@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:log/log.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
+import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -13,9 +15,8 @@ class DataProvider extends ChangeNotifier {
     final List<Group> result = [];
     String userId = FirebaseAuth.instance.currentUser!.uid;
     for (Group g in groups) {
-      if (g.users.contains(userId)) {
-        result.add(g);
-      }
+      if (!g.users.contains(userId)) continue;
+      result.add(g);
     }
     return result;
   }
@@ -50,26 +51,63 @@ class DataProvider extends ChangeNotifier {
   }
 
   void removeCategory(Category category) {
-    for (Group g in groups) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
       g.categories.remove(category);
     }
     notifyListeners();
   }
 
-  void addRating({required Category category, required Rating rating}) {
-    for (Group g in groups) {
+  void addItem({required Category category, required Item item}) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
       for (Category c in g.categories) {
-        if (c == category) c.ratings.add(rating);
+        if (c.id != category.id) continue;
+        c.items.add(item);
       }
+      Log.warning("added item:\n${g.toJson()}");
+    }
+    notifyListeners();
+  }
+
+  void removeItem({required Category category, required Item item}) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
+      for (Category c in g.categories) {
+        if (c.id != category.id) continue;
+        c.items.remove(item);
+      }
+      Log.warning("removed item:\n${g.toJson()}");
+    }
+    notifyListeners();
+  }
+
+  void addRating({required Category category, required Rating rating}) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
+      for (Category c in g.categories) {
+        if (c.id != category.id) continue;
+        for (Item i in c.items) {
+          if (i.id != rating.itemId) continue;
+          i.ratings.add(rating);
+        }
+      }
+      Log.warning("added rating:\n${g.toJson()}");
     }
     notifyListeners();
   }
 
   void removeRating({required Category category, required Rating rating}) {
-    for (Group g in groups) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
       for (Category c in g.categories) {
-        if (c == category) c.ratings.remove(rating);
+        if (c != category) continue;
+        for (Item i in c.items) {
+          if (i.id != rating.itemId) continue;
+          i.ratings.remove(rating);
+        }
       }
+      Log.warning("removed rating:\n${g.toJson()}");
     }
     notifyListeners();
   }

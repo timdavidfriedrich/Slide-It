@@ -1,4 +1,4 @@
-import 'package:rating/features/ratings/services/rating.dart';
+import 'package:rating/features/ratings/services/item.dart';
 import 'package:uuid/uuid.dart';
 
 class Category {
@@ -6,11 +6,11 @@ class Category {
   final String groupId;
   final String name;
   final String? description;
-  List<Rating> ratings;
+  List<Item> items;
 
-  Category({required this.groupId, required this.name, this.description, List<Rating>? ratings})
+  Category({required this.groupId, required this.name, this.description, List<Item>? ratings})
       : id = "category--${const Uuid().v4()}",
-        ratings = ratings ?? [];
+        items = ratings ?? [];
 
   Map<String, dynamic> toJson() {
     return {
@@ -18,14 +18,14 @@ class Category {
       'groupId': groupId,
       'name': name,
       'description': description,
-      'ratings': ratings.map((rating) => rating.toJson()).toList(),
+      'items': items.map((rating) => rating.toJson()).toList(),
     };
   }
 
   Category.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        groupId = json['groupId'],
-        name = json['name'],
+      : id = json['id'] ?? "",
+        groupId = json['groupId'] ?? "",
+        name = json['name'] ?? "",
         description = json['description'],
-        ratings = (json['ratings'] as List).map((rating) => Rating.fromJson(rating)).toList();
+        items = ((json['items'] ?? []) as List).map((e) => Item.fromJson(e)).toList();
 }

@@ -37,9 +37,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Group? currentGroup;
 
   void _initCurrentGroup() {
-    List<Group> groups = Provider.of<DataProvider>(context, listen: false).groups;
+    List<Group> groups = Provider.of<DataProvider>(context, listen: false).userGroups;
     if (groups.isEmpty) return;
-    currentGroup = Provider.of<DataProvider>(context, listen: false).groups.first;
+    currentGroup = Provider.of<DataProvider>(context, listen: false).userGroups.first;
   }
 
   void _createCategory() {
@@ -83,7 +83,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   const SizedBox(height: Constants.smallPadding),
                   AspectRatio(
                     aspectRatio: 4 / 1,
-                    child: Card(child: Center(child: Text("${c.ratings.length}"))),
+                    child: Card(child: Center(child: Text("${c.items.length}"))),
                   ),
                   const SizedBox(height: Constants.normalPadding),
                 ],

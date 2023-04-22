@@ -29,11 +29,11 @@ class Group {
   }
 
   Group.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
+      : id = json['id'] ?? "",
+        name = json['name'] ?? "",
         avatarUrl = json['avatarUrl'],
-        users = List<String>.from(json['users']),
-        categories = (json['categories'] as List).map((category) => Category.fromJson(category)).toList();
+        users = List<String>.from(json['users'] ?? []),
+        categories = ((json['categories'] ?? []) as List).map((category) => Category.fromJson(category)).toList();
 
   // ? Keep color ?
   // Future<void> updateAvatar(String url) async {
