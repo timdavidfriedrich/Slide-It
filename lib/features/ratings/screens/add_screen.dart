@@ -15,14 +15,14 @@ import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
-  static const routeName = "/add";
+  static const routeName = "/Add";
   const AddScreen({super.key});
 
   @override
   State<AddScreen> createState() => _AddScreenState();
 
   @override
-  String get displayName => "Objekt Hinzufügen";
+  String get displayName => "Hinzufügen";
 
   @override
   Icon get icon {
@@ -43,6 +43,7 @@ class _AddScreenState extends State<AddScreen> {
   final TextEditingController _commentController = TextEditingController();
   Group? _group;
   Category? _category;
+  Item? _containedItem;
   bool _isInputValid = false;
 
   double _sliderValue = Constants.minRating;
@@ -54,6 +55,7 @@ class _AddScreenState extends State<AddScreen> {
     setState(() {
       _group = arguments.group;
       _category = arguments.category;
+      _containedItem = arguments.containedItem;
     });
   }
 
@@ -68,7 +70,7 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   void _checkIfInputValid() {
-    setState(() => _isInputValid = _nameController.text.isNotEmpty);
+    setState(() => _isInputValid = _nameController.text.isNotEmpty || _containedItem != null);
   }
 
   void _save() {
@@ -76,11 +78,34 @@ class _AddScreenState extends State<AddScreen> {
     // TODO: Refactor (way too much weird code)
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) Navigator.pop(context);
-    Item item = Item(name: _nameController.text, categoryId: _category!.groupId);
-    Rating rating = Rating(itemId: item.id, userId: user!.uid, value: _sliderValue, comment: _commentController.text);
+    if (_containedItem == null) {
+      _saveWithNewItem(user!);
+    } else {
+      _saveWithContainedItem(user!);
+    }
+    Navigator.pop(context);
+  }
+
+  void _saveWithNewItem(User user) {
+    Item item = Item(name: _nameController.text, categoryId: _category!.id);
+    Rating rating = Rating(
+      itemId: item.id, 
+      userId: user.uid, 
+      value: _sliderValue, 
+      comment: _commentController.text.isNotEmpty ? _commentController.text : null,
+    );
     item.ratings.add(rating);
     CloudService.addItem(category: _category!, item: item);
-    Navigator.pop(context);
+  }
+
+  void _saveWithContainedItem(User user) {
+    Rating rating = Rating(
+      itemId: _containedItem!.id, 
+      userId: user.uid, 
+      value: _sliderValue, 
+      comment: _commentController.text.isNotEmpty ? _commentController.text : null,
+    );
+    CloudService.addRating(category: _containedItem!.category, rating: rating);
   }
 
   @override
@@ -104,30 +129,34 @@ class _AddScreenState extends State<AddScreen> {
             const SizedBox(height: Constants.normalPadding),
             AspectRatio(
               aspectRatio: 3 / 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
-                onPressed: () => _openCamera(),
-                child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
-              ),
+              child: _containedItem != null 
+                ? _containedItem!.image
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+                    onPressed: () => _openCamera(),
+                    child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
+                  ),
             ),
             const SizedBox(height: Constants.normalPadding),
-            PlatformTextField(
-              controller: _nameController,
-              material: (context, platform) {
-                return MaterialTextFieldData(
-                  decoration: const InputDecoration(
-                    labelText: "Name",
-                    border: OutlineInputBorder(),
-                  ),
-                );
-              },
-              cupertino: (context, platform) {
-                return CupertinoTextFieldData(placeholder: "Name");
-              },
-              onChanged: (_) => _checkIfInputValid(),
-            ),
+            _containedItem != null 
+            ? Text(_containedItem!.name, style: Theme.of(context).textTheme.headlineMedium)
+            : PlatformTextField(
+                controller: _nameController,
+                material: (context, platform) {
+                  return MaterialTextFieldData(
+                    decoration: const InputDecoration(
+                      labelText: "Name",
+                      border: OutlineInputBorder(),
+                    ),
+                  );
+                },
+                cupertino: (context, platform) {
+                  return CupertinoTextFieldData(placeholder: "Name");
+                },
+                onChanged: (_) => _checkIfInputValid(),
+              ),
             const SizedBox(height: Constants.mediumPadding),
-            Text("Meine Bewertung", style: Theme.of(context).textTheme.headlineSmall),
+            if (_containedItem != null) Text("Meine Bewertung", style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: Constants.smallPadding),
             Card(
               child: Padding(
@@ -180,7 +209,7 @@ class _AddScreenState extends State<AddScreen> {
             ),
             const SizedBox(height: Constants.mediumPadding),
             PlatformElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
-            if (_group != null && _category != null)
+            if (_containedItem == null && _group != null && _category != null)
               PlatformTextButton(
                 padding: EdgeInsets.zero,
                 onPressed: () => _openChangeCategoryDialog(),

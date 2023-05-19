@@ -87,7 +87,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     Text(c.name, style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: Constants.smallPadding),
                     if (c.items.isEmpty)
-                      const Text("Keine Items vorhanden")
+                      Text("Keine Items vorhanden", style: Theme.of(context).textTheme.bodyMedium)
                     else
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,

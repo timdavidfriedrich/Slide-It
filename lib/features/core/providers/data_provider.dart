@@ -14,9 +14,10 @@ class DataProvider extends ChangeNotifier {
   List<Group> groups = [];
   List<Group> get userGroups {
     final List<Group> result = [];
-    String userId = FirebaseAuth.instance.currentUser!.uid;
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return result;
     for (Group g in groups) {
-      if (!g.users.contains(userId)) continue;
+      if (!g.users.contains(user.uid)) continue;
       result.add(g);
     }
     return result;

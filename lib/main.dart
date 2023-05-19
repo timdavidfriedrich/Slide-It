@@ -13,6 +13,7 @@ import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
+import 'package:rating/features/ratings/screens/item_screen.dart';
 import 'package:rating/firebase_options.dart';
 
 void main() async {
@@ -44,6 +45,7 @@ class RatingApp extends StatelessWidget {
               AppScaffold.routeName: (context) => const AppScaffold(),
               ChooseGroupScreen.routeName: (context) => const ChooseGroupScreen(),
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
+              ItemScreen.routeName: (context) => const ItemScreen(),
               AddScreen.routeName: (context) => const AddScreen(),
               WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               SignScreen.routeName: (context) => const SignScreen(),

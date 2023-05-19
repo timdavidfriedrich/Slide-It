@@ -5,12 +5,18 @@ class Category {
   final String id;
   final String groupId;
   final String name;
-  final String? description;
+  String? description;
   List<Item> items;
 
   Category({required this.groupId, required this.name, this.description, List<Item>? ratings})
       : id = "category--${const Uuid().v4()}",
         items = ratings ?? [];
+  
+  Category.empty() 
+      : id = "empty-category--${const Uuid().v4()}",
+        groupId = "unknown",
+        name = "Empty",
+        items = [];
 
   Map<String, dynamic> toJson() {
     return {
