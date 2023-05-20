@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/screen.dart';
-import 'package:rating/features/core/services/firebase/auth_service.dart';
 
 class SettingsScreen extends StatefulWidget implements Screen {
   const SettingsScreen({Key? key}) : super(key: key);
