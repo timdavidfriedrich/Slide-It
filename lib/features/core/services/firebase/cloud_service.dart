@@ -39,7 +39,7 @@ class CloudService {
       return;
     }
     Log.hint("User data loaded (UID: ${user.uid}).");
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    // Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     // appUser.loadFromJson(data);
   }
 
