@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:rating/constants/global.dart';
@@ -34,6 +35,7 @@ class NotificationService {
   }
 
   Future<void> _initWeb() async {
+    if (!kIsWeb) return;
     String? token = await firebaseMessaging.getToken(
       // TODO: Move to secret file.
       vapidKey: "BBGSDgHDlYCJ2CefiP4yF07XBTspRV-jh_-kGX6Ld3lmG5YPn-IUeCEpcJKgK-Hep0_58TsOyNiRb50ESb6aYWk",

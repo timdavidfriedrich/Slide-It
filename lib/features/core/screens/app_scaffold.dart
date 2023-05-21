@@ -93,7 +93,12 @@ class _AppScaffoldState extends State<AppScaffold> {
                               builder: (context) {
                                 return CupertinoPageScaffold(
                                   navigationBar: CupertinoNavigationBar(
-                                    middle: Text(_screens[_selectedIndex].displayName),
+                                    brightness: Theme.of(context).brightness,
+                                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                    middle: Text(
+                                      _screens[_selectedIndex].displayName,
+                                      style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                                    ),
                                     trailing: CupertinoButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () => _navigateToAdd(),

@@ -4,7 +4,6 @@ class ThemeConfig {
   static ThemeData light(BuildContext context, ColorScheme? colorScheme) {
     return ThemeData(
       useMaterial3: true,
-      platform: TargetPlatform.iOS,
       brightness: Brightness.light,
       colorScheme: colorScheme,
     );
