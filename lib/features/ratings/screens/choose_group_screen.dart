@@ -62,7 +62,7 @@ class ChooseGroupScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Constants.mediumPadding),
-            PlatformElevatedButton(onPressed: () => cancel(), child: const Text("Abbrechen")),
+            ElevatedButton(onPressed: () => cancel(), child: const Text("Abbrechen")),
             const SizedBox(height: Constants.largePadding),
           ],
         ),

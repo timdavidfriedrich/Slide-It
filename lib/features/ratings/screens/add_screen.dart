@@ -89,9 +89,9 @@ class _AddScreenState extends State<AddScreen> {
   void _saveWithNewItem(User user) {
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
     Rating rating = Rating(
-      itemId: item.id, 
-      userId: user.uid, 
-      value: _sliderValue, 
+      itemId: item.id,
+      userId: user.uid,
+      value: _sliderValue,
       comment: _commentController.text.isNotEmpty ? _commentController.text : null,
     );
     item.ratings.add(rating);
@@ -100,9 +100,9 @@ class _AddScreenState extends State<AddScreen> {
 
   void _saveWithContainedItem(User user) {
     Rating rating = Rating(
-      itemId: _containedItem!.id, 
-      userId: user.uid, 
-      value: _sliderValue, 
+      itemId: _containedItem!.id,
+      userId: user.uid,
+      value: _sliderValue,
       comment: _commentController.text.isNotEmpty ? _commentController.text : null,
     );
     CloudService.addRating(category: _containedItem!.category, rating: rating);
@@ -129,32 +129,32 @@ class _AddScreenState extends State<AddScreen> {
             const SizedBox(height: Constants.normalPadding),
             AspectRatio(
               aspectRatio: 3 / 2,
-              child: _containedItem != null 
-                ? _containedItem!.image
-                : ElevatedButton(
-                    style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
-                    onPressed: () => _openCamera(),
-                    child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
-                  ),
+              child: _containedItem != null
+                  ? _containedItem!.image
+                  : ElevatedButton(
+                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+                      onPressed: () => _openCamera(),
+                      child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
+                    ),
             ),
             const SizedBox(height: Constants.normalPadding),
-            _containedItem != null 
-            ? Text(_containedItem!.name, style: Theme.of(context).textTheme.headlineMedium)
-            : PlatformTextField(
-                controller: _nameController,
-                material: (context, platform) {
-                  return MaterialTextFieldData(
-                    decoration: const InputDecoration(
-                      labelText: "Name",
-                      border: OutlineInputBorder(),
-                    ),
-                  );
-                },
-                cupertino: (context, platform) {
-                  return CupertinoTextFieldData(placeholder: "Name");
-                },
-                onChanged: (_) => _checkIfInputValid(),
-              ),
+            _containedItem != null
+                ? Text(_containedItem!.name, style: Theme.of(context).textTheme.headlineMedium)
+                : PlatformTextField(
+                    controller: _nameController,
+                    material: (context, platform) {
+                      return MaterialTextFieldData(
+                        decoration: const InputDecoration(
+                          labelText: "Name",
+                          border: OutlineInputBorder(),
+                        ),
+                      );
+                    },
+                    cupertino: (context, platform) {
+                      return CupertinoTextFieldData(placeholder: "Name");
+                    },
+                    onChanged: (_) => _checkIfInputValid(),
+                  ),
             const SizedBox(height: Constants.mediumPadding),
             if (_containedItem != null) Text("Meine Bewertung", style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: Constants.smallPadding),
@@ -208,7 +208,7 @@ class _AddScreenState extends State<AddScreen> {
               ),
             ),
             const SizedBox(height: Constants.mediumPadding),
-            PlatformElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
+            ElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
             if (_containedItem == null && _group != null && _category != null)
               PlatformTextButton(
                 padding: EdgeInsets.zero,

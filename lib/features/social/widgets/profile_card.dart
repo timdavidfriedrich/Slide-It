@@ -15,19 +15,17 @@ class ProfileCard extends StatelessWidget {
       AuthService.signOut();
     }
 
-    return Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.smallPadding),
-        leading: CircleAvatar(
-          backgroundImage: user != null && user.photoURL != null ? NetworkImage(user.photoURL!) : null,
-          child: user != null && user.photoURL != null ? null : Icon(PlatformIcons(context).person),
-        ),
-        title: Text(user?.displayName ?? "Unbenannt"),
-        subtitle: Text(user?.email ?? "Nicht angemeldet."),
-        trailing: PlatformIconButton(
-          onPressed: () => signOut(),
-          icon: Icon(PlatformIcons(context).forward),
-        ),
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.smallPadding),
+      leading: CircleAvatar(
+        backgroundImage: user != null && user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+        child: user != null && user.photoURL != null ? null : Icon(PlatformIcons(context).person),
+      ),
+      title: Text(user?.displayName ?? "Unbenannt"),
+      subtitle: Text(user?.email ?? "Nicht angemeldet."),
+      trailing: PlatformIconButton(
+        onPressed: () => signOut(),
+        icon: Icon(PlatformIcons(context).forward),
       ),
     );
   }

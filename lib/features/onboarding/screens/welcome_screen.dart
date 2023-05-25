@@ -39,15 +39,13 @@ class WelcomeScreen extends StatelessWidget {
             // ? Flexible(child: Image.asset(AssetPath.mascotIdle)),
             const Spacer(),
             const SizedBox(height: 48),
-            PlatformElevatedButton(
+            ElevatedButton(
               onPressed: () => _navigateToSignIn(context),
-              color: Theme.of(context).colorScheme.onPrimary,
               child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             const SizedBox(height: 16),
-            PlatformElevatedButton(
+            ElevatedButton(
               onPressed: () => _navigateToSignUp(context),
-              color: Theme.of(context).colorScheme.onPrimary,
               child: Text("Register", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             const SizedBox(height: 16),

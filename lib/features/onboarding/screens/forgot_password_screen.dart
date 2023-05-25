@@ -86,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     controller: _emailController,
                   ),
                   const SizedBox(height: 32),
-                  PlatformElevatedButton(
+                  ElevatedButton(
                     onPressed: _sendButtonBlocked ? null : () => _sendPasswordResetEmail(_emailController.text),
                     child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Send link"),
                   ),

@@ -69,12 +69,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               onTap: () => _navigateToGroupSelection(),
             ),
           ),
-          const SizedBox(height: Constants.smallPadding),
-          PlatformElevatedButton(
-            onPressed: currentGroup == null ? null : () => _createCategory(),
-            child: const Text("Kategorie erstellen"),
-          ),
-          const SizedBox(height: Constants.normalPadding),
+          const SizedBox(height: Constants.mediumPadding),
           if (currentGroup != null)
             if (currentGroup!.categories.isEmpty)
               const Text("Keine Kategorien vorhanden.")
@@ -99,9 +94,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           ),
                         ),
                       ),
-                    const SizedBox(height: Constants.normalPadding),
+                    const SizedBox(height: Constants.mediumPadding),
                   ],
                 ),
+          TextButton.icon(
+            onPressed: currentGroup == null ? null : () => _createCategory(),
+            icon: Icon(PlatformIcons(context).add),
+            label: const Text("Kategorie erstellen"),
+          ),
+          const SizedBox(height: Constants.largePadding),
         ],
       ),
     );

@@ -15,7 +15,7 @@ class ItemScreen extends StatefulWidget implements Screen {
   static const String routeName = "/Item";
   const ItemScreen({super.key});
 
-    @override
+  @override
   String get displayName => "Item";
 
   @override
@@ -31,8 +31,6 @@ class ItemScreen extends StatefulWidget implements Screen {
   @override
   Icon get cupertinoIcon => const Icon(CupertinoIcons.folder);
 
-
-
   @override
   State<ItemScreen> createState() => _ItemScreenState();
 }
@@ -43,17 +41,17 @@ class _ItemScreenState extends State<ItemScreen> {
     Item? item;
 
     Future<Item> loadArguments() async {
-      ItemScreenArguments arguments =
-          ModalRoute.of(context)!.settings.arguments as ItemScreenArguments;
+      ItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ItemScreenArguments;
       return arguments.item;
     }
 
     void addOwnRating() {
       Navigator.pushNamed(
-        context, 
-        AddScreen.routeName, arguments: AddScreenArguments(
-          group: item!.group, 
-          category: item!.category, 
+        context,
+        AddScreen.routeName,
+        arguments: AddScreenArguments(
+          group: item!.group,
+          category: item!.category,
           containedItem: item!,
         ),
       ).whenComplete(() => setState(() => {}));
@@ -82,17 +80,19 @@ class _ItemScreenState extends State<ItemScreen> {
                       children: [
                         AspectRatio(aspectRatio: 4 / 3, child: item!.image),
                         Positioned(
-                          bottom: - Constants.mediumPadding / 2,
-                          right: - Constants.mediumPadding / 2,
+                          bottom: -Constants.mediumPadding / 2,
+                          right: -Constants.mediumPadding / 2,
                           child: Card(
+                            elevation: 0,
+                            color: Theme.of(context).colorScheme.background,
                             child: Padding(
                               padding: const EdgeInsets.all(Constants.smallPadding),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(PlatformIcons(context).star, size: 32),
-                                  const SizedBox(width: Constants.smallPadding),
                                   Text(item!.averageRating.toStringAsFixed(1), style: Theme.of(context).textTheme.displaySmall),
+                                  const SizedBox(width: Constants.smallPadding),
+                                  const Text("🔥"),
                                 ],
                               ),
                             ),
@@ -103,48 +103,46 @@ class _ItemScreenState extends State<ItemScreen> {
                     const SizedBox(height: Constants.smallPadding),
                     Text(item!.category.name),
                     const SizedBox(height: Constants.mediumPadding),
-                    Text("Meine Bewertung:", style: Theme.of(context).textTheme.headlineMedium),
+                    Text("Meine Bewertung:", style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: Constants.smallPadding),
-                    item!.ownRating == null 
-                    ? Card(
-                      child: ListTile(
-                        leading: Icon(PlatformIcons(context).add),
-                        title: const Text("Bewertung abgeben"),
-                        onTap: () => addOwnRating(),
-                      ),
-                    )
-                    : Card(
-                      child: ListTile(
+                    item!.ownRating == null
+                        ? Card(
+                            child: ListTile(
+                              leading: Icon(PlatformIcons(context).add),
+                              title: const Text("Bewertung abgeben"),
+                              onTap: () => addOwnRating(),
+                            ),
+                          )
+                        : Card(
+                            child: ListTile(
+                              leading: AppUser.avatar,
+                              title: const Text("Ich"),
+                              subtitle: Text(item!.ownRating!.comment ?? "Ohne Kommentar."),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(item!.ownRating!.value.toStringAsFixed(1)),
+                                  const SizedBox(width: Constants.smallPadding),
+                                  const Text("🔥"),
+                                ],
+                              ),
+                            ),
+                          ),
+                    const SizedBox(height: Constants.mediumPadding),
+                    Text("${item!.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
+                    const SizedBox(height: Constants.smallPadding),
+                    for (Rating r in item!.ratings)
+                      ListTile(
                         leading: AppUser.avatar,
-                        title: const Text("Ich"),
-                        subtitle: Text(item!.ownRating!.comment ?? "Ohne Kommentar."),
+                        title: Text(AppUser.user?.displayName ?? "Unbenannt"),
+                        subtitle: Text(r.comment ?? "Ohne Kommentar."),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(PlatformIcons(context).star),
+                            Text(r.value.toStringAsFixed(1)),
                             const SizedBox(width: Constants.smallPadding),
-                            Text(item!.ownRating!.value.toStringAsFixed(1)),
+                            const Text("🔥"),
                           ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: Constants.mediumPadding),
-                    Text("${item!.group.name}:", style: Theme.of(context).textTheme.headlineMedium),
-                    const SizedBox(height: Constants.smallPadding),
-                    for (Rating r in item!.ratings)
-                      Card(
-                        child: ListTile(
-                          leading: AppUser.avatar,
-                          title: Text(AppUser.user?.displayName ?? "Unbenannt"),
-                          subtitle: Text(r.comment ?? "Ohne Kommentar."),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(PlatformIcons(context).star),
-                              const SizedBox(width: Constants.smallPadding),
-                              Text(r.value.toStringAsFixed(1)),
-                            ],
-                          ),
                         ),
                       ),
                     const SizedBox(height: Constants.largePadding),

@@ -44,28 +44,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
         children: [
-          const SizedBox(height: Constants.normalPadding),
-          Text("Mein Profil", style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: Constants.smallPadding),
           const ProfileCard(),
           const SizedBox(height: Constants.mediumPadding),
           Text("Meine Gruppen", style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: Constants.smallPadding),
-          PlatformElevatedButton(
-            onPressed: () => _createGroup(),
-            child: const Text("Gruppe erstellen"),
-          ),
           const SizedBox(height: Constants.normalPadding),
           for (Group group in Provider.of<DataProvider>(context).userGroups)
             Card(
               // ? Keep color ?
               // color: group.color,
+              margin: const EdgeInsets.only(bottom: Constants.smallPadding),
               child: ListTile(
                 leading: group.avatar,
                 title: Text(group.name),
                 subtitle: Text(group.users.length == 1 ? "1 Mitglied" : "${group.users.length} Mitglieder"),
               ),
             ),
+          TextButton.icon(
+            onPressed: () => _createGroup(),
+            icon: Icon(PlatformIcons(context).add),
+            label: const Text("Gruppe hinzufügen"),
+          ),
           const SizedBox(height: Constants.mediumPadding),
         ],
       ),

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 
@@ -79,7 +78,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
               const SizedBox(height: 16),
               const Text("We sent you an email with a link. Please, click on it to verify your email address."),
               const SizedBox(height: 32),
-              PlatformElevatedButton(
+              ElevatedButton(
                 onPressed: _sendButtonBlocked ? null : () => _sendVerificationEmail(),
                 child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Resend verification email"),
               ),

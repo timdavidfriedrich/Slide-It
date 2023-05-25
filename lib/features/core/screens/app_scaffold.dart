@@ -11,6 +11,7 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
+import 'package:rating/features/settings/screens/settings_screen.dart';
 import 'package:rating/features/social/screens/profile_screen.dart';
 
 class AppScaffold extends StatefulWidget {
@@ -27,8 +28,12 @@ class _AppScaffoldState extends State<AppScaffold> {
     // HomeScreen(),
     CategoriesScreen(),
     ProfileScreen(),
-    // SettingsScreen(),
+    SettingsScreen(),
   ];
+
+  bool _platformIsApple() {
+    return Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS;
+  }
 
   void _initSelectedIndex() {
     AppScaffoldArguments? arguments = ModalRoute.of(context)!.settings.arguments as AppScaffoldArguments?;
@@ -75,9 +80,23 @@ class _AppScaffoldState extends State<AppScaffold> {
           return !isEmailVerified
               ? const VerifyScreen()
               : SafeArea(
-                  child: Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS
-                      ? CupertinoTabScaffold(
-                          tabBar: CupertinoTabBar(
+                  child: Scaffold(
+                    appBar: AppBar(
+                      title: Text(_screens[_selectedIndex].displayName),
+                      actions: [
+                        if (_platformIsApple())
+                          FilledButton(
+                            onPressed: () => _navigateToAdd(),
+                            child: Row(
+                              children: [const AddScreen().icon, const Text("Objekt")],
+                            ),
+                          ),
+                        const SizedBox(width: 32),
+                      ],
+                    ),
+                    body: _screens[_selectedIndex] as Widget,
+                    bottomNavigationBar: _platformIsApple()
+                        ? CupertinoTabBar(
                             currentIndex: _selectedIndex,
                             onTap: (index) => setState(() => _selectedIndex = index),
                             items: List.generate(_screens.length, (index) {
@@ -87,40 +106,8 @@ class _AppScaffoldState extends State<AppScaffold> {
                                 tooltip: "",
                               );
                             }),
-                          ),
-                          tabBuilder: (context, index) {
-                            return CupertinoTabView(
-                              builder: (context) {
-                                return CupertinoPageScaffold(
-                                  navigationBar: CupertinoNavigationBar(
-                                    brightness: Theme.of(context).brightness,
-                                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                                    middle: Text(
-                                      _screens[_selectedIndex].displayName,
-                                      style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-                                    ),
-                                    trailing: CupertinoButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () => _navigateToAdd(),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const AddScreen().icon,
-                                          Text(const AddScreen().displayName),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  child: _screens[_selectedIndex] as Widget,
-                                );
-                              },
-                            );
-                          },
-                        )
-                      : Scaffold(
-                          appBar: AppBar(title: Text(_screens[_selectedIndex].displayName)),
-                          body: _screens[_selectedIndex] as Widget,
-                          bottomNavigationBar: NavigationBar(
+                          )
+                        : NavigationBar(
                             selectedIndex: _selectedIndex,
                             onDestinationSelected: (index) => setState(() => _selectedIndex = index),
                             destinations: List.generate(_screens.length, (index) {
@@ -131,8 +118,9 @@ class _AppScaffoldState extends State<AppScaffold> {
                               );
                             }),
                           ),
-                          floatingActionButton: FloatingActionButton(onPressed: () => _navigateToAdd(), child: const AddScreen().icon),
-                        ),
+                    floatingActionButton:
+                        _platformIsApple() ? null : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const AddScreen().icon),
+                  ),
                 );
         }
         return const WelcomeScreen();

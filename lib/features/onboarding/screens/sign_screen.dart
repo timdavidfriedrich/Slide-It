@@ -172,11 +172,11 @@ class _SignScreenState extends State<SignScreen> {
                       ),
                 const SizedBox(height: 32),
                 signType == SignType.signIn
-                    ? PlatformElevatedButton(
+                    ? ElevatedButton(
                         onPressed: !_isEmailValid || _password.isEmpty ? null : () => _signIn(),
                         child: const Text("Sign in"),
                       )
-                    : PlatformElevatedButton(
+                    : ElevatedButton(
                         onPressed: !_isEmailValid || _password.isEmpty || _repeatedPassword.isEmpty ? null : () => _signUp(),
                         child: const Text("Sign up"),
                       ),
