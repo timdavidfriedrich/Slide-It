@@ -72,7 +72,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           const SizedBox(height: Constants.mediumPadding),
           if (currentGroup != null)
             if (currentGroup!.categories.isEmpty)
-              const Text("Keine Kategorien vorhanden.")
+              const Padding(
+                padding: EdgeInsets.only(bottom: Constants.mediumPadding),
+                child: Text("Keine Kategorien vorhanden."),
+              )
             else
               for (Category c in currentGroup!.categories)
                 Column(
