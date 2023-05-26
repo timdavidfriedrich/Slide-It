@@ -3,9 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
-import 'package:rating/features/ratings/screens/add_screen.dart';
 import 'package:rating/features/ratings/screens/categories_screen.dart';
-import 'package:rating/features/ratings/services/add_screen_arguments.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
@@ -20,13 +18,8 @@ class ChooseCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Group> userGroups = Provider.of<DataProvider>(context).userGroups;
 
-    void chooseCategory(Group group, Category category) {
-      Navigator.pop(context);
-      Navigator.pushNamed(
-        context,
-        AddScreen.routeName,
-        arguments: AddScreenArguments(group: group, category: category),
-      );
+    void chooseCategory(Category category) {
+      Navigator.pop(context, category);
     }
 
     void addCategory() {
@@ -35,7 +28,7 @@ class ChooseCategoryScreen extends StatelessWidget {
     }
 
     void cancel() {
-      Navigator.popUntil(context, ModalRoute.withName(AppScaffold.routeName));
+      Navigator.pop(context);
     }
 
     return Scaffold(
@@ -55,15 +48,14 @@ class ChooseCategoryScreen extends StatelessWidget {
                         child: ListTile(
                           title: Text(category.name),
                           trailing: Text(group.name),
-                          onTap: () => chooseCategory(group, category),
+                          onTap: () => chooseCategory(category),
                         ),
                       ),
-                  Card(
-                    child: ListTile(
-                      leading: Icon(PlatformIcons(context).add),
-                      title: const Text("Neue Kategorie erstellen"),
-                      onTap: () => addCategory(),
-                    ),
+                  const SizedBox(height: Constants.normalPadding),
+                  TextButton.icon(
+                    onPressed: () => addCategory(),
+                    icon: Icon(PlatformIcons(context).add),
+                    label: const Text("Neue Kategorie erstellen"),
                   ),
                 ],
               ),

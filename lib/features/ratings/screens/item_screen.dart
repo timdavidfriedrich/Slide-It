@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/core/services/screen.dart';
-import 'package:rating/features/ratings/screens/add_screen.dart';
-import 'package:rating/features/ratings/services/add_screen_arguments.dart';
+import 'package:rating/features/ratings/screens/rate_screen.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
@@ -45,16 +46,21 @@ class _ItemScreenState extends State<ItemScreen> {
       return arguments.item;
     }
 
-    void addOwnRating() {
-      Navigator.pushNamed(
-        context,
-        AddScreen.routeName,
-        arguments: AddScreenArguments(
-          group: item!.group,
-          category: item!.category,
-          containedItem: item!,
-        ),
-      ).whenComplete(() => setState(() => {}));
+    void addOwnRating() async {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      final result = await Navigator.pushNamed(context, RateScreen.routeName);
+      if (result is! (double, String?)) return;
+      final (ratingValue, comment) = result;
+      Rating rating = Rating(
+        value: ratingValue,
+        comment: comment,
+        userId: user.uid,
+        itemId: item!.id,
+      );
+      // item!.ratings.add(rating);
+      CloudService.addRating(category: item!.category, rating: rating);
+      setState(() {});
     }
 
     return FutureBuilder(
@@ -111,8 +117,7 @@ class _ItemScreenState extends State<ItemScreen> {
                     item!.ownRating == null
                         ? Card(
                             child: ListTile(
-                              leading: Icon(PlatformIcons(context).add),
-                              title: const Text("Bewertung abgeben"),
+                              title: const Text("(Klicken zum Bewerten)"),
                               onTap: () => addOwnRating(),
                             ),
                           )

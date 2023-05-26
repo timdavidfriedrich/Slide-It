@@ -3,15 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/ratings/screens/choose_category_screen.dart';
+import 'package:rating/features/ratings/screens/rate_screen.dart';
 import 'package:rating/features/ratings/services/add_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/widget/change_category_dialog.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
@@ -40,72 +42,66 @@ class AddScreen extends StatefulWidget implements Screen {
 
 class _AddScreenState extends State<AddScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _commentController = TextEditingController();
-  Group? _group;
   Category? _category;
   Item? _containedItem;
+  bool _isEditMode = false; // TODO: Implement edit mode
   bool _isInputValid = false;
 
-  double _sliderValue = Constants.minRating;
-  final double _minValue = Constants.minRating;
-  final double _maxValue = Constants.maxRating;
+  double _ratingValue = Constants.minRating;
+  String? _comment;
+
+  void _checkIfInputValid() {
+    setState(() => _isInputValid = (_nameController.text.isNotEmpty || _containedItem != null) && _category != null);
+  }
+
+  bool _hasRating() {
+    return _ratingValue > 0.0;
+  }
 
   void _loadArguments() {
-    AddScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as AddScreenArguments;
+    AddScreenArguments? arguments = ModalRoute.of(context)!.settings.arguments as AddScreenArguments?;
+    if (arguments == null) return;
     setState(() {
-      _group = arguments.group;
-      _category = arguments.category;
-      _containedItem = arguments.containedItem;
+      _isEditMode = arguments.isEditMode;
     });
   }
 
   void _openCamera() {}
 
-  void _openChangeCategoryDialog() {
-    showDialog(context: context, builder: (context) => const ChangeCategoryDialog());
+  void _changeCategory() async {
+    final result = await Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
+    if (result is! Category) return;
+    setState(() => _category = result);
+    _checkIfInputValid();
   }
 
-  void _updateSliderValue(double value) {
-    setState(() => _sliderValue = value);
-  }
-
-  void _checkIfInputValid() {
-    setState(() => _isInputValid = _nameController.text.isNotEmpty || _containedItem != null);
+  void _addRating() async {
+    // TODO: Give RateScreen the item as argument
+    final result = await Navigator.pushNamed(context, RateScreen.routeName);
+    if (result == null || result is! (double, String?)) return;
+    final (ratingValue, comment) = result;
+    setState(() {
+      _ratingValue = ratingValue;
+      _comment = comment;
+    });
   }
 
   void _save() {
     if (_category == null) return;
-    // TODO: Refactor (way too much weird code)
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) Navigator.pop(context);
-    if (_containedItem == null) {
-      _saveWithNewItem(user!);
-    } else {
-      _saveWithContainedItem(user!);
-    }
-    Navigator.pop(context);
-  }
 
-  void _saveWithNewItem(User user) {
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
     Rating rating = Rating(
       itemId: item.id,
-      userId: user.uid,
-      value: _sliderValue,
-      comment: _commentController.text.isNotEmpty ? _commentController.text : null,
+      userId: user!.uid,
+      value: _ratingValue,
+      comment: _comment,
     );
     item.ratings.add(rating);
     CloudService.addItem(category: _category!, item: item);
-  }
 
-  void _saveWithContainedItem(User user) {
-    Rating rating = Rating(
-      itemId: _containedItem!.id,
-      userId: user.uid,
-      value: _sliderValue,
-      comment: _commentController.text.isNotEmpty ? _commentController.text : null,
-    );
-    CloudService.addRating(category: _containedItem!.category, rating: rating);
+    Navigator.pop(context);
   }
 
   @override
@@ -137,88 +133,48 @@ class _AddScreenState extends State<AddScreen> {
                       child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
                     ),
             ),
-            const SizedBox(height: Constants.normalPadding),
-            _containedItem != null
-                ? Text(_containedItem!.name, style: Theme.of(context).textTheme.headlineMedium)
-                : PlatformTextField(
-                    controller: _nameController,
-                    material: (context, platform) {
-                      return MaterialTextFieldData(
-                        decoration: const InputDecoration(
-                          labelText: "Name",
-                          border: OutlineInputBorder(),
-                        ),
-                      );
-                    },
-                    cupertino: (context, platform) {
-                      return CupertinoTextFieldData(placeholder: "Name");
-                    },
-                    onChanged: (_) => _checkIfInputValid(),
-                  ),
             const SizedBox(height: Constants.mediumPadding),
-            if (_containedItem != null) Text("Meine Bewertung", style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: Constants.smallPadding),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: "Name",
+              ),
+              onChanged: (_) => _checkIfInputValid(),
+            ),
+            const SizedBox(height: Constants.mediumPadding),
             Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.normalPadding),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Rating:",
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(
-                          child: PlatformSlider(
-                            min: _minValue,
-                            max: _maxValue,
-                            value: _sliderValue,
-                            onChanged: (value) => _updateSliderValue(value),
-                          ),
-                        ),
-                        const SizedBox(width: Constants.normalPadding),
-                        Text(
-                          _sliderValue.toStringAsFixed(1),
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: Constants.smallPadding),
-                    PlatformTextField(
-                      controller: _commentController,
-                      maxLines: 3,
-                      material: (context, platform) {
-                        return MaterialTextFieldData(
-                          decoration: const InputDecoration(
-                            labelText: "Begründung (optional)",
-                            border: OutlineInputBorder(),
-                            alignLabelWithHint: true,
-                          ),
-                        );
-                      },
-                      cupertino: (context, platform) {
-                        return CupertinoTextFieldData(placeholder: "Begründung (optional)");
-                      },
-                      onChanged: (_) => _checkIfInputValid(),
-                    ),
-                  ],
-                ),
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                onTap: () => _changeCategory(),
+                title: Text(_category?.name ?? "(Wähle eine Kategorie)"),
+                trailing: _category != null ? Text(Provider.of<DataProvider>(context).getGroupFromCategory(_category!).name) : null,
+              ),
+            ),
+            const SizedBox(height: Constants.normalPadding),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                enabled: _category != null,
+                onTap: () => _addRating(),
+                title: Text(_hasRating() ? "Meine Bewertung:" : "(Klicke zum Bewerten)"),
+                subtitle: _comment != null ? Text(_comment!) : null,
+                trailing: _hasRating()
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(_ratingValue.toStringAsFixed(1)),
+                          const SizedBox(width: Constants.smallPadding),
+                          const Text("🔥"),
+                        ],
+                      )
+                    : null,
               ),
             ),
             const SizedBox(height: Constants.mediumPadding),
-            ElevatedButton(onPressed: _isInputValid ? () => _save() : null, child: const Text("Speichern")),
-            if (_containedItem == null && _group != null && _category != null)
-              PlatformTextButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => _openChangeCategoryDialog(),
-                child: ListTile(
-                  textColor: Theme.of(context).hintColor,
-                  title: Text("Kategorie: ${_category!.name}"),
-                  trailing: Text(_group!.name),
-                ),
-              ),
+            ElevatedButton(
+              onPressed: _isInputValid ? () => _save() : null,
+              child: Text(_hasRating() ? "Speichern" : "Ohne Bewertung speichern"),
+            ),
             const SizedBox(height: Constants.largePadding),
           ],
         ),

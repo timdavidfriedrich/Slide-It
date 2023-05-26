@@ -14,6 +14,7 @@ import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/item_screen.dart';
+import 'package:rating/features/ratings/screens/rate_screen.dart';
 import 'package:rating/firebase_options.dart';
 
 void main() async {
@@ -47,6 +48,7 @@ class RatingApp extends StatelessWidget {
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
               ItemScreen.routeName: (context) => const ItemScreen(),
               AddScreen.routeName: (context) => const AddScreen(),
+              RateScreen.routeName: (context) => const RateScreen(),
               WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               SignScreen.routeName: (context) => const SignScreen(),
               ForgotPasswordScreen.routeName: (context) => const ForgotPasswordScreen(),

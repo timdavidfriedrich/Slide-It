@@ -49,6 +49,12 @@ class ThemeConfig {
       //   color: colorScheme.surface,
       //   margin: EdgeInsets.zero,
       // ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colorScheme.surface,
+        border: const OutlineInputBorder(),
+        alignLabelWithHint: true,
+      ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(16, 0, 16, 0)),

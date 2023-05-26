@@ -35,6 +35,11 @@ class DataProvider extends ChangeNotifier {
     return groups.firstWhere((element) => element.id == group.id).categories;
   }
 
+  Group getGroupFromCategory(Category category) {
+    if (groups.isEmpty) return Group.empty();
+    return groups.firstWhere((element) => element.id == category.groupId);
+  }
+
   Future<void> loadData() async {
     groups = await CloudService.getUserGroupData();
     if (userGroups.isEmpty) return;
