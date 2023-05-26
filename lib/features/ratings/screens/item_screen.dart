@@ -105,8 +105,6 @@ class _ItemScreenState extends State<ItemScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: Constants.smallPadding),
-                    Text(item!.category.name),
                     const SizedBox(height: Constants.mediumPadding),
                     Text("Meine Bewertung:", style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: Constants.smallPadding),
