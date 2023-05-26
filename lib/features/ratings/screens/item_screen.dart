@@ -69,7 +69,12 @@ class _ItemScreenState extends State<ItemScreen> {
             return SafeArea(
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text(item!.name),
+                  titleSpacing: 0,
+                  title: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(item!.name, style: Theme.of(context).textTheme.titleMedium),
+                    subtitle: Text(item!.category.name, style: Theme.of(context).textTheme.bodySmall),
+                  ),
                 ),
                 body: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),

@@ -97,6 +97,12 @@ class ThemeConfig {
             fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! * 1.25,
             fontWeight: FontWeight.w600,
           ),
+          titleMedium: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+          titleSmall: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
