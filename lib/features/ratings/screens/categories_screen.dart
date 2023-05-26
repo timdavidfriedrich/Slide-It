@@ -88,9 +88,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: List.generate(
                             c.items.length,
-                            (index) => ItemCard(item: c.items.elementAt(index)),
+                            (index) => Padding(
+                              padding: const EdgeInsets.only(right: Constants.normalPadding),
+                              child: ItemCard(item: c.items.elementAt(index)),
+                            ),
                           ),
                         ),
                       ),
