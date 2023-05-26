@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/ratings/screens/rate_screen.dart';
@@ -79,7 +81,10 @@ class _ItemScreenState extends State<ItemScreen> {
                   title: ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(item!.name, style: Theme.of(context).textTheme.titleMedium),
-                    subtitle: Text(item!.category.name, style: Theme.of(context).textTheme.bodySmall),
+                    subtitle: Text(
+                      "${item!.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item!.category).name})",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
                 ),
                 body: ListView(

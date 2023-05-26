@@ -50,7 +50,11 @@ class _RateScreenState extends State<RateScreen> {
         title: ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text("item!.name", style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text("item!.category.name", style: Theme.of(context).textTheme.bodySmall),
+          subtitle: Text(
+            // "${item!.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item!.category).name})",
+            "item!.category.name",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
       ),
       body: SafeArea(
