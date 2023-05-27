@@ -51,12 +51,11 @@ class ChooseGroupScreen extends StatelessWidget {
                         onTap: () => chooseGroup(group),
                       ),
                     ),
-                  Card(
-                    child: ListTile(
-                      leading: Icon(PlatformIcons(context).add),
-                      title: const Text("Neue Gruppe erstellen"),
-                      onTap: () => addGroup(),
-                    ),
+                  const SizedBox(height: Constants.normalPadding),
+                  TextButton.icon(
+                    onPressed: () => addGroup(),
+                    icon: Icon(PlatformIcons(context).add),
+                    label: const Text("Neue Gruppe erstellen"),
                   ),
                 ],
               ),
