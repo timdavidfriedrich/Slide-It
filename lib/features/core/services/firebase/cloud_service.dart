@@ -102,6 +102,11 @@ class CloudService {
     }, SetOptions(merge: true));
   }
 
+  static Future<void> editItem({required Item item}) async {
+    Log.error("EDIT_ITEM NOT IMPLEMENTED");
+    return;
+  }
+
   static Future<void> removeItem({required Category category, required Item item}) async {
     Provider.of<DataProvider>(Global.context, listen: false).removeItem(category: category, item: item);
     Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);

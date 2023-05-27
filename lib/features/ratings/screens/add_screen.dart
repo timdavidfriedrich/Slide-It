@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
@@ -14,6 +15,7 @@ import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
+import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
@@ -43,15 +45,14 @@ class AddScreen extends StatefulWidget implements Screen {
 class _AddScreenState extends State<AddScreen> {
   final TextEditingController _nameController = TextEditingController();
   Category? _category;
-  Item? _containedItem;
-  bool _isEditMode = false; // TODO: Implement edit mode
+  Item? _itemToEdit;
   bool _isInputValid = false;
 
   double _ratingValue = Constants.minRating;
   String? _comment;
 
   void _checkIfInputValid() {
-    setState(() => _isInputValid = (_nameController.text.isNotEmpty || _containedItem != null) && _category != null);
+    setState(() => _isInputValid = (_nameController.text.isNotEmpty || _itemToEdit != null) && _category != null);
   }
 
   bool _hasRating() {
@@ -59,10 +60,14 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   void _loadArguments() {
-    AddScreenArguments? arguments = ModalRoute.of(context)!.settings.arguments as AddScreenArguments?;
+    AddScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as AddScreenArguments?;
     if (arguments == null) return;
+    Item? itemToEdit = arguments.itemToEdit;
+    if (itemToEdit == null) return;
     setState(() {
-      _isEditMode = arguments.isEditMode;
+      _itemToEdit = itemToEdit;
+      _nameController.text = itemToEdit.name;
+      _category = itemToEdit.category;
     });
   }
 
@@ -76,8 +81,14 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   void _addRating() async {
-    // TODO: Give RateScreen the item as argument
-    final result = await Navigator.pushNamed(context, RateScreen.routeName);
+    final result = await Navigator.pushNamed(
+      context,
+      RateScreen.routeName,
+      arguments: RateScreenArguments(
+        ratingValue: _ratingValue,
+        comment: _comment,
+      ),
+    );
     if (result == null || result is! (double, String?)) return;
     final (ratingValue, comment) = result;
     setState(() {
@@ -98,9 +109,12 @@ class _AddScreenState extends State<AddScreen> {
       value: _ratingValue,
       comment: _comment,
     );
-    item.ratings.add(rating);
-    CloudService.addItem(category: _category!, item: item);
-
+    if (_itemToEdit == null) {
+      item.ratings.add(rating);
+      CloudService.addItem(category: _category!, item: item);
+    } else {
+      CloudService.editItem(item: item);
+    }
     Navigator.pop(context);
   }
 
@@ -115,9 +129,7 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS
-          ? CupertinoNavigationBar(middle: Text(widget.displayName))
-          : AppBar(title: Text(widget.displayName)) as PreferredSizeWidget?,
+      appBar: AppBar(title: Text(_itemToEdit == null ? widget.displayName : "Bearbeiten")),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
@@ -125,19 +137,21 @@ class _AddScreenState extends State<AddScreen> {
             const SizedBox(height: Constants.normalPadding),
             AspectRatio(
               aspectRatio: 3 / 2,
-              child: _containedItem != null
-                  ? _containedItem!.image
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
-                      onPressed: () => _openCamera(),
-                      child: Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
-                    ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                ),
+                onPressed: () => _openCamera(),
+                child: _itemToEdit != null ? _itemToEdit!.image : Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
+              ),
             ),
             const SizedBox(height: Constants.mediumPadding),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: "Name",
+                hintText: _itemToEdit?.name,
               ),
               onChanged: (_) => _checkIfInputValid(),
             ),
@@ -151,29 +165,30 @@ class _AddScreenState extends State<AddScreen> {
               ),
             ),
             const SizedBox(height: Constants.normalPadding),
-            Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                enabled: _category != null,
-                onTap: () => _addRating(),
-                title: Text(_hasRating() ? "Meine Bewertung:" : "(Klicke zum Bewerten)"),
-                subtitle: _comment != null ? Text(_comment!) : null,
-                trailing: _hasRating()
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(_ratingValue.toStringAsFixed(1)),
-                          const SizedBox(width: Constants.smallPadding),
-                          const Text("🔥"),
-                        ],
-                      )
-                    : null,
+            if (_itemToEdit == null)
+              Card(
+                margin: EdgeInsets.zero,
+                child: ListTile(
+                  enabled: _category != null,
+                  onTap: () => _addRating(),
+                  title: Text(_hasRating() ? "Meine Bewertung:" : "(Klicke zum Bewerten)"),
+                  subtitle: _comment != null ? Text(_comment!) : null,
+                  trailing: _hasRating()
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(_ratingValue.toStringAsFixed(1)),
+                            const SizedBox(width: Constants.smallPadding),
+                            const Text("🔥"),
+                          ],
+                        )
+                      : null,
+                ),
               ),
-            ),
             const SizedBox(height: Constants.mediumPadding),
             ElevatedButton(
               onPressed: _isInputValid ? () => _save() : null,
-              child: Text(_hasRating() ? "Speichern" : "Ohne Bewertung speichern"),
+              child: Text(_hasRating() || _itemToEdit != null ? "Speichern" : "Ohne Bewertung speichern"),
             ),
             const SizedBox(height: Constants.largePadding),
           ],

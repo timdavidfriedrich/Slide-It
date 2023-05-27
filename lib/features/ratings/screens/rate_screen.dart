@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
 
 class RateScreen extends StatefulWidget {
   static const routeName = "/Rate";
@@ -10,16 +12,20 @@ class RateScreen extends StatefulWidget {
 }
 
 class _RateScreenState extends State<RateScreen> {
-  void _save() {
-    String? text = _commentController.text.isNotEmpty ? _commentController.text : null;
-    Navigator.pop(context, (_ratingValue, text));
-  }
-
   final TextEditingController _commentController = TextEditingController();
 
   double _ratingValue = Constants.minRating;
   final double _minValue = Constants.minRating;
   final double _maxValue = Constants.maxRating;
+
+  void _loadArguments() {
+    final RateScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as RateScreenArguments?;
+    if (arguments == null) return;
+    if (arguments.ratingValue == null) return;
+    setState(() => _ratingValue = arguments.ratingValue!);
+    if (arguments.comment == null) return;
+    setState(() => _commentController.text = arguments.comment!);
+  }
 
   bool _isInputValid() {
     return _ratingValue >= 0.1;
@@ -38,6 +44,19 @@ class _RateScreenState extends State<RateScreen> {
     if (_ratingValue < 5.0) return Color.lerp(badColor, mediumColor, _ratingValue / 5.0) ?? badColor;
     if (_ratingValue < 10.0) return Color.lerp(mediumColor, greatColor, (_ratingValue - 5.0) / 5.0) ?? mediumColor;
     return greatColor;
+  }
+
+  void _save() {
+    String? text = _commentController.text.isNotEmpty ? _commentController.text : null;
+    Navigator.pop(context, (_ratingValue, text));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _loadArguments();
+    });
   }
 
   @override

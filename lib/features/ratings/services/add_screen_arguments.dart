@@ -1,5 +1,6 @@
-class AddScreenArguments {
-  final bool isEditMode;
+import 'package:rating/features/ratings/services/item.dart';
 
-  AddScreenArguments({this.isEditMode = false});
+class AddScreenArguments {
+  final Item? itemToEdit;
+  const AddScreenArguments({this.itemToEdit});
 }
