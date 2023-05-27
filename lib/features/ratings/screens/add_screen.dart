@@ -48,7 +48,7 @@ class _AddScreenState extends State<AddScreen> {
   Item? _itemToEdit;
   bool _isInputValid = false;
 
-  double _ratingValue = Constants.minRating;
+  double _ratingValue = Constants.noRatingValue;
   String? _comment;
 
   void _checkIfInputValid() {
@@ -100,7 +100,7 @@ class _AddScreenState extends State<AddScreen> {
 
   void _save() {
     if (_category == null) return;
-    User? user = AppUser.user;
+    User? user = AppUser.currentUser;
     if (user == null) Navigator.pop(context);
 
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
@@ -181,7 +181,7 @@ class _AddScreenState extends State<AddScreen> {
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(_ratingValue.toStringAsFixed(1)),
+                            Text(_ratingValue.toStringAsFixed(Constants.ratingValueDigit)),
                             const SizedBox(width: Constants.smallPadding),
                             const Text("🔥"),
                           ],
