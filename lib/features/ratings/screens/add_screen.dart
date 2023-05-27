@@ -16,6 +16,7 @@ import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
+import 'package:rating/features/social/services/app_user.dart';
 
 class AddScreen extends StatefulWidget implements Screen {
   static const routeName = "/Add";
@@ -99,7 +100,7 @@ class _AddScreenState extends State<AddScreen> {
 
   void _save() {
     if (_category == null) return;
-    User? user = FirebaseAuth.instance.currentUser;
+    User? user = AppUser.user;
     if (user == null) Navigator.pop(context);
 
     Item item = Item(name: _nameController.text, categoryId: _category!.id);

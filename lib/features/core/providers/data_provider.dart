@@ -4,6 +4,7 @@ import 'package:log/log.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -14,7 +15,7 @@ class DataProvider extends ChangeNotifier {
   List<Group> groups = [];
   List<Group> get userGroups {
     final List<Group> result = [];
-    final User? user = FirebaseAuth.instance.currentUser;
+    final User? user = AppUser.user;
     if (user == null) return result;
     for (Group g in groups) {
       if (!g.users.contains(user.uid)) continue;

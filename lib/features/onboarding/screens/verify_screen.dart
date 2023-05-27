@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
+import 'package:rating/features/social/services/app_user.dart';
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({super.key});
@@ -25,7 +25,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   void _reload() async {
     await AuthService.reloadUser().whenComplete(() {
-      if (FirebaseAuth.instance.currentUser!.emailVerified) {
+      if (AppUser.user!.emailVerified) {
         reloadTimer?.cancel();
         Navigator.pushNamed(context, AppScaffold.routeName);
       }

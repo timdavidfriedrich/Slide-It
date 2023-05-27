@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/ratings/services/category.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:uuid/uuid.dart';
 
 class Group {
@@ -15,7 +15,7 @@ class Group {
   List<Category> categories = [];
 
   Group({required this.name, bool autoJoin = true}) : id = "group--${const Uuid().v4()}" {
-    if (autoJoin) users.add(FirebaseAuth.instance.currentUser!.uid);
+    if (autoJoin) users.add(AppUser.user!.uid);
   }
 
   Group.empty()

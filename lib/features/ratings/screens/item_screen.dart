@@ -54,7 +54,7 @@ class _ItemScreenState extends State<ItemScreen> {
   }
 
   void _editOwnRating({Item? item}) async {
-    User? user = FirebaseAuth.instance.currentUser;
+    User? user = AppUser.user;
     if (user == null) return;
     final result = await Navigator.pushNamed(
       context,

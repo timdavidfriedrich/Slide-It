@@ -5,6 +5,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/ratings/services/rating.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,13 +23,12 @@ class Item {
   Item.withRating({required this.categoryId, required this.name, required Rating rating})
       : id = "item--${const Uuid().v4()}",
         ratings = [rating];
-  
+
   Item.empty()
       : id = "empty-item--${const Uuid().v4()}",
         categoryId = "unknown",
         name = "Empty",
         ratings = [];
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -63,7 +63,7 @@ class Item {
 
   Rating? get ownRating {
     Rating? result;
-    User? user = FirebaseAuth.instance.currentUser;
+    User? user = AppUser.user;
     if (ratings.isEmpty) return null;
     if (user == null) return null;
     for (Rating r in ratings) {
