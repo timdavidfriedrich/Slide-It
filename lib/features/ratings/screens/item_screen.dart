@@ -13,6 +13,7 @@ import 'package:rating/features/ratings/screens/rate_screen.dart';
 import 'package:rating/features/ratings/services/add_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/item_screen_arguments.dart';
+import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
@@ -41,7 +42,7 @@ class ItemScreen extends StatefulWidget implements Screen {
 }
 
 class _ItemScreenState extends State<ItemScreen> {
-  Item? item;
+  Item? _item;
 
   Future<Item> _loadArguments() async {
     ItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ItemScreenArguments;
@@ -49,23 +50,37 @@ class _ItemScreenState extends State<ItemScreen> {
   }
 
   void _edit() {
-    Navigator.pushNamed(context, AddScreen.routeName, arguments: AddScreenArguments(itemToEdit: item));
+    Navigator.pushNamed(context, AddScreen.routeName, arguments: AddScreenArguments(itemToEdit: _item));
   }
 
-  void _addOwnRating() async {
+  void _editOwnRating({Item? item}) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    final result = await Navigator.pushNamed(context, RateScreen.routeName);
+    final result = await Navigator.pushNamed(
+      context,
+      RateScreen.routeName,
+      arguments: item == null
+          ? null
+          : RateScreenArguments(
+              item: item,
+              ratingValue: item.ownRating?.value,
+              comment: item.ownRating?.comment,
+            ),
+    );
     if (result is! (double, String?)) return;
     final (ratingValue, comment) = result;
     Rating rating = Rating(
       value: ratingValue,
       comment: comment,
       userId: user.uid,
-      itemId: item!.id,
+      itemId: _item!.id,
     );
-    // item!.ratings.add(rating);
-    CloudService.addRating(category: item!.category, rating: rating);
+    if (item == null) {
+      // item!.ratings.add(rating);
+      CloudService.addRating(category: _item!.category, rating: rating);
+    } else {
+      CloudService.editRating(rating: rating);
+    }
     setState(() {});
   }
 
@@ -79,16 +94,16 @@ class _ItemScreenState extends State<ItemScreen> {
           } else if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator.adaptive());
           } else {
-            item = snapshot.data!;
+            _item = snapshot.data!;
             return SafeArea(
               child: Scaffold(
                 appBar: AppBar(
                   titleSpacing: 0,
                   title: ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text(item!.name, style: Theme.of(context).textTheme.titleMedium),
+                    title: Text(_item!.name, style: Theme.of(context).textTheme.titleMedium),
                     subtitle: Text(
-                      "${item!.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item!.category).name})",
+                      "${_item!.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(_item!.category).name})",
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
@@ -103,7 +118,7 @@ class _ItemScreenState extends State<ItemScreen> {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        AspectRatio(aspectRatio: 4 / 3, child: item!.image),
+                        AspectRatio(aspectRatio: 4 / 3, child: _item!.image),
                         Positioned(
                           bottom: -Constants.mediumPadding / 2,
                           right: -Constants.mediumPadding / 2,
@@ -115,7 +130,7 @@ class _ItemScreenState extends State<ItemScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(item!.averageRating.toStringAsFixed(1), style: Theme.of(context).textTheme.displaySmall),
+                                  Text(_item!.averageRating.toStringAsFixed(1), style: Theme.of(context).textTheme.displaySmall),
                                   const SizedBox(width: Constants.smallPadding),
                                   const Text("🔥"),
                                 ],
@@ -128,43 +143,37 @@ class _ItemScreenState extends State<ItemScreen> {
                     const SizedBox(height: Constants.mediumPadding),
                     Text("Meine Bewertung:", style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: Constants.smallPadding),
-                    item!.ownRating == null
+                    _item!.ownRating == null
                         ? Card(
                             child: ListTile(
                               title: const Text("(Klicken zum Bewerten)"),
-                              onTap: () => _addOwnRating(),
+                              onTap: () => _editOwnRating(),
                             ),
                           )
                         : Card(
                             child: ListTile(
+                              onTap: () => _editOwnRating(item: _item!),
                               leading: AppUser.avatar,
                               title: const Text("Ich"),
-                              subtitle: Text(item!.ownRating!.comment ?? "Ohne Kommentar."),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(item!.ownRating!.value.toStringAsFixed(1)),
-                                  const SizedBox(width: Constants.smallPadding),
-                                  const Text("🔥"),
-                                ],
+                              subtitle: Text(_item!.ownRating!.comment ?? "Ohne Kommentar."),
+                              trailing: Text(
+                                "${_item!.ownRating!.value.toStringAsFixed(1)} 🔥",
+                                style: Theme.of(context).textTheme.labelLarge,
                               ),
                             ),
                           ),
                     const SizedBox(height: Constants.mediumPadding),
-                    Text("${item!.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
+                    Text("${_item!.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: Constants.smallPadding),
-                    for (Rating r in item!.ratings)
+                    for (Rating r in _item!.ratings)
                       ListTile(
+                        // TODO: Replace data with rating user. => Implement userList to Provider
                         leading: AppUser.avatar,
-                        title: Text(AppUser.user?.displayName ?? "Unbenannt"),
+                        title: Text(r.userId.substring(0, 12)),
                         subtitle: Text(r.comment ?? "Ohne Kommentar."),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(r.value.toStringAsFixed(1)),
-                            const SizedBox(width: Constants.smallPadding),
-                            const Text("🔥"),
-                          ],
+                        trailing: Text(
+                          "${r.value.toStringAsFixed(1)} 🔥",
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                     const SizedBox(height: Constants.largePadding),

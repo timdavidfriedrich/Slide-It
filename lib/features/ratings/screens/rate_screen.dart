@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
 
 class RateScreen extends StatefulWidget {
@@ -25,6 +28,11 @@ class _RateScreenState extends State<RateScreen> {
     setState(() => _ratingValue = arguments.ratingValue!);
     if (arguments.comment == null) return;
     setState(() => _commentController.text = arguments.comment!);
+  }
+
+  Future<Item> _getItem() async {
+    final RateScreenArguments arguments = ModalRoute.of(context)?.settings.arguments as RateScreenArguments;
+    return arguments.item;
   }
 
   bool _isInputValid() {
@@ -61,53 +69,62 @@ class _RateScreenState extends State<RateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _getValueColor(),
-      appBar: AppBar(
-        backgroundColor: _getValueColor(),
-        titleSpacing: 0,
-        title: ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text("item!.name", style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(
-            // "${item!.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item!.category).name})",
-            "item!.category.name",
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-          children: [
-            const SizedBox(height: Constants.normalPadding),
-            const AspectRatio(aspectRatio: 3 / 2, child: Placeholder()),
-            const SizedBox(height: Constants.mediumPadding),
-            Text(
-              "${_ratingValue.toStringAsFixed(1)} 🔥",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.displayLarge,
+    return FutureBuilder(
+      future: _getItem(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const CircularProgressIndicator.adaptive();
+        } else {
+          Item item = snapshot.data!;
+          return Scaffold(
+            backgroundColor: _getValueColor(),
+            appBar: AppBar(
+              backgroundColor: _getValueColor(),
+              titleSpacing: 0,
+              title: ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(item.name, style: Theme.of(context).textTheme.titleMedium),
+                subtitle: Text(
+                  "${item.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item.category).name})",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
             ),
-            Slider(
-              min: _minValue,
-              max: _maxValue,
-              value: _ratingValue,
-              onChanged: (value) => _updateSliderValue(value),
+            body: SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                children: [
+                  const SizedBox(height: Constants.normalPadding),
+                  const AspectRatio(aspectRatio: 3 / 2, child: Placeholder()),
+                  const SizedBox(height: Constants.mediumPadding),
+                  Text(
+                    "${_ratingValue.toStringAsFixed(1)} 🔥",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                  Slider(
+                    min: _minValue,
+                    max: _maxValue,
+                    value: _ratingValue,
+                    onChanged: (value) => _updateSliderValue(value),
+                  ),
+                  const SizedBox(height: Constants.smallPadding),
+                  TextField(
+                    controller: _commentController,
+                    maxLines: 3,
+                    decoration: const InputDecoration(labelText: "Begründung (optional)"),
+                  ),
+                  const SizedBox(height: Constants.mediumPadding),
+                  ElevatedButton(
+                    onPressed: _isInputValid() ? () => _save() : null,
+                    child: const Text("Bewerten"),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: Constants.smallPadding),
-            TextField(
-              controller: _commentController,
-              maxLines: 3,
-              decoration: const InputDecoration(labelText: "Begründung (optional)"),
-            ),
-            const SizedBox(height: Constants.mediumPadding),
-            ElevatedButton(
-              onPressed: _isInputValid() ? () => _save() : null,
-              child: const Text("Bewerten"),
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

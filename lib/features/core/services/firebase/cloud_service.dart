@@ -102,7 +102,7 @@ class CloudService {
     }, SetOptions(merge: true));
   }
 
-  static Future<void> editItem({required Item item}) async {
+  static Future<void> editItem({required Item item, String? name, String? imageUrl}) async {
     Log.error("EDIT_ITEM NOT IMPLEMENTED");
     return;
   }
@@ -122,6 +122,11 @@ class CloudService {
       // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
+  }
+
+  static Future<void> editRating({required Rating rating, String? comment, double? value}) async {
+    Log.error("EDIT_RATING NOT IMPLEMENTED");
+    return;
   }
 
   static Future<void> removeRating({required Category category, required Rating rating}) async {

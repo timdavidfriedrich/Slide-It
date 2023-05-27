@@ -27,10 +27,10 @@ class ProfileScreen extends StatefulWidget implements Screen {
   }
 
   @override
-  Icon get materialIcon => const Icon(Icons.person_outlined);
+  Icon get materialIcon => const Icon(Icons.group_outlined);
 
   @override
-  Icon get cupertinoIcon => const Icon(CupertinoIcons.person);
+  Icon get cupertinoIcon => const Icon(CupertinoIcons.group);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {

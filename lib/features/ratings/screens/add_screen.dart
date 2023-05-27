@@ -84,6 +84,7 @@ class _AddScreenState extends State<AddScreen> {
       context,
       RateScreen.routeName,
       arguments: RateScreenArguments(
+        item: Item(categoryId: _category?.id ?? "", name: _nameController.text),
         ratingValue: _ratingValue,
         comment: _comment,
       ),
@@ -128,7 +129,10 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_itemToEdit == null ? widget.displayName : "Bearbeiten")),
+      appBar: AppBar(
+        title: Text(_itemToEdit == null ? widget.displayName : "Bearbeiten"),
+        titleSpacing: 0,
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
@@ -168,7 +172,7 @@ class _AddScreenState extends State<AddScreen> {
               Card(
                 margin: EdgeInsets.zero,
                 child: ListTile(
-                  enabled: _category != null,
+                  enabled: _category != null && _nameController.text.isNotEmpty,
                   onTap: () => _addRating(),
                   title: Text(_hasRating() ? "Meine Bewertung:" : "(Klicke zum Bewerten)"),
                   subtitle: _comment != null ? Text(_comment!) : null,
