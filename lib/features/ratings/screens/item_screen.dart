@@ -41,38 +41,38 @@ class ItemScreen extends StatefulWidget implements Screen {
 }
 
 class _ItemScreenState extends State<ItemScreen> {
+  Item? item;
+
+  Future<Item> _loadArguments() async {
+    ItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ItemScreenArguments;
+    return arguments.item;
+  }
+
+  void _edit() {
+    Navigator.pushNamed(context, AddScreen.routeName, arguments: AddScreenArguments(itemToEdit: item));
+  }
+
+  void _addOwnRating() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final result = await Navigator.pushNamed(context, RateScreen.routeName);
+    if (result is! (double, String?)) return;
+    final (ratingValue, comment) = result;
+    Rating rating = Rating(
+      value: ratingValue,
+      comment: comment,
+      userId: user.uid,
+      itemId: item!.id,
+    );
+    // item!.ratings.add(rating);
+    CloudService.addRating(category: item!.category, rating: rating);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    Item? item;
-
-    Future<Item> loadArguments() async {
-      ItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ItemScreenArguments;
-      return arguments.item;
-    }
-
-    void _edit() {
-      Navigator.pushNamed(context, AddScreen.routeName, arguments: AddScreenArguments(itemToEdit: item));
-    }
-
-    void addOwnRating() async {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-      final result = await Navigator.pushNamed(context, RateScreen.routeName);
-      if (result is! (double, String?)) return;
-      final (ratingValue, comment) = result;
-      Rating rating = Rating(
-        value: ratingValue,
-        comment: comment,
-        userId: user.uid,
-        itemId: item!.id,
-      );
-      // item!.ratings.add(rating);
-      CloudService.addRating(category: item!.category, rating: rating);
-      setState(() {});
-    }
-
     return FutureBuilder(
-        future: loadArguments(),
+        future: _loadArguments(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Icon(PlatformIcons(context).error));
@@ -132,7 +132,7 @@ class _ItemScreenState extends State<ItemScreen> {
                         ? Card(
                             child: ListTile(
                               title: const Text("(Klicken zum Bewerten)"),
-                              onTap: () => addOwnRating(),
+                              onTap: () => _addOwnRating(),
                             ),
                           )
                         : Card(
