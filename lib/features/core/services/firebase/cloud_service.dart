@@ -7,6 +7,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -42,6 +43,17 @@ class CloudService {
     // Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     // appUser.loadFromJson(data);
   }
+
+  // static Future<List<AppUser> getAllUsers() async {
+  //       List<AppUser> result = [];
+  //   final QuerySnapshot<Map<String, dynamic>> rawData = await _userCollection.get();
+  //   final rawUsers = rawData.docs.map((doc) => doc.data()).toList();
+  //   for (Map<String, dynamic> rawUser in rawUsers) {
+  //     result.add(rawUser);
+  //   }
+  //   return result;
+
+  // }
 
   static Future<List<Group>> getUserGroupData() async {
     final User? user = FirebaseAuth.instance.currentUser;

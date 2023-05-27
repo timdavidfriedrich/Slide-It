@@ -15,7 +15,7 @@ class DataProvider extends ChangeNotifier {
   List<Group> groups = [];
   List<Group> get userGroups {
     final List<Group> result = [];
-    final User? user = AppUser.user;
+    final User? user = AppUser.currentUser;
     if (user == null) return result;
     for (Group g in groups) {
       if (!g.users.contains(user.uid)) continue;

@@ -63,7 +63,7 @@ class Item {
 
   Rating? get ownRating {
     Rating? result;
-    User? user = AppUser.user;
+    User? user = AppUser.currentUser;
     if (ratings.isEmpty) return null;
     if (user == null) return null;
     for (Rating r in ratings) {

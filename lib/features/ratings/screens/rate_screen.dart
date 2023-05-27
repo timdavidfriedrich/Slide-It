@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +19,9 @@ class RateScreen extends StatefulWidget {
 class _RateScreenState extends State<RateScreen> {
   final TextEditingController _commentController = TextEditingController();
 
-  double _ratingValue = Constants.minRating;
-  final double _minValue = Constants.minRating;
-  final double _maxValue = Constants.maxRating;
+  double _ratingValue = Constants.noRatingValue;
+  final double _minValue = Constants.noRatingValue;
+  final double _maxValue = Constants.maxRatingValue;
 
   void _loadArguments() {
     final RateScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as RateScreenArguments?;
@@ -36,7 +38,8 @@ class _RateScreenState extends State<RateScreen> {
   }
 
   bool _isInputValid() {
-    return _ratingValue >= 0.1;
+    // * value for 0 digits = 0.5, for 1 digit = 0.05, ... (catch double to int convertion)
+    return _ratingValue >= (Constants.minRatingValue - 0.5) / pow(10, Constants.ratingValueDigit);
   }
 
   void _updateSliderValue(double value) {
@@ -44,14 +47,19 @@ class _RateScreenState extends State<RateScreen> {
   }
 
   Color _getValueColor() {
-    const Color greatColor = Color(0xFF20BF6B);
-    const Color mediumColor = Color(0xFFF7B731);
-    const Color badColor = Color(0xFFEB3B5A);
     final Color defaultColor = Theme.of(context).colorScheme.background;
-    if (_ratingValue < 0.5) return Color.lerp(defaultColor, badColor, _ratingValue / 0.5) ?? defaultColor;
-    if (_ratingValue < 5.0) return Color.lerp(badColor, mediumColor, _ratingValue / 5.0) ?? badColor;
-    if (_ratingValue < 10.0) return Color.lerp(mediumColor, greatColor, (_ratingValue - 5.0) / 5.0) ?? mediumColor;
-    return greatColor;
+    switch (_ratingValue) {
+      case < Constants.minRatingValue:
+        return Color.lerp(defaultColor, Constants.badColor, _ratingValue / Constants.minRatingValue) ?? defaultColor;
+      case < 5.0:
+        return Color.lerp(
+                Constants.badColor, Constants.mediumColor, (_ratingValue - Constants.minRatingValue) / (5.0 - Constants.minRatingValue)) ??
+            Constants.badColor;
+      case < 10.0:
+        return Color.lerp(Constants.mediumColor, Constants.greatColor, (_ratingValue - 5.0) / 5.0) ?? Constants.mediumColor;
+      default:
+        return Constants.greatColor;
+    }
   }
 
   void _save() {
@@ -98,7 +106,7 @@ class _RateScreenState extends State<RateScreen> {
                   const AspectRatio(aspectRatio: 3 / 2, child: Placeholder()),
                   const SizedBox(height: Constants.mediumPadding),
                   Text(
-                    "${_ratingValue.toStringAsFixed(1)} 🔥",
+                    "${_ratingValue.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayLarge,
                   ),

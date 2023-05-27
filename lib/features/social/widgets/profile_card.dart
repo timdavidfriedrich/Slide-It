@@ -10,7 +10,7 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User? user = AppUser.user;
+    final User? user = AppUser.currentUser;
 
     void signOut() {
       AuthService.signOut();

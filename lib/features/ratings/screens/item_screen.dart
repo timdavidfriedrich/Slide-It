@@ -54,7 +54,7 @@ class _ItemScreenState extends State<ItemScreen> {
   }
 
   void _editOwnRating({Item? item}) async {
-    User? user = AppUser.user;
+    User? user = AppUser.currentUser;
     if (user == null) return;
     final result = await Navigator.pushNamed(
       context,
@@ -130,7 +130,8 @@ class _ItemScreenState extends State<ItemScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(_item!.averageRating.toStringAsFixed(1), style: Theme.of(context).textTheme.displaySmall),
+                                  Text(_item!.averageRating.toStringAsFixed(Constants.ratingValueDigit),
+                                      style: Theme.of(context).textTheme.displaySmall),
                                   const SizedBox(width: Constants.smallPadding),
                                   const Text("🔥"),
                                 ],
@@ -153,11 +154,11 @@ class _ItemScreenState extends State<ItemScreen> {
                         : Card(
                             child: ListTile(
                               onTap: () => _editOwnRating(item: _item!),
-                              leading: AppUser.avatar,
+                              leading: AppUser.currentAvatar,
                               title: const Text("Ich"),
                               subtitle: Text(_item!.ownRating!.comment ?? "Ohne Kommentar."),
                               trailing: Text(
-                                "${_item!.ownRating!.value.toStringAsFixed(1)} 🔥",
+                                "${_item!.ownRating!.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
                                 style: Theme.of(context).textTheme.labelLarge,
                               ),
                             ),
@@ -168,11 +169,11 @@ class _ItemScreenState extends State<ItemScreen> {
                     for (Rating r in _item!.ratings)
                       ListTile(
                         // TODO: Replace data with rating user. => Implement userList to Provider
-                        leading: AppUser.avatar,
+                        leading: AppUser.currentAvatar,
                         title: Text(r.userId.substring(0, 12)),
                         subtitle: Text(r.comment ?? "Ohne Kommentar."),
                         trailing: Text(
-                          "${r.value.toStringAsFixed(1)} 🔥",
+                          "${r.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),

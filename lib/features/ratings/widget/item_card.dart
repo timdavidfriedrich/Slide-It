@@ -33,7 +33,7 @@ class ItemCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(item.averageRating.toStringAsFixed(1)),
+                    Text(item.averageRating.toStringAsFixed(Constants.ratingValueDigit)),
                     const SizedBox(width: Constants.smallPadding),
                     const Text("🔥"),
                   ],

@@ -25,7 +25,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   void _reload() async {
     await AuthService.reloadUser().whenComplete(() {
-      if (AppUser.user!.emailVerified) {
+      if (AppUser.currentUser!.emailVerified) {
         reloadTimer?.cancel();
         Navigator.pushNamed(context, AppScaffold.routeName);
       }

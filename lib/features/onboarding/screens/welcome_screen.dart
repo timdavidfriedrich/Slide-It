@@ -41,15 +41,17 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(height: 48),
             ElevatedButton(
               onPressed: () => _navigateToSignIn(context),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary)),
               child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => _navigateToSignUp(context),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary)),
               child: Text("Register", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             const SizedBox(height: 16),
-            PlatformTextButton(
+            TextButton(
               onPressed: () => _signInWithGoogle(),
               child: Text("Mit Google anmelden", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
             ),

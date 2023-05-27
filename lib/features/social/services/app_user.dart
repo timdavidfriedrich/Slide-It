@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/global.dart';
 
 class AppUser {
-  static Widget get avatar {
+  static Widget get currentAvatar {
     final User? user = FirebaseAuth.instance.currentUser;
     bool hasAvatar = user != null && user.photoURL != null;
     return CircleAvatar(
@@ -13,8 +13,7 @@ class AppUser {
     );
   }
 
-  static User? get user {
+  static User? get currentUser {
     return FirebaseAuth.instance.currentUser;
   }
-
 }
