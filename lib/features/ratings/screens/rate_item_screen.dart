@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 
@@ -82,57 +83,60 @@ class _RateItemScreenState extends State<RateItemScreen> {
     return FutureBuilder(
       future: _getItem(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return ErrorInfo(message: snapshot.error.toString());
+        }
         if (!snapshot.hasData) {
           return const CircularProgressIndicator.adaptive();
-        } else {
-          Item item = snapshot.data!;
-          return Scaffold(
-            backgroundColor: _getValueColor(),
-            appBar: AppBar(
-              backgroundColor: _getValueColor(),
-              title: ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(item.name, style: Theme.of(context).textTheme.titleMedium),
-                subtitle: Text(
-                  "${item.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item.category).name})",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-            body: SafeArea(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-                children: [
-                  const SizedBox(height: Constants.normalPadding),
-                  const AspectRatio(aspectRatio: 3 / 2, child: Placeholder()),
-                  const SizedBox(height: Constants.mediumPadding),
-                  Text(
-                    "${_ratingValue.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                  Slider(
-                    min: _minValue,
-                    max: _maxValue,
-                    value: _ratingValue,
-                    onChanged: (value) => _updateSliderValue(value),
-                  ),
-                  const SizedBox(height: Constants.smallPadding),
-                  TextField(
-                    controller: _commentController,
-                    maxLines: 3,
-                    decoration: const InputDecoration(labelText: "Begründung (optional)"),
-                  ),
-                  const SizedBox(height: Constants.mediumPadding),
-                  ElevatedButton(
-                    onPressed: _isInputValid() ? () => _save() : null,
-                    child: const Text("Bewerten"),
-                  ),
-                ],
-              ),
-            ),
-          );
         }
+        if (snapshot.data is! Item) return const ErrorInfo();
+        Item item = snapshot.data as Item;
+        return Scaffold(
+          backgroundColor: _getValueColor(),
+          appBar: AppBar(
+            backgroundColor: _getValueColor(),
+            title: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(item.name, style: Theme.of(context).textTheme.titleMedium),
+              subtitle: Text(
+                "${item.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(item.category).name})",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ),
+          body: SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+              children: [
+                const SizedBox(height: Constants.normalPadding),
+                const AspectRatio(aspectRatio: 3 / 2, child: Placeholder()),
+                const SizedBox(height: Constants.mediumPadding),
+                Text(
+                  "${_ratingValue.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+                Slider(
+                  min: _minValue,
+                  max: _maxValue,
+                  value: _ratingValue,
+                  onChanged: (value) => _updateSliderValue(value),
+                ),
+                const SizedBox(height: Constants.smallPadding),
+                TextField(
+                  controller: _commentController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(labelText: "Begründung (optional)"),
+                ),
+                const SizedBox(height: Constants.mediumPadding),
+                ElevatedButton(
+                  onPressed: _isInputValid() ? () => _save() : null,
+                  child: const Text("Bewerten"),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }

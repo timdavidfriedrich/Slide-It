@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/social/services/group_screen_arguments.dart';
 import 'package:rating/features/social/widgets/group_invitation_dialog.dart';
@@ -24,12 +25,13 @@ class GroupScreen extends StatelessWidget {
         future: getGroup(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            // TODO: Add error handling
+            return ErrorInfo(message: snapshot.error.toString());
           }
           if (!snapshot.hasData) {
             return const CircularProgressIndicator.adaptive();
           }
-          Group group = snapshot.data!;
+          if (snapshot.data is! Group) return const ErrorInfo();
+          Group group = snapshot.data as Group;
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(

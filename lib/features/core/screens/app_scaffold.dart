@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
+import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -72,9 +73,10 @@ class _AppScaffoldState extends State<AppScaffold> {
         //   return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
         // }
         if (snapshot.hasError) {
-          return const Scaffold(body: Center(child: Text("Error")));
+          return ErrorInfo(message: snapshot.error.toString());
         }
         if (snapshot.hasData) {
+          if (snapshot.data is! User) return const ErrorInfo();
           bool isEmailVerified = snapshot.data!.isAnonymous || snapshot.data!.emailVerified;
           return !isEmailVerified
               ? const VerifyScreen()
