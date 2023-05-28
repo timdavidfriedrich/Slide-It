@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/config/themes/theme_config.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -53,6 +54,7 @@ class RatingApp extends StatelessWidget {
               JoinGroupScreen.routeName: (context) => const JoinGroupScreen(),
               QrCodeScannerScreen.routeName: (context) => const QrCodeScannerScreen(),
               ChooseGroupScreen.routeName: (context) => const ChooseGroupScreen(),
+              CreateCategoryScreen.routeName: (context) => const CreateCategoryScreen(),
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
               ViewItemScreen.routeName: (context) => const ViewItemScreen(),
               EditItemScreen.routeName: (context) => const EditItemScreen(),
