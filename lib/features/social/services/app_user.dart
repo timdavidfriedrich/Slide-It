@@ -16,4 +16,15 @@ class AppUser {
   static User? get currentUser {
     return FirebaseAuth.instance.currentUser;
   }
+
+  List<String> firebaseMessagingTokens = [];
+  List<String> groupIds = [];
+
+  // AppUser({required this.groupIds});
+
+  AppUser.fromJson(Map<String, dynamic> json) {
+    for (String groupId in json['groups']) {
+      groupIds.add(groupId);
+    }
+  }
 }

@@ -15,6 +15,9 @@ import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/view_item_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
+import 'package:rating/features/social/screens/create_group_screen.dart';
+import 'package:rating/features/social/screens/group_screen.dart';
+import 'package:rating/features/social/screens/join_group_screen.dart';
 import 'package:rating/firebase_options.dart';
 
 void main() async {
@@ -44,6 +47,9 @@ class RatingApp extends StatelessWidget {
             initialRoute: AppScaffold.routeName,
             routes: {
               AppScaffold.routeName: (context) => const AppScaffold(),
+              GroupScreen.routeName: (context) => const GroupScreen(),
+              CreateGroupScreen.routeName: (context) => const CreateGroupScreen(),
+              JoinGroupScreen.routeName: (context) => const JoinGroupScreen(),
               ChooseGroupScreen.routeName: (context) => const ChooseGroupScreen(),
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
               ViewItemScreen.routeName: (context) => const ViewItemScreen(),

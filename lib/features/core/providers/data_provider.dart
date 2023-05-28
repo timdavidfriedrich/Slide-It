@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -12,17 +10,17 @@ import 'package:rating/features/ratings/services/rating.dart';
 /// Note, that this is only temporary data.
 class DataProvider extends ChangeNotifier {
   Group? _selectedGroup;
-  List<Group> groups = [];
-  List<Group> get userGroups {
-    final List<Group> result = [];
-    final User? user = AppUser.currentUser;
-    if (user == null) return result;
-    for (Group g in groups) {
-      if (!g.users.contains(user.uid)) continue;
-      result.add(g);
-    }
-    return result;
-  }
+  List<Group> userGroups = [];
+  // List<Group> get userGroups {
+  //   final List<Group> result = [];
+  //   final User? user = AppUser.currentUser;
+  //   if (user == null) return result;
+  //   for (Group g in groups) {
+  //     if (!g.users.contains(user.uid)) continue;
+  //     result.add(g);
+  //   }
+  //   return result;
+  // }
 
   Group? get selectedGroup => _selectedGroup;
 
@@ -32,40 +30,55 @@ class DataProvider extends ChangeNotifier {
   }
 
   List<Category> getCategoriesFromGroup(Group group) {
-    if (groups.isEmpty) return [];
-    return groups.firstWhere((element) => element.id == group.id).categories;
+    if (userGroups.isEmpty) return [];
+    return userGroups.firstWhere((element) => element.id == group.id).categories;
+  }
+
+  Group getGroupById(String groupId) {
+    if (userGroups.isEmpty) return Group.empty();
+    Log.hint(userGroups);
+    try {
+      return userGroups.firstWhere((element) => element.id == groupId);
+    } catch (e) {
+      return Group.empty();
+    }
   }
 
   Group getGroupFromCategory(Category category) {
-    if (groups.isEmpty) return Group.empty();
-    return groups.firstWhere((element) => element.id == category.groupId);
+    if (userGroups.isEmpty) return Group.empty();
+    return userGroups.firstWhere((element) => element.id == category.groupId);
   }
 
   Future<void> loadData() async {
     CloudService.loadUserData();
-    groups = await CloudService.getUserGroupData();
+    userGroups = await CloudService.getUserGroupData();
     if (userGroups.isEmpty) return;
     _selectedGroup = userGroups.first;
     notifyListeners();
   }
 
   void addGroup(Group group) {
-    groups.add(group);
+    userGroups.add(group);
+    notifyListeners();
+  }
+
+  void addGroupById(String groupId) {
+    userGroups.add(getGroupById(groupId));
     notifyListeners();
   }
 
   void removeGroup(Group group) {
-    groups.remove(group);
+    userGroups.remove(group);
     notifyListeners();
   }
 
   void clearGroups() {
-    groups.clear();
+    userGroups.clear();
     notifyListeners();
   }
 
   void addCategory({required Group group, required Category category}) {
-    groups.firstWhere((element) => element.id == group.id).categories.add(category);
+    userGroups.firstWhere((element) => element.id == group.id).categories.add(category);
     notifyListeners();
   }
 

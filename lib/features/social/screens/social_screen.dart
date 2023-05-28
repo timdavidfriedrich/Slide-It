@@ -6,8 +6,10 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/services/group.dart';
-import 'package:rating/features/social/widgets/create_group_dialog.dart';
+import 'package:rating/features/social/services/group_screen_arguments.dart';
+import 'package:rating/features/social/widgets/add_group_dialog.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
 class SocialScreen extends StatefulWidget implements ScaffoldScreen {
@@ -34,8 +36,12 @@ class SocialScreen extends StatefulWidget implements ScaffoldScreen {
 }
 
 class _SocialScreenState extends State<SocialScreen> {
-  void _createGroup() {
-    showDialog(context: context, builder: (context) => const CreateGroupDialog());
+  void _goToGroupDetails(Group group) {
+    Navigator.pushNamed(context, GroupScreen.routeName, arguments: GroupScreenArguments(group: group));
+  }
+
+  void _addGroup() {
+    showDialog(context: context, builder: (context) => const AddGroupDialog());
   }
 
   @override
@@ -55,13 +61,14 @@ class _SocialScreenState extends State<SocialScreen> {
               // color: group.color,
               margin: const EdgeInsets.only(bottom: Constants.smallPadding),
               child: ListTile(
+                onTap: () => _goToGroupDetails(group),
                 leading: group.avatar,
                 title: Text(group.name),
                 subtitle: Text(group.users.length == 1 ? "1 Mitglied" : "${group.users.length} Mitglieder"),
               ),
             ),
           TextButton.icon(
-            onPressed: () => _createGroup(),
+            onPressed: () => _addGroup(),
             icon: Icon(PlatformIcons(context).add),
             label: const Text("Gruppe hinzufügen"),
           ),

@@ -7,6 +7,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -55,14 +56,21 @@ class CloudService {
   // }
 
   static Future<List<Group>> getUserGroupData() async {
+    // TODO: Refactor getUserGroupData(). This is quite messy.
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
     List<Group> result = [];
-    final QuerySnapshot<Map<String, dynamic>> rawData = await _groupCollection.get();
-    final rawGroups = rawData.docs.map((doc) => doc.data()).toList();
+    List<String> appUserGroupIds = [];
+    DocumentSnapshot rawAppUser = await _userCollection.doc(user.uid).get();
+    AppUser appUser = AppUser.fromJson(rawAppUser.data() as Map<String, dynamic>);
+    for (String groupId in appUser.groupIds) {
+      appUserGroupIds.add(groupId);
+    }
+    final QuerySnapshot<Map<String, dynamic>> rawGroupData = await _groupCollection.get();
+    final rawGroups = rawGroupData.docs.map((doc) => doc.data()).toList();
     for (Map<String, dynamic> rawGroup in rawGroups) {
       Group group = Group.fromJson(rawGroup);
-      if (!group.users.contains(user.uid)) continue;
+      if (!appUserGroupIds.contains(group.id)) continue;
       result.add(group);
     }
     return result;
@@ -80,11 +88,15 @@ class CloudService {
     Provider.of<DataProvider>(Global.context, listen: false).removeGroup(group);
   }
 
-  static Future<void> joinGroup(String id) async {
+  static Future<void> joinGroup(String groupId) async {
     final User? user = FirebaseAuth.instance.currentUser;
     await _userCollection.doc(user!.uid).set({
-      "groups": FieldValue.arrayUnion(List<String>.from([id])),
+      "groups": FieldValue.arrayUnion(List<String>.from([groupId])),
     }, SetOptions(merge: true));
+    await _groupCollection.doc(groupId).set({
+      "users": FieldValue.arrayUnion(List<String>.from([user.uid])),
+    }, SetOptions(merge: true));
+
     // FirebaseMessaging.instance.subscribeToTopic(id);
     // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
