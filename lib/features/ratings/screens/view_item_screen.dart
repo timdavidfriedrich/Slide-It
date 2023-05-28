@@ -26,7 +26,7 @@ class ViewItemScreen extends StatefulWidget {
 class _ViewItemScreenState extends State<ViewItemScreen> {
   Item? _item;
 
-  Future<Item> _loadArguments() async {
+  Future<Item> _loadItem() async {
     ViewItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ViewItemScreenArguments;
     return arguments.item;
   }
@@ -69,7 +69,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _loadArguments(),
+      future: _loadItem(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return ErrorInfo(message: snapshot.error.toString());

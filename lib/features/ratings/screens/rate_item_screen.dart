@@ -33,7 +33,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
     setState(() => _commentController.text = arguments.comment!);
   }
 
-  Future<Item> _getItem() async {
+  Future<Item> _loadItem() async {
     final RateItemScreenArguments arguments = ModalRoute.of(context)?.settings.arguments as RateItemScreenArguments;
     return arguments.item;
   }
@@ -81,7 +81,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getItem(),
+      future: _loadItem(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return ErrorInfo(message: snapshot.error.toString());
