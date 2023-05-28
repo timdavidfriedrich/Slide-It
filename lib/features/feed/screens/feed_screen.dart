@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/core/services/scaffold_screen.dart';
 
-class HomeScreen extends StatefulWidget implements Screen {
+class HomeScreen extends StatefulWidget implements ScaffoldScreen {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override

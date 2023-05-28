@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-abstract class Screen {
+abstract class ScaffoldScreen {
   String get displayName;
   Icon get icon;
   Icon get materialIcon;

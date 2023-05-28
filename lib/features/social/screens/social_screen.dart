@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/social/widgets/create_group_dialog.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
-class SocialScreen extends StatefulWidget implements Screen {
+class SocialScreen extends StatefulWidget implements ScaffoldScreen {
   const SocialScreen({super.key});
 
   @override

@@ -1,13 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/ratings/services/edit_item_screen_arguments.dart';
@@ -17,25 +14,9 @@ import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
-class ViewItemScreen extends StatefulWidget implements Screen {
+class ViewItemScreen extends StatefulWidget {
   static const String routeName = "/Item";
   const ViewItemScreen({super.key});
-
-  @override
-  String get displayName => "Item";
-
-  @override
-  Icon get icon {
-    bool isIos = Theme.of(Global.context).platform == TargetPlatform.iOS;
-    bool isMacOs = Theme.of(Global.context).platform == TargetPlatform.macOS;
-    return isIos || isMacOs ? cupertinoIcon : materialIcon;
-  }
-
-  @override
-  Icon get materialIcon => const Icon(Icons.folder);
-
-  @override
-  Icon get cupertinoIcon => const Icon(CupertinoIcons.folder);
 
   @override
   State<ViewItemScreen> createState() => _ViewItemScreenState();
@@ -98,7 +79,6 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
             return SafeArea(
               child: Scaffold(
                 appBar: AppBar(
-                  titleSpacing: 0,
                   title: ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(_item!.name, style: Theme.of(context).textTheme.titleMedium),

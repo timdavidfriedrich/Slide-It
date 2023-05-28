@@ -12,13 +12,13 @@ import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/ratings/services/edit_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
-class EditItemScreen extends StatefulWidget implements Screen {
+class EditItemScreen extends StatefulWidget implements ScaffoldScreen {
   static const routeName = "/Add";
   const EditItemScreen({super.key});
 
@@ -132,7 +132,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_itemToEdit == null ? widget.displayName : "Bearbeiten"),
-        titleSpacing: 0,
       ),
       body: SafeArea(
         child: ListView(

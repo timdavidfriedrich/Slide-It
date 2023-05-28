@@ -8,11 +8,11 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/ratings/widget/create_category_dialog.dart';
-import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/ratings/widget/item_card.dart';
 import 'package:rating/features/social/services/group.dart';
 
-class RatingsScreen extends StatefulWidget implements Screen {
+class RatingsScreen extends StatefulWidget implements ScaffoldScreen {
   const RatingsScreen({Key? key}) : super(key: key);
 
   @override
