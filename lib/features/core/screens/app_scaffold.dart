@@ -69,7 +69,7 @@ class _AppScaffoldState extends State<AppScaffold> {
       builder: (context, snapshot) {
         // TODO: Find a solution (interupts the regular scaffold).
         // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        //   return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
         // }
         if (snapshot.hasError) {
           return const Scaffold(body: Center(child: Text("Error")));
