@@ -3,7 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
-import 'package:rating/features/ratings/screens/categories_screen.dart';
+import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
@@ -24,7 +24,7 @@ class ChooseCategoryScreen extends StatelessWidget {
 
     void addCategory() {
       Navigator.pushNamedAndRemoveUntil(context, AppScaffold.routeName, (route) => false,
-          arguments: const AppScaffoldArguments(selectedScreen: CategoriesScreen()));
+          arguments: const AppScaffoldArguments(selectedScreen: RatingsScreen()));
     }
 
     void cancel() {

@@ -5,7 +5,7 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
-import 'package:rating/features/social/screens/profile_screen.dart';
+import 'package:rating/features/social/screens/social_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 
 class ChooseGroupScreen extends StatelessWidget {
@@ -24,7 +24,7 @@ class ChooseGroupScreen extends StatelessWidget {
 
     void addGroup() {
       Navigator.pushNamedAndRemoveUntil(context, AppScaffold.routeName, (route) => false,
-          arguments: const AppScaffoldArguments(selectedScreen: ProfileScreen()));
+          arguments: const AppScaffoldArguments(selectedScreen: SocialScreen()));
     }
 
     void cancel() {

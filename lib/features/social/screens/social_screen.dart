@@ -10,11 +10,11 @@ import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/social/widgets/create_group_dialog.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
-class ProfileScreen extends StatefulWidget implements Screen {
-  const ProfileScreen({super.key});
+class SocialScreen extends StatefulWidget implements Screen {
+  const SocialScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<SocialScreen> createState() => _SocialScreenState();
 
   @override
   String get displayName => "Soziales";
@@ -33,7 +33,7 @@ class ProfileScreen extends StatefulWidget implements Screen {
   Icon get cupertinoIcon => const Icon(CupertinoIcons.group);
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _SocialScreenState extends State<SocialScreen> {
   void _createGroup() {
     showDialog(context: context, builder: (context) => const CreateGroupDialog());
   }

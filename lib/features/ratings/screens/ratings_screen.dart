@@ -12,11 +12,11 @@ import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/ratings/widget/item_card.dart';
 import 'package:rating/features/social/services/group.dart';
 
-class CategoriesScreen extends StatefulWidget implements Screen {
-  const CategoriesScreen({Key? key}) : super(key: key);
+class RatingsScreen extends StatefulWidget implements Screen {
+  const RatingsScreen({Key? key}) : super(key: key);
 
   @override
-  State<CategoriesScreen> createState() => _CategoriesScreenState();
+  State<RatingsScreen> createState() => _RatingsScreenState();
 
   @override
   String get displayName => "Bewertungen";
@@ -35,7 +35,7 @@ class CategoriesScreen extends StatefulWidget implements Screen {
   Icon get cupertinoIcon => const Icon(CupertinoIcons.list_bullet);
 }
 
-class _CategoriesScreenState extends State<CategoriesScreen> {
+class _RatingsScreenState extends State<RatingsScreen> {
   Group? currentGroup;
 
   void _navigateToGroupSelection() {

@@ -8,22 +8,22 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
-import 'package:rating/features/ratings/screens/rate_screen.dart';
-import 'package:rating/features/ratings/services/add_screen_arguments.dart';
+import 'package:rating/features/ratings/screens/rate_item_screen.dart';
+import 'package:rating/features/ratings/services/edit_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
+import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
-class AddScreen extends StatefulWidget implements Screen {
+class EditItemScreen extends StatefulWidget implements Screen {
   static const routeName = "/Add";
-  const AddScreen({super.key});
+  const EditItemScreen({super.key});
 
   @override
-  State<AddScreen> createState() => _AddScreenState();
+  State<EditItemScreen> createState() => _EditItemScreenState();
 
   @override
   String get displayName => "Hinzufügen";
@@ -42,7 +42,7 @@ class AddScreen extends StatefulWidget implements Screen {
   Icon get cupertinoIcon => const Icon(CupertinoIcons.add, size: 20);
 }
 
-class _AddScreenState extends State<AddScreen> {
+class _EditItemScreenState extends State<EditItemScreen> {
   final TextEditingController _nameController = TextEditingController();
   Category? _category;
   Item? _itemToEdit;
@@ -60,7 +60,7 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   void _loadArguments() {
-    AddScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as AddScreenArguments?;
+    EditItemScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as EditItemScreenArguments?;
     if (arguments == null) return;
     Item? itemToEdit = arguments.itemToEdit;
     if (itemToEdit == null) return;
@@ -83,8 +83,8 @@ class _AddScreenState extends State<AddScreen> {
   void _addRating() async {
     final result = await Navigator.pushNamed(
       context,
-      RateScreen.routeName,
-      arguments: RateScreenArguments(
+      RateItemScreen.routeName,
+      arguments: RateItemScreenArguments(
         item: Item(categoryId: _category?.id ?? "", name: _nameController.text),
         ratingValue: _ratingValue,
         comment: _comment,

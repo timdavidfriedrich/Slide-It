@@ -8,18 +8,18 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/core/services/screen.dart';
-import 'package:rating/features/ratings/screens/add_screen.dart';
-import 'package:rating/features/ratings/screens/rate_screen.dart';
-import 'package:rating/features/ratings/services/add_screen_arguments.dart';
+import 'package:rating/features/ratings/screens/edit_item_screen.dart';
+import 'package:rating/features/ratings/screens/rate_item_screen.dart';
+import 'package:rating/features/ratings/services/edit_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/item_screen_arguments.dart';
-import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
+import 'package:rating/features/ratings/services/view_item_screen_arguments.dart';
+import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
-class ItemScreen extends StatefulWidget implements Screen {
+class ViewItemScreen extends StatefulWidget implements Screen {
   static const String routeName = "/Item";
-  const ItemScreen({super.key});
+  const ViewItemScreen({super.key});
 
   @override
   String get displayName => "Item";
@@ -38,19 +38,19 @@ class ItemScreen extends StatefulWidget implements Screen {
   Icon get cupertinoIcon => const Icon(CupertinoIcons.folder);
 
   @override
-  State<ItemScreen> createState() => _ItemScreenState();
+  State<ViewItemScreen> createState() => _ViewItemScreenState();
 }
 
-class _ItemScreenState extends State<ItemScreen> {
+class _ViewItemScreenState extends State<ViewItemScreen> {
   Item? _item;
 
   Future<Item> _loadArguments() async {
-    ItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ItemScreenArguments;
+    ViewItemScreenArguments arguments = ModalRoute.of(context)!.settings.arguments as ViewItemScreenArguments;
     return arguments.item;
   }
 
   void _edit() {
-    Navigator.pushNamed(context, AddScreen.routeName, arguments: AddScreenArguments(itemToEdit: _item));
+    Navigator.pushNamed(context, EditItemScreen.routeName, arguments: EditItemScreenArguments(itemToEdit: _item));
   }
 
   void _editOwnRating({Item? item}) async {
@@ -58,10 +58,10 @@ class _ItemScreenState extends State<ItemScreen> {
     if (user == null) return;
     final result = await Navigator.pushNamed(
       context,
-      RateScreen.routeName,
+      RateItemScreen.routeName,
       arguments: item == null
           ? null
-          : RateScreenArguments(
+          : RateItemScreenArguments(
               item: item,
               ratingValue: item.ownRating?.value,
               comment: item.ownRating?.comment,

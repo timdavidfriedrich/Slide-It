@@ -6,17 +6,17 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/rate_screen_arguments.dart';
+import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 
-class RateScreen extends StatefulWidget {
+class RateItemScreen extends StatefulWidget {
   static const routeName = "/Rate";
-  const RateScreen({super.key});
+  const RateItemScreen({super.key});
 
   @override
-  State<RateScreen> createState() => _RateScreenState();
+  State<RateItemScreen> createState() => _RateItemScreenState();
 }
 
-class _RateScreenState extends State<RateScreen> {
+class _RateItemScreenState extends State<RateItemScreen> {
   final TextEditingController _commentController = TextEditingController();
 
   double _ratingValue = Constants.noRatingValue;
@@ -24,7 +24,7 @@ class _RateScreenState extends State<RateScreen> {
   final double _maxValue = Constants.maxRatingValue;
 
   void _loadArguments() {
-    final RateScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as RateScreenArguments?;
+    final RateItemScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as RateItemScreenArguments?;
     if (arguments == null) return;
     if (arguments.ratingValue == null) return;
     setState(() => _ratingValue = arguments.ratingValue!);
@@ -33,7 +33,7 @@ class _RateScreenState extends State<RateScreen> {
   }
 
   Future<Item> _getItem() async {
-    final RateScreenArguments arguments = ModalRoute.of(context)?.settings.arguments as RateScreenArguments;
+    final RateItemScreenArguments arguments = ModalRoute.of(context)?.settings.arguments as RateItemScreenArguments;
     return arguments.item;
   }
 

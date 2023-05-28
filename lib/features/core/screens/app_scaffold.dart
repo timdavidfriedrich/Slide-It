@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
-import 'package:rating/features/ratings/screens/add_screen.dart';
-import 'package:rating/features/ratings/screens/categories_screen.dart';
+import 'package:rating/features/ratings/screens/edit_item_screen.dart';
+import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/settings/screens/settings_screen.dart';
-import 'package:rating/features/social/screens/profile_screen.dart';
+import 'package:rating/features/social/screens/social_screen.dart';
 
 class AppScaffold extends StatefulWidget {
   static const routeName = "/";
@@ -25,8 +25,8 @@ class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
   final List<Screen> _screens = const [
     // HomeScreen(),
-    CategoriesScreen(),
-    ProfileScreen(),
+    RatingsScreen(),
+    SocialScreen(),
     SettingsScreen(),
   ];
 
@@ -46,7 +46,7 @@ class _AppScaffoldState extends State<AppScaffold> {
   }
 
   void _navigateToAdd() {
-    Navigator.pushNamed(context, AddScreen.routeName);
+    Navigator.pushNamed(context, EditItemScreen.routeName);
   }
 
   Future<void> initData() async {
@@ -87,7 +87,7 @@ class _AppScaffoldState extends State<AppScaffold> {
                           FilledButton(
                             onPressed: () => _navigateToAdd(),
                             child: Row(
-                              children: [const AddScreen().icon, const Text("Objekt")],
+                              children: [const EditItemScreen().icon, const Text("Objekt")],
                             ),
                           ),
                         const SizedBox(width: 32),
@@ -117,8 +117,9 @@ class _AppScaffoldState extends State<AppScaffold> {
                               );
                             }),
                           ),
-                    floatingActionButton:
-                        _platformIsApple() ? null : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const AddScreen().icon),
+                    floatingActionButton: _platformIsApple()
+                        ? null
+                        : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const EditItemScreen().icon),
                   ),
                 );
         }

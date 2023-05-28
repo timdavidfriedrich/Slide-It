@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/config/themes/theme_config.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/ratings/screens/add_screen.dart';
+import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
@@ -13,8 +13,8 @@ import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
-import 'package:rating/features/ratings/screens/item_screen.dart';
-import 'package:rating/features/ratings/screens/rate_screen.dart';
+import 'package:rating/features/ratings/screens/view_item_screen.dart';
+import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/firebase_options.dart';
 
 void main() async {
@@ -46,9 +46,9 @@ class RatingApp extends StatelessWidget {
               AppScaffold.routeName: (context) => const AppScaffold(),
               ChooseGroupScreen.routeName: (context) => const ChooseGroupScreen(),
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
-              ItemScreen.routeName: (context) => const ItemScreen(),
-              AddScreen.routeName: (context) => const AddScreen(),
-              RateScreen.routeName: (context) => const RateScreen(),
+              ViewItemScreen.routeName: (context) => const ViewItemScreen(),
+              EditItemScreen.routeName: (context) => const EditItemScreen(),
+              RateItemScreen.routeName: (context) => const RateItemScreen(),
               WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               SignScreen.routeName: (context) => const SignScreen(),
               ForgotPasswordScreen.routeName: (context) => const ForgotPasswordScreen(),
