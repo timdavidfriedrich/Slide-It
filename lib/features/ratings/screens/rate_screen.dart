@@ -49,6 +49,8 @@ class _RateScreenState extends State<RateScreen> {
   Color _getValueColor() {
     final Color defaultColor = Theme.of(context).colorScheme.background;
     switch (_ratingValue) {
+      // * Ignore statement is bugfix for dart analyzer (Dart 3.0.2)
+      // ignore: non_constant_relational_pattern_expression
       case < Constants.minRatingValue:
         return Color.lerp(defaultColor, Constants.badColor, _ratingValue / Constants.minRatingValue) ?? defaultColor;
       case < 5.0:
