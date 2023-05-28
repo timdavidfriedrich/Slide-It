@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/social/services/group.dart';
 
@@ -18,10 +19,25 @@ class GroupInvitationDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: Constants.normalPadding),
-          const AspectRatio(aspectRatio: 1 / 1, child: Placeholder()),
-          const SizedBox(height: Constants.normalPadding),
-          Text("ID: ${group.id}"),
+          const SizedBox(height: Constants.smallPadding),
+          Flexible(
+            child: AspectRatio(
+              aspectRatio: 1 / 1,
+              child: QrImageView(
+                data: group.id,
+                eyeStyle: QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                dataModuleStyle: QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: Constants.smallPadding),
+          SelectableText(group.id),
         ],
       ),
       actions: [

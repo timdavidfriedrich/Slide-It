@@ -18,6 +18,7 @@ import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/social/screens/create_group_screen.dart';
 import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/screens/join_group_screen.dart';
+import 'package:rating/features/social/screens/qr_code_scanner_screen.dart';
 import 'package:rating/firebase_options.dart';
 
 void main() async {
@@ -50,6 +51,7 @@ class RatingApp extends StatelessWidget {
               GroupScreen.routeName: (context) => const GroupScreen(),
               CreateGroupScreen.routeName: (context) => const CreateGroupScreen(),
               JoinGroupScreen.routeName: (context) => const JoinGroupScreen(),
+              QrCodeScannerScreen.routeName: (context) => const QrCodeScannerScreen(),
               ChooseGroupScreen.routeName: (context) => const ChooseGroupScreen(),
               ChooseCategoryScreen.routeName: (context) => const ChooseCategoryScreen(),
               ViewItemScreen.routeName: (context) => const ViewItemScreen(),
