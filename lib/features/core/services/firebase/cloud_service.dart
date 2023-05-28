@@ -85,7 +85,7 @@ class CloudService {
     await _userCollection.doc(user!.uid).set({
       "groups": FieldValue.arrayUnion(List<String>.from([id])),
     }, SetOptions(merge: true));
-    FirebaseMessaging.instance.subscribeToTopic(id);
+    // FirebaseMessaging.instance.subscribeToTopic(id);
     // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
   }
