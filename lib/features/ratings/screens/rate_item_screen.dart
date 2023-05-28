@@ -90,7 +90,6 @@ class _RateItemScreenState extends State<RateItemScreen> {
             backgroundColor: _getValueColor(),
             appBar: AppBar(
               backgroundColor: _getValueColor(),
-              titleSpacing: 0,
               title: ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(item.name, style: Theme.of(context).textTheme.titleMedium),
