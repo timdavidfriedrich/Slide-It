@@ -18,6 +18,7 @@ class ItemCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () => showItemRatings(),
+        borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
         child: Padding(
           padding: const EdgeInsets.all(Constants.normalPadding),
           child: SizedBox(

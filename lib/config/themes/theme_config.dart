@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rating/constants/constants.dart';
 
 class ThemeConfig {
   static const ColorScheme _defaultLightColorScheme = ColorScheme(
@@ -49,16 +50,25 @@ class ThemeConfig {
       //   color: colorScheme.surface,
       //   margin: EdgeInsets.zero,
       // ),
+      listTileTheme: ListTileThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+        ),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colorScheme.surface,
-        border: const OutlineInputBorder(),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(Constants.defaultBorderRadius)),
         alignLabelWithHint: true,
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(16, 0, 16, 0)),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+            ),
+          ),
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
               return colorScheme.primary.withOpacity(0.1);
@@ -74,7 +84,11 @@ class ThemeConfig {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(32, 16, 32, 16)),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+            ),
+          ),
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
               return colorScheme.primary.withOpacity(0.1);

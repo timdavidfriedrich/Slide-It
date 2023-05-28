@@ -10,6 +10,8 @@ class Constants {
   static const double maxRatingValue = 10.0;
   static const int ratingValueDigit = 1;
 
+  static const double defaultBorderRadius = 8.0;
+
   static const double largePadding = 48;
   static const double mediumPadding = 32;
   static const double normalPadding = 16;
