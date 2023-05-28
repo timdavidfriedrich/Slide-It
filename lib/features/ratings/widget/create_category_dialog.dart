@@ -27,19 +27,14 @@ class CreateCategoryDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PlatformTextField(
-            controller: nameController,
-            material: (context, platform) {
-              return MaterialTextFieldData(
-                decoration: const InputDecoration(
-                  labelText: "Name der Kategorie",
-                  border: OutlineInputBorder(),
-                ),
-              );
-            },
-            cupertino: (context, platform) {
-              return CupertinoTextFieldData(placeholder: "Name der Kategorie");
-            },
+          const SizedBox(height: Constants.normalPadding),
+          Material(
+            child: TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: "Name der Kategorie",
+              ),
+            ),
           ),
           const SizedBox(height: Constants.normalPadding),
           Text("Gruppe: ${group.name}"),
