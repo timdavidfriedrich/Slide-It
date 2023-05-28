@@ -40,7 +40,7 @@ class ThemeConfig {
       colorScheme: colorScheme,
       appBarTheme: AppBarTheme(
         color: colorScheme.background,
-        titleSpacing: 32,
+        titleSpacing: 0,
         centerTitle: false,
       ),
       scaffoldBackgroundColor: colorScheme.background,

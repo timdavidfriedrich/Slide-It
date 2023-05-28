@@ -7,7 +7,7 @@ import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/screen.dart';
+import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/settings/screens/settings_screen.dart';
@@ -23,7 +23,7 @@ class AppScaffold extends StatefulWidget {
 
 class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
-  final List<Screen> _screens = const [
+  final List<ScaffoldScreen> _screens = const [
     // HomeScreen(),
     RatingsScreen(),
     SocialScreen(),
@@ -82,6 +82,7 @@ class _AppScaffoldState extends State<AppScaffold> {
                   child: Scaffold(
                     appBar: AppBar(
                       title: Text(_screens[_selectedIndex].displayName),
+                      titleSpacing: 32,
                       actions: [
                         if (_platformIsApple())
                           FilledButton(
