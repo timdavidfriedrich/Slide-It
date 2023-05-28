@@ -24,7 +24,7 @@ class ProfileCard extends StatelessWidget {
       ),
       title: Text(user?.displayName ?? "Unbenannt"),
       subtitle: Text(user?.email ?? "Nicht angemeldet."),
-      trailing: PlatformIconButton(
+      trailing: IconButton(
         onPressed: () => signOut(),
         icon: Icon(PlatformIcons(context).forward),
       ),

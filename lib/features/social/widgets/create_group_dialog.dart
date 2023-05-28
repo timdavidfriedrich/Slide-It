@@ -21,19 +21,11 @@ class CreateGroupDialog extends StatelessWidget {
 
     return PlatformAlertDialog(
       title: const Text("Gruppe erstellen"),
-      content: PlatformTextField(
+      content: TextField(
         controller: nameController,
-        material: (context, platform) {
-          return MaterialTextFieldData(
-            decoration: const InputDecoration(
-              labelText: "Name der Gruppe",
-              border: OutlineInputBorder(),
-            ),
-          );
-        },
-        cupertino: (context, platform) {
-          return CupertinoTextFieldData(placeholder: "Name der Gruppe");
-        },
+        decoration: const InputDecoration(
+          labelText: "Name der Gruppe",
+        ),
       ),
       material: (context, platform) {
         return MaterialAlertDialogData(
