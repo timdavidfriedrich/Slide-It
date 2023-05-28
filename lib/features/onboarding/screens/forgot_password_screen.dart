@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
@@ -69,18 +68,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(height: 16),
                   const Text("Enter your email address to receive a link to reset your password."),
                   const SizedBox(height: 16),
-                  PlatformTextField(
-                    material: (context, platform) {
-                      return MaterialTextFieldData(
-                        decoration: const InputDecoration(
-                          label: Text("Email"),
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        ),
-                      );
-                    },
-                    cupertino: (context, platform) {
-                      return CupertinoTextFieldData(placeholder: "Email");
-                    },
+                  TextField(
+                    decoration: const InputDecoration(
+                      label: Text("Email"),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    ),
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
                     controller: _emailController,

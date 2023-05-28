@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PasswordResetFailedDialog extends StatelessWidget {
   final FirebaseAuthException error;
@@ -27,11 +28,11 @@ class PasswordResetFailedDialog extends StatelessWidget {
       }
     }
 
-    return AlertDialog(
+    return PlatformAlertDialog(
       title: const Text('Password reset failed'),
       content: Text(errorMessage()),
       actions: [
-        ElevatedButton(
+        PlatformDialogAction(
           onPressed: () => okay(),
           child: const Text('Okay'),
         ),

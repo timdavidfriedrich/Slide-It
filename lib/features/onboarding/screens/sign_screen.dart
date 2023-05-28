@@ -28,6 +28,13 @@ class _SignScreenState extends State<SignScreen> {
   bool _isEmailValid = false;
   bool _isPasswordObscured = true;
 
+  void _loadArguments() {
+    setState(() {
+      arguments = (ModalRoute.of(context)!.settings.arguments as SignArguments);
+      signType = arguments.signType;
+    });
+  }
+
   void _signIn() {
     AuthService.signInWithEmailAndPassword(_email, _password);
   }
@@ -38,7 +45,6 @@ class _SignScreenState extends State<SignScreen> {
       return;
     }
     AuthService.createUserWithEmailAndPassword(_email, _password);
-    Navigator.pop(context);
   }
 
   void _updateEmail(String email) {
@@ -69,10 +75,7 @@ class _SignScreenState extends State<SignScreen> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        arguments = (ModalRoute.of(context)!.settings.arguments as SignArguments);
-        signType = arguments.signType;
-      });
+      _loadArguments();
     });
   }
 
@@ -104,18 +107,11 @@ class _SignScreenState extends State<SignScreen> {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(height: 48),
-                PlatformTextField(
-                  material: (context, platform) {
-                    return MaterialTextFieldData(
-                      decoration: const InputDecoration(
-                        label: Text("Email"),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      ),
-                    );
-                  },
-                  cupertino: (context, platform) {
-                    return CupertinoTextFieldData(placeholder: "Email");
-                  },
+                TextField(
+                  decoration: const InputDecoration(
+                    label: Text("Email"),
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  ),
                   textInputAction: TextInputAction.next,
                   onChanged: (text) {
                     _updateEmail(text);
@@ -123,50 +119,29 @@ class _SignScreenState extends State<SignScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                PlatformTextField(
+                TextField(
                   textInputAction: signType == SignType.signIn ? TextInputAction.done : TextInputAction.next,
                   obscureText: _isPasswordObscured,
                   onChanged: (text) => _updatePassword(text),
-                  material: (context, platform) {
-                    return MaterialTextFieldData(
-                        decoration: InputDecoration(
-                      label: const Text("Password"),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      suffixIcon: _password.isEmpty
-                          ? null
-                          : PlatformIconButton(
-                              onPressed: () => _changePasswordVisibility(),
-                              icon: Icon(_isPasswordObscured ? Icons.visibility_rounded : Icons.visibility_off_rounded),
-                            ),
-                    ));
-                  },
-                  cupertino: (context, platform) {
-                    return CupertinoTextFieldData(
-                      placeholder: "Password",
-                      suffix: _password.isEmpty
-                          ? null
-                          : PlatformIconButton(
-                              onPressed: () => _changePasswordVisibility(),
-                              icon: Icon(_isPasswordObscured ? Icons.visibility_rounded : Icons.visibility_off_rounded),
-                            ),
-                    );
-                  },
+                  decoration: InputDecoration(
+                    label: const Text("Password"),
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    suffixIcon: _password.isEmpty
+                        ? null
+                        : IconButton(
+                            onPressed: () => _changePasswordVisibility(),
+                            icon: Icon(_isPasswordObscured ? PlatformIcons(context).eyeSolid : PlatformIcons(context).eyeSlashSolid),
+                          ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 signType == SignType.signIn
                     ? Container()
-                    : PlatformTextField(
-                        material: (context, platform) {
-                          return MaterialTextFieldData(
-                            decoration: const InputDecoration(
-                              label: Text("Repeat Password"),
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                            ),
-                          );
-                        },
-                        cupertino: (context, platform) {
-                          return CupertinoTextFieldData(placeholder: "Repeat Password");
-                        },
+                    : TextField(
+                        decoration: const InputDecoration(
+                          label: Text("Repeat Password"),
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        ),
                         obscureText: true,
                         onChanged: (text) => _updateRepeatedPassword(text),
                       ),
@@ -182,7 +157,7 @@ class _SignScreenState extends State<SignScreen> {
                       ),
                 const SizedBox(height: 8),
                 signType == SignType.signIn
-                    ? PlatformTextButton(
+                    ? TextButton(
                         onPressed: () => _navigateToForgotPasswordScreen(),
                         child: Text(
                           "Forgot password?",

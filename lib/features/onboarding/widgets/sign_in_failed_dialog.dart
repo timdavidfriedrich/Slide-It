@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class SignInFailedDialog extends StatelessWidget {
   final FirebaseAuthException error;
@@ -25,11 +26,11 @@ class SignInFailedDialog extends StatelessWidget {
       }
     }
 
-    return AlertDialog(
+    return PlatformAlertDialog(
       title: const Text("Sign in failed"),
       content: Text(errorMessage()),
       actions: [
-        ElevatedButton(
+        PlatformDialogAction(
           onPressed: () => okay(),
           child: const Text("Okay"),
         ),

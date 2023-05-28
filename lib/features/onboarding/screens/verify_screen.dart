@@ -27,7 +27,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     await AuthService.reloadUser().whenComplete(() {
       if (AppUser.currentUser!.emailVerified) {
         reloadTimer?.cancel();
-        Navigator.pushNamed(context, AppScaffold.routeName);
+        Navigator.pushReplacementNamed(context, AppScaffold.routeName);
       }
     });
   }
@@ -76,7 +76,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             children: [
               Text("Verify your email", style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 16),
-              const Text("We sent you an email with a link. Please, click on it to verify your email address."),
+              Text("We sent you an email with a link to ${AppUser.currentUser?.email}. Please, click on it to verify your email address."),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _sendButtonBlocked ? null : () => _sendVerificationEmail(),

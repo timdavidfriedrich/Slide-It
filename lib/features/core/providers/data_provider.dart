@@ -42,6 +42,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> loadData() async {
+    CloudService.loadUserData();
     groups = await CloudService.getUserGroupData();
     if (userGroups.isEmpty) return;
     _selectedGroup = userGroups.first;

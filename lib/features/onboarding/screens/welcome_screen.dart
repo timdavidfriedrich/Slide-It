@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 // import 'package:rating/constants/asset_path.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
