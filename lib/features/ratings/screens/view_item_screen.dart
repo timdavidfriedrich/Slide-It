@@ -148,17 +148,19 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                 const SizedBox(height: Constants.mediumPadding),
                 Text("${_item!.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: Constants.smallPadding),
+                if (_item!.ratings.length == 0 + (_item!.ownRating != null ? 1 : 0)) const Text("Noch keine Bewertungen."),
                 for (Rating r in _item!.ratings)
-                  ListTile(
-                    // TODO: Replace data with rating user. => Implement userList to Provider
-                    leading: AppUser.currentAvatar,
-                    title: Text(r.userId.substring(0, 12)),
-                    subtitle: Text(r.comment ?? "Ohne Kommentar."),
-                    trailing: Text(
-                      "${r.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
-                      style: Theme.of(context).textTheme.labelLarge,
+                  if (r.userId != AppUser.currentUser?.uid)
+                    ListTile(
+                      // TODO: Replace data with rating user. => Implement userList to Provider
+                      leading: AppUser.currentAvatar,
+                      title: Text(r.userId.substring(0, 12)),
+                      subtitle: Text(r.comment ?? "Ohne Kommentar."),
+                      trailing: Text(
+                        "${r.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
                     ),
-                  ),
                 const SizedBox(height: Constants.largePadding),
               ],
             ),
