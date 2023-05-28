@@ -62,6 +62,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         children: [
           const SizedBox(height: Constants.normalPadding),
           Card(
+            margin: EdgeInsets.zero,
             child: ListTile(
               leading: currentGroup?.avatar,
               title: Text(currentGroup?.name ?? "Keine Gruppe ausgewählt"),
