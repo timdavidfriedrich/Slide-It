@@ -87,7 +87,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
           return ErrorInfo(message: snapshot.error.toString());
         }
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator.adaptive();
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
         if (snapshot.data is! Item) return const ErrorInfo();
         Item item = snapshot.data as Item;

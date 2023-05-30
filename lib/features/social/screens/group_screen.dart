@@ -28,7 +28,7 @@ class GroupScreen extends StatelessWidget {
             return ErrorInfo(message: snapshot.error.toString());
           }
           if (!snapshot.hasData) {
-            return const CircularProgressIndicator.adaptive();
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshot.data is! Group) return const ErrorInfo();
           Group group = snapshot.data as Group;

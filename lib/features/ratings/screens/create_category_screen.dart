@@ -52,7 +52,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
             return ErrorInfo(message: snapshot.error.toString());
           }
           if (!snapshot.hasData) {
-            return const CircularProgressIndicator.adaptive();
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshot.data is! Group) return const ErrorInfo();
           Group group = Provider.of<DataProvider>(context).selectedGroup ?? snapshot.data as Group;
