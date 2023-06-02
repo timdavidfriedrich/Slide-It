@@ -39,6 +39,7 @@ class ThemeConfig {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      hintColor: colorScheme.onSurface.withOpacity(0.5),
       appBarTheme: AppBarTheme(
         color: colorScheme.background,
         titleSpacing: 0,
@@ -113,6 +114,9 @@ class ThemeConfig {
       ),
       textTheme: GoogleFonts.poppinsTextTheme(
         TextTheme(
+          bodySmall: TextStyle(
+            color: colorScheme.onSurface.withOpacity(0.5),
+          ),
           titleLarge: TextStyle(
             fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! * 1.25,
             fontWeight: FontWeight.w600,
