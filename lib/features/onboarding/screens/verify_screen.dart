@@ -24,7 +24,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   void _reload() async {
-    await AuthService.reloadUser().whenComplete(() {
+    await AuthService.instance.reloadUser().whenComplete(() {
       if (AppUser.currentUser!.emailVerified) {
         reloadTimer?.cancel();
         Navigator.pushReplacementNamed(context, AppScaffold.routeName);
@@ -38,7 +38,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   Future<void> _sendVerificationEmail() async {
-    AuthService.sendVerificationEmail();
+    AuthService.instance.sendVerificationEmail();
     setState(() => _sendButtonBlocked = true);
     _blockTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _secondsLeft -= 1);

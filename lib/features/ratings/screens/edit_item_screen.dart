@@ -112,9 +112,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
     );
     if (_itemToEdit == null) {
       item.ratings.add(rating);
-      CloudService.addItem(category: _category!, item: item);
+      CloudService.instance.addItem(category: _category!, item: item);
     } else {
-      CloudService.editItem(item: item);
+      CloudService.instance.editItem(item: item);
     }
     Navigator.pop(context);
   }

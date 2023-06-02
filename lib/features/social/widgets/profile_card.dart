@@ -13,7 +13,7 @@ class ProfileCard extends StatelessWidget {
     final User? user = AppUser.currentUser;
 
     void signOut() {
-      AuthService.signOut();
+      AuthService.instance.signOut();
     }
 
     return ListTile(

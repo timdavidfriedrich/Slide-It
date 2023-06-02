@@ -35,7 +35,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 
   void _createCategoryInGroup(Group group) {
     if (_nameController.text.isEmpty) return;
-    CloudService.createCategory(name: _nameController.text, group: group);
+    CloudService.instance.createCategory(name: _nameController.text, group: group);
     Navigator.pop(context);
   }
 

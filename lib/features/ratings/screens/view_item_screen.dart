@@ -59,9 +59,9 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
     );
     if (item == null) {
       // item!.ratings.add(rating);
-      CloudService.addRating(category: _item!.category, rating: rating);
+      CloudService.instance.addRating(category: _item!.category, rating: rating);
     } else {
-      CloudService.editRating(rating: rating);
+      CloudService.instance.editRating(rating: rating);
     }
     setState(() {});
   }

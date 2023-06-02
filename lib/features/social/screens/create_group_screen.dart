@@ -20,7 +20,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   void _createGroup() {
     if (_nameController.text.isEmpty) return;
-    CloudService.createGroup(_nameController.text);
+    CloudService.instance.createGroup(_nameController.text);
     Navigator.pop(context);
   }
 

@@ -36,7 +36,7 @@ class _SignScreenState extends State<SignScreen> {
   }
 
   void _signIn() {
-    AuthService.signInWithEmailAndPassword(_email, _password);
+    AuthService.instance.signInWithEmailAndPassword(_email, _password);
   }
 
   void _signUp() {
@@ -44,7 +44,8 @@ class _SignScreenState extends State<SignScreen> {
       showDialog(context: context, builder: (context) => const PasswordsDontMatchDialog());
       return;
     }
-    AuthService.createUserWithEmailAndPassword(_email, _password);
+    AuthService.instance.createUserWithEmailAndPassword(_email, _password);
+    Navigator.pop(context);
   }
 
   void _updateEmail(String email) {

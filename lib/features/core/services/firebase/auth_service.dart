@@ -5,16 +5,17 @@ import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/onboarding/widgets/password_reset_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_in_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_up_failed_dialog.dart';
 
 class AuthService {
-  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  static final User? user = FirebaseAuth.instance.currentUser;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final User? user = FirebaseAuth.instance.currentUser;
 
-  static Future<void> reloadUser() async {
+  static AuthService instance = AuthService();
+
+  Future<void> reloadUser() async {
     await user!.reload();
   }
 
@@ -29,7 +30,7 @@ class AuthService {
   //   // Navigator.pop(Global.context);
   // }
 
-  static Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     try {
       Log.warning("vamos");
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -43,14 +44,14 @@ class AuthService {
       Log.warning("got credentials");
       await _firebaseAuth.signInWithCredential(credential);
       Log.warning("signed in");
-      await CloudService.loadUserData();
-      Log.warning("loaded user data");
+      // await CloudService.instance.loadUserData();
+      // Log.warning("loaded user data");
     } catch (error) {
       Log.error(error);
     }
   }
 
-  static Future<void> createUserWithEmailAndPassword(String email, String password) async {
+  Future<void> createUserWithEmailAndPassword(String email, String password) async {
     // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password);
@@ -62,7 +63,7 @@ class AuthService {
     }
   }
 
-  static Future<void> sendVerificationEmail() async {
+  Future<void> sendVerificationEmail() async {
     try {
       await user!.sendEmailVerification();
     } catch (error) {
@@ -70,7 +71,7 @@ class AuthService {
     }
   }
 
-  static Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
     // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password);
@@ -82,7 +83,7 @@ class AuthService {
     }
   }
 
-  static Future<void> signOut() async {
+  Future<void> signOut() async {
     // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.signOut();
@@ -93,7 +94,7 @@ class AuthService {
     // Navigator.pop(Global.context);
   }
 
-  static Future<void> sendPasswordResetEmail(String email) async {
+  Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (error) {

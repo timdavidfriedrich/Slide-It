@@ -34,7 +34,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
 
   void _joinGroup() {
     if (_nameController.text.isEmpty) return;
-    CloudService.joinGroup(_nameController.text);
+    CloudService.instance.joinGroup(_nameController.text);
     Navigator.pop(context);
   }
 

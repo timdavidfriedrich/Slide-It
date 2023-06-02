@@ -18,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   void _signInWithGoogle() async {
-    await AuthService.signInWithGoogle();
+    await AuthService.instance.signInWithGoogle();
   }
 
   @override
