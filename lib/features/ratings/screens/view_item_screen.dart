@@ -73,7 +73,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return ErrorInfo(message: snapshot.error.toString());
-        } else if (!snapshot.hasData) {
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
         if (snapshot.data is! Item) return const ErrorInfo();

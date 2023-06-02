@@ -86,7 +86,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
         if (snapshot.hasError) {
           return ErrorInfo(message: snapshot.error.toString());
         }
-        if (!snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
         if (snapshot.data is! Item) return const ErrorInfo();
