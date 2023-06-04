@@ -6,8 +6,8 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/feed/services/history_widget.dart';
-import 'package:rating/features/ratings/screens/category_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
+import 'package:rating/features/ratings/screens/view_item_screen.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
@@ -50,8 +50,8 @@ class _AddedItemCardState extends State<AddedItemCard> {
     setState(() {});
   }
 
-  void _openCategory() {
-    context.push(CategoryScreen.routeName, extra: widget.item.category);
+  void _viewItem() {
+    context.push(ViewItemScreen.routeName, extra: widget.item);
   }
 
   @override
@@ -82,7 +82,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
             Card(
               margin: EdgeInsets.zero,
               child: ListTile(
-                onTap: () => _openCategory(),
+                onTap: () => _viewItem(),
                 leading: SizedBox(width: 32, height: 32, child: widget.item.image),
                 title: Text(widget.item.name),
                 subtitle: Text(widget.item.category.name),
