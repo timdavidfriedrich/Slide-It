@@ -16,7 +16,14 @@ class ErrorInfo extends StatelessWidget {
         children: [
           Icon(PlatformIcons(context).error, color: Theme.of(context).colorScheme.error),
           const SizedBox(height: Constants.smallPadding),
-          Text(message, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+          Flexible(
+            child: Text(
+              message,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ),
         ],
       ),
     );
