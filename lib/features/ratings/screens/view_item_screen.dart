@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -33,7 +32,6 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   }
 
   void _edit() {
-    Log.error(_item?.name ?? "Item is null");
     Navigator.pushNamed(context, EditItemScreen.routeName, arguments: EditItemScreenArguments(itemToEdit: _item));
   }
 

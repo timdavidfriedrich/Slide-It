@@ -33,7 +33,7 @@ class CloudService {
     );
     if (AppUser.current == null) return;
     await _userCollection.doc(user.uid).set(AppUser.current!.toJson(), SetOptions(merge: true));
-    Log.hint("User data saved (UID: ${user.uid}).");
+    Log.hint("User data saved (User ID: ${user.uid}) to cloud.");
   }
 
   Future<void> loadRawData() async {
@@ -43,10 +43,12 @@ class CloudService {
 
   Future<void> loadRawUsersData() async {
     _rawUsersData = await _userCollection.get();
+    Log.hint("Loaded raw user data from cloud.");
   }
 
   Future<void> loadRawGroupsData() async {
     _rawGroupsData = await _groupCollection.get();
+    Log.hint("Loaded raw group from cloud.");
   }
 
   Future<void> loadUserData() async {
@@ -58,29 +60,8 @@ class CloudService {
       return;
     }
     AppUser.current = AppUser.fromJson(snapshot.data() as Map<String, dynamic>);
-    Log.hint("User data loaded (UID: ${user.uid}).");
+    Log.hint("Loaded User data (UID: ${user.uid}) from cloud.");
   }
-
-  // Future<List<Group>> getUserGroupData() async {
-  //   final User? user = FirebaseAuth.instance.currentUser;
-  //   if (user == null) return [];
-  //   List<Group> result = [];
-  //   List<String> appUserGroupIds = [];
-  //   DocumentSnapshot rawAppUser = await _userCollection.doc(user.uid).get();
-
-  //   AppUser appUser = AppUser.fromJson(rawAppUser.data() as Map<String, dynamic>?);
-  //   for (String groupId in appUser.groupIds) {
-  //     appUserGroupIds.add(groupId);
-  //   }
-  //   final QuerySnapshot<Map<String, dynamic>> rawGroupData = await _groupCollection.get();
-  //   final rawGroups = rawGroupData.docs.map((doc) => doc.data()).toList();
-  //   for (Map<String, dynamic> rawGroup in rawGroups) {
-  //     Group group = Group.fromJson(rawGroup);
-  //     if (!appUserGroupIds.contains(group.id)) continue;
-  //     result.add(group);
-  //   }
-  //   return result;
-  // }
 
   Future<List<Group>> getUserGroups() async {
     List<Group> result = [];
@@ -134,18 +115,20 @@ class CloudService {
     await _groupCollection.doc(group.id).set(group.toJson(), SetOptions(merge: true));
     await joinGroup(group.id);
     Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
+    Log.hint("Created group \"${group.name}\" (ID: ${group.id}) and save on cloud.");
   }
 
   Future<void> removeGroup(Group group) async {
     await _groupCollection.doc(group.id).delete();
     Provider.of<DataProvider>(Global.context, listen: false).removeGroup(group);
+    Log.hint("Removed group \"${group.name}\" (ID: ${group.id}) from cloud.");
   }
 
   Future<void> joinGroup(String groupId) async {
     AppUser? currentUser = AppUser.current;
     if (currentUser == null) return;
     // TODO: Implement error dialog (maybe extra class to reuse) => "already in group"
-    if (currentUser.groupIds.contains(groupId)) return Log.error("Already in group.");
+    if (currentUser.groupIds.contains(groupId)) return Log.error("JOIN GROUP: Already in group (ID: $groupId).");
     final User? user = FirebaseAuth.instance.currentUser;
     await _userCollection.doc(user!.uid).set({
       "groupIds": FieldValue.arrayUnion(List<String>.from([groupId])),
@@ -157,6 +140,7 @@ class CloudService {
     // FirebaseMessaging.instance.subscribeToTopic(id);
     // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
+    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.name}) joined a group (ID: $groupId) and data saved on cloud.");
   }
 
   Future<void> createCategory({required String name, required Group group}) async {
@@ -165,6 +149,7 @@ class CloudService {
       "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
     }, SetOptions(merge: true));
     Provider.of<DataProvider>(Global.context, listen: false).addCategory(category: category, group: group);
+    Log.hint("Created Category \"${category.name}\" (ID: ${category.id}) and saved to cloud.");
   }
 
   Future<void> removeCategory(Category category) async {
@@ -172,6 +157,7 @@ class CloudService {
       "categories": FieldValue.arrayRemove(List<Map<String, dynamic>>.from([category.toJson()])),
     }, SetOptions(merge: true));
     Provider.of<DataProvider>(Global.context, listen: false).removeCategory(category);
+    Log.hint("Removed Category \"${category.name}\" (ID: ${category.id}) from cloud.");
   }
 
   Future<void> addItem({required Category category, required Item item}) async {
@@ -180,6 +166,7 @@ class CloudService {
     await _groupCollection.doc(category.groupId).set({
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
+    Log.hint("Added Item \"${item.name}\" (ID: ${item.id}) to cloud.");
   }
 
   Future<void> editItem({required Item item, String? name, String? imageUrl}) async {
@@ -193,6 +180,7 @@ class CloudService {
     await _groupCollection.doc(category.groupId).set({
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
+    Log.hint("Removed Item \"${item.name}\" (ID: ${item.id}) from cloud.");
   }
 
   Future<void> addRating({required Category category, required Rating rating}) async {
@@ -202,6 +190,7 @@ class CloudService {
       // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
+    Log.hint("Added Rating (ID: ${rating.id}) to an item (Item ID: ${rating.itemId}) to cloud.");
   }
 
   Future<void> editRating({required Rating rating, String? comment, double? value}) async {
@@ -216,5 +205,6 @@ class CloudService {
       // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
+    Log.hint("Removed Rating (ID: ${rating.id}) from an item (Item ID: ${rating.itemId}) from cloud.");
   }
 }

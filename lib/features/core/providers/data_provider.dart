@@ -19,6 +19,7 @@ class DataProvider extends ChangeNotifier {
   void selectGroup(Group group) {
     _selectedGroup = group;
     notifyListeners();
+    Log.hint("Selected Group \"${group.name}\" (ID: ${group.id}).");
   }
 
   AppUser? getAppUserById(String? id) {
@@ -37,7 +38,6 @@ class DataProvider extends ChangeNotifier {
 
   Group getGroupById(String groupId) {
     if (userGroups.isEmpty) return Group.empty();
-    Log.hint(userGroups);
     try {
       return userGroups.firstWhere((element) => element.id == groupId);
     } catch (e) {
@@ -57,31 +57,37 @@ class DataProvider extends ChangeNotifier {
     if (userGroups.isEmpty) return;
     _selectedGroup = userGroups.first;
     notifyListeners();
+    Log.hint("Loaded ${userGroups.length} groups to runtime storage.");
   }
 
   void addGroup(Group group) {
     userGroups.add(group);
     notifyListeners();
+    Log.hint("Added Group \"${group.name}\" (ID: ${group.id}) to runtime storage.");
   }
 
   void addGroupById(String groupId) {
     userGroups.add(getGroupById(groupId));
     notifyListeners();
+    Log.hint("Added Group by ID $groupId to runtime storage.");
   }
 
   void removeGroup(Group group) {
     userGroups.remove(group);
     notifyListeners();
+    Log.hint("Removed Group \"${group.name}\" (ID: ${group.id}) from runtime storage.");
   }
 
   void clearGroups() {
     userGroups.clear();
     notifyListeners();
+    Log.hint("Cleared all groups from runtime storage.");
   }
 
   void addCategory({required Group group, required Category category}) {
     userGroups.firstWhere((element) => element.id == group.id).categories.add(category);
     notifyListeners();
+    Log.hint("Added Category \"${category.name}\" (ID: ${category.id}) to runtime storage.");
   }
 
   void removeCategory(Category category) {
@@ -90,6 +96,7 @@ class DataProvider extends ChangeNotifier {
       g.categories.remove(category);
     }
     notifyListeners();
+    Log.hint("Removed Category \"${category.name}\" (ID: ${category.id}) from runtime storage.");
   }
 
   void addItem({required Category category, required Item item}) {
@@ -99,9 +106,9 @@ class DataProvider extends ChangeNotifier {
         if (c.id != category.id) continue;
         c.items.add(item);
       }
-      Log.warning("added item:\n${g.toJson()}");
     }
     notifyListeners();
+    Log.hint("Added item \"${item.name}\" (ID: ${item.id}) to runtime storage.");
   }
 
   void removeItem({required Category category, required Item item}) {
@@ -111,9 +118,9 @@ class DataProvider extends ChangeNotifier {
         if (c.id != category.id) continue;
         c.items.remove(item);
       }
-      Log.warning("removed item:\n${g.toJson()}");
     }
     notifyListeners();
+    Log.hint("Removed item \"${item.name}\" (ID: ${item.id}) from runtime storage.");
   }
 
   void addRating({required Category category, required Rating rating}) {
@@ -126,9 +133,9 @@ class DataProvider extends ChangeNotifier {
           i.ratings.add(rating);
         }
       }
-      Log.warning("added rating:\n${g.toJson()}");
     }
     notifyListeners();
+    Log.hint("Added Rating (ID: ${rating.id}) to an item (Item ID: ${rating.itemId}) to runtime storage.");
   }
 
   void removeRating({required Category category, required Rating rating}) {
@@ -141,8 +148,8 @@ class DataProvider extends ChangeNotifier {
           i.ratings.remove(rating);
         }
       }
-      Log.warning("removed rating:\n${g.toJson()}");
     }
     notifyListeners();
+    Log.hint("Removed Rating (ID: ${rating.id}) from an item (Item ID: ${rating.itemId}) from runtime storage.");
   }
 }

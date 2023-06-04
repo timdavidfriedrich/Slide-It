@@ -19,6 +19,7 @@ class AuthService {
   Future<void> reloadUser() async {
     if (user == null) reloadUser();
     await user!.reload();
+    Log.hint("Reloaded user (User ID: ${user!.uid}).");
   }
 
   // ? Should anonymous sign in be implemented?
@@ -32,20 +33,16 @@ class AuthService {
 
   Future<void> signInWithGoogle() async {
     try {
-      Log.warning("vamos");
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      Log.warning("signed in with google");
       final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-      Log.warning("got auth status");
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      Log.warning("got credentials");
       await _firebaseAuth.signInWithCredential(credential);
-      Log.warning("signed in");
+      Log.hint("Signed in with Google (User ID: ${user!.uid}).");
     } catch (error) {
-      Log.error(error);
+      Log.error("GOOGLE SIGN IN: $error");
     }
   }
 
@@ -54,10 +51,11 @@ class AuthService {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password);
       await sendVerificationEmail();
       await CloudService.instance.saveUserData(name: name);
+      Log.hint("Created user with email and password (User ID: ${user!.uid}).");
       return true;
     } on FirebaseAuthException catch (error) {
       showDialog(context: Global.context, builder: (context) => SignUpFailedDialog(error: error));
-      Log.error(error);
+      Log.error("EMAIL SIGN UP: $error");
       return false;
     }
   }
@@ -65,8 +63,9 @@ class AuthService {
   Future<void> sendVerificationEmail() async {
     try {
       await user!.sendEmailVerification();
+      Log.hint("Send verification email (User ID: ${user!.uid}).");
     } catch (error) {
-      Log.error(error);
+      Log.error("VERIFICATION EMAIL: $error");
     }
   }
 
@@ -75,26 +74,29 @@ class AuthService {
       await _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password);
       await Provider.of<DataProvider>(Global.context, listen: false).loadData();
       Navigator.pop(Global.context);
+      Log.hint("User signed in with email and password (User ID: ${user!.uid}).");
     } on FirebaseAuthException catch (error) {
       showDialog(context: Global.context, builder: (context) => SignInFailedDialog(error: error));
-      Log.error(error);
+      Log.error("EMAIL SIGN IN: $error");
     }
   }
 
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
+      Log.hint("User signed out (User ID: ${user!.uid}).");
     } catch (error) {
-      Log.error(error);
+      Log.error("SIGN OUT: $error");
     }
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
+      Log.hint("Send password reset email (to: $email).");
     } on FirebaseAuthException catch (error) {
       showDialog(context: Global.context, builder: (context) => PasswordResetFailedDialog(error: error));
-      Log.error(error);
+      Log.error("PASSWORD RESET EMAIL: $error");
     }
   }
 }
