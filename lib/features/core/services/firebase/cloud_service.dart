@@ -140,7 +140,7 @@ class CloudService {
     // FirebaseMessaging.instance.subscribeToTopic(id);
     // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
-    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.name}) joined a group (ID: $groupId) and data saved to cloud.");
+    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.id}) joined a group (ID: $groupId) and data saved to cloud.");
   }
 
   Future<void> createCategory({required String name, required Group group}) async {
