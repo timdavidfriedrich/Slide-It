@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -32,22 +33,22 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   }
 
   void _edit() {
+    Log.error(_item?.name ?? "Item is null");
     Navigator.pushNamed(context, EditItemScreen.routeName, arguments: EditItemScreenArguments(itemToEdit: _item));
   }
 
-  void _editOwnRating({Item? item}) async {
+  void _editOwnRating() async {
+    if (_item == null) return;
     User? user = AppUser.currentUser;
     if (user == null) return;
     final result = await Navigator.pushNamed(
       context,
       RateItemScreen.routeName,
-      arguments: item == null
-          ? null
-          : RateItemScreenArguments(
-              item: item,
-              ratingValue: item.ownRating?.value,
-              comment: item.ownRating?.comment,
-            ),
+      arguments: RateItemScreenArguments(
+        item: _item!,
+        ratingValue: _item!.ownRating?.value,
+        comment: _item!.ownRating?.comment,
+      ),
     );
     if (result is! (double, String?)) return;
     final (ratingValue, comment) = result;
@@ -57,8 +58,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
       userId: user.uid,
       itemId: _item!.id,
     );
-    if (item == null) {
-      // item!.ratings.add(rating);
+    if (_item!.ownRating == null) {
       CloudService.instance.addRating(category: _item!.category, rating: rating);
     } else {
       CloudService.instance.editRating(rating: rating);
@@ -135,7 +135,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                       )
                     : Card(
                         child: ListTile(
-                          onTap: () => _editOwnRating(item: _item!),
+                          onTap: () => _editOwnRating(),
                           leading: AppUser.currentAvatar,
                           title: const Text("Ich"),
                           subtitle: Text(_item!.ownRating!.comment ?? "Ohne Kommentar."),
@@ -152,9 +152,8 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                 for (Rating r in _item!.ratings)
                   if (r.userId != AppUser.currentUser?.uid)
                     ListTile(
-                      // TODO: Replace data with rating user. => Implement userList to Provider
-                      leading: AppUser.currentAvatar,
-                      title: Text(r.userId.substring(0, 12)),
+                      leading: Provider.of<DataProvider>(context).getAppUserById(r.userId)?.getAvatar(),
+                      title: Text(Provider.of<DataProvider>(context).getAppUserById(r.userId)?.name ?? "Unbenannt"),
                       subtitle: Text(r.comment ?? "Ohne Kommentar."),
                       trailing: Text(
                         "${r.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
