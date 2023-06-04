@@ -34,7 +34,10 @@ class ThemeConfig {
 
   static ThemeData _dynamicThemeData(BuildContext context, ColorScheme? deviceColorScheme, Brightness brightness) {
     ColorScheme defaultColorScheme = brightness == Brightness.dark ? _defaultDarkColorScheme : _defaultLightColorScheme;
-    ColorScheme? dynamicColorScheme = deviceColorScheme?.copyWith(primary: defaultColorScheme.primary);
+    ColorScheme? dynamicColorScheme = deviceColorScheme?.copyWith(
+      primary: defaultColorScheme.primary,
+      surface: defaultColorScheme.surface,
+    );
     ColorScheme colorScheme = dynamicColorScheme ?? defaultColorScheme;
     return ThemeData(
       useMaterial3: true,
@@ -46,11 +49,10 @@ class ThemeConfig {
         centerTitle: false,
       ),
       scaffoldBackgroundColor: colorScheme.background,
-      // cardTheme: CardTheme(
-      //   elevation: 0,
-      //   color: colorScheme.surface,
-      //   margin: EdgeInsets.zero,
-      // ),
+      cardTheme: const CardTheme(
+        elevation: 0,
+        // margin: EdgeInsets.zero,
+      ),
       listTileTheme: ListTileThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
