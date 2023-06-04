@@ -115,13 +115,13 @@ class CloudService {
     await _groupCollection.doc(group.id).set(group.toJson(), SetOptions(merge: true));
     await joinGroup(group.id);
     Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
-    Log.hint("Created group \"${group.name}\" (ID: ${group.id}) and save on cloud.");
+    Log.hint("Created Group \"${group.name}\" (ID: ${group.id}) and saved to cloud.");
   }
 
   Future<void> removeGroup(Group group) async {
     await _groupCollection.doc(group.id).delete();
     Provider.of<DataProvider>(Global.context, listen: false).removeGroup(group);
-    Log.hint("Removed group \"${group.name}\" (ID: ${group.id}) from cloud.");
+    Log.hint("Removed Group \"${group.name}\" (ID: ${group.id}) from cloud.");
   }
 
   Future<void> joinGroup(String groupId) async {
@@ -140,7 +140,7 @@ class CloudService {
     // FirebaseMessaging.instance.subscribeToTopic(id);
     // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
-    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.name}) joined a group (ID: $groupId) and data saved on cloud.");
+    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.name}) joined a group (ID: $groupId) and data saved to cloud.");
   }
 
   Future<void> createCategory({required String name, required Group group}) async {
