@@ -101,6 +101,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
               child: ListTile(
                 onTap: () => _editOwnRating(),
                 title: Text(widget.item.ownRating == null ? "(Tippe zum Bewerten)" : "Meine Bewertung"),
+                subtitle: widget.item.ownRating?.comment == null ? null : Text(widget.item.ownRating!.comment!),
                 trailing: widget.item.ownRating == null
                     ? null
                     : Text("${widget.item.ownRating?.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥"),
