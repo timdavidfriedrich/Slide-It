@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 // import 'package:rating/constants/asset_path.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
@@ -23,39 +24,39 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 48),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 48),
-            Text("Slide It",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineLarge!.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
-            const SizedBox(height: 24),
-            // ? Flexible(child: Image.asset(AssetPath.mascotIdle)),
-            const Spacer(),
-            const SizedBox(height: 48),
-            ElevatedButton(
-              onPressed: () => _navigateToSignIn(context),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary)),
-              child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _navigateToSignUp(context),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary)),
-              child: Text("Register", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () => _signInWithGoogle(),
-              child: Text("Mit Google anmelden", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-            ),
-            const SizedBox(height: 48),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: Constants.largePadding),
+              const SizedBox(height: Constants.largePadding),
+              Text("Slide It",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () => _navigateToSignIn(context),
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary)),
+                child: Text("Einloggen", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              const SizedBox(height: Constants.normalPadding),
+              ElevatedButton(
+                onPressed: () => _navigateToSignUp(context),
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary)),
+                child: Text("Registrieren", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              const SizedBox(height: Constants.normalPadding),
+              TextButton(
+                onPressed: () => _signInWithGoogle(),
+                child: Text("Mit Google anmelden", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+              ),
+              const SizedBox(height: Constants.largePadding),
+            ],
+          ),
         ),
       ),
     );

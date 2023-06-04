@@ -96,105 +96,107 @@ class _SignScreenState extends State<SignScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          // Expanded(
-          //   child: Image.asset(
-          //     signType == SignType.signIn ? AssetPath.mascotWaving : AssetPath.mascotHanging,
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  signType == SignType.signIn ? "Schön, dass du\nwieder da bist!" : "Willkommen!",
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                const SizedBox(height: Constants.largePadding),
-                if (signType == SignType.signUp)
+    return SafeArea(
+      child: Scaffold(
+        // resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            // Expanded(
+            //   child: Image.asset(
+            //     signType == SignType.signIn ? AssetPath.mascotWaving : AssetPath.mascotHanging,
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    signType == SignType.signIn ? "Schön, dass du\nwieder da bist!" : "Willkommen!",
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: Constants.largePadding),
+                  if (signType == SignType.signUp)
+                    TextField(
+                      decoration: const InputDecoration(
+                        label: Text("Anzeigename"),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onChanged: (text) => _updateName(text),
+                    ),
+                  const SizedBox(height: Constants.normalPadding),
                   TextField(
                     decoration: const InputDecoration(
-                      label: Text("Anzeigename"),
+                      label: Text("Email"),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (text) => _updateName(text),
+                    onChanged: (text) {
+                      _updateEmail(text);
+                      _checkIfEmailIsValid();
+                    },
                   ),
-                const SizedBox(height: Constants.normalPadding),
-                TextField(
-                  decoration: const InputDecoration(
-                    label: Text("Email"),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  ),
-                  textInputAction: TextInputAction.next,
-                  onChanged: (text) {
-                    _updateEmail(text);
-                    _checkIfEmailIsValid();
-                  },
-                ),
-                const SizedBox(height: Constants.normalPadding),
-                TextField(
-                  textInputAction: signType == SignType.signIn ? TextInputAction.done : TextInputAction.next,
-                  obscureText: _isPasswordObscured,
-                  onChanged: (text) => _updatePassword(text),
-                  decoration: InputDecoration(
-                    label: const Text("Passwort"),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    suffixIcon: _password.isEmpty
-                        ? null
-                        : IconButton(
-                            onPressed: () => _changePasswordVisibility(),
-                            icon: Icon(_isPasswordObscured ? PlatformIcons(context).eyeSolid : PlatformIcons(context).eyeSlashSolid),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: Constants.normalPadding),
-                if (signType == SignType.signUp)
+                  const SizedBox(height: Constants.normalPadding),
                   TextField(
-                    decoration: const InputDecoration(
-                      label: Text("Password wiederholen"),
+                    textInputAction: signType == SignType.signIn ? TextInputAction.done : TextInputAction.next,
+                    obscureText: _isPasswordObscured,
+                    onChanged: (text) => _updatePassword(text),
+                    decoration: InputDecoration(
+                      label: const Text("Passwort"),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      suffixIcon: _password.isEmpty
+                          ? null
+                          : IconButton(
+                              onPressed: () => _changePasswordVisibility(),
+                              icon: Icon(_isPasswordObscured ? PlatformIcons(context).eyeSolid : PlatformIcons(context).eyeSlashSolid),
+                            ),
                     ),
-                    obscureText: true,
-                    onChanged: (text) => _updateRepeatedPassword(text),
                   ),
-                const SizedBox(height: Constants.mediumPadding),
-                signType == SignType.signIn
-                    ? ElevatedButton(
-                        onPressed: _isSignInValid() ? () => _signIn() : null,
-                        child: const Text("Einloggen"),
-                      )
-                    : ElevatedButton(
-                        onPressed: _isSignUpValid() ? () => _signUp() : null,
-                        child: const Text("Registrieren"),
+                  const SizedBox(height: Constants.normalPadding),
+                  if (signType == SignType.signUp)
+                    TextField(
+                      decoration: const InputDecoration(
+                        label: Text("Password wiederholen"),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
                       ),
-                const SizedBox(height: Constants.smallPadding),
-                signType == SignType.signIn
-                    ? TextButton(
-                        onPressed: () => _navigateToForgotPasswordScreen(),
-                        child: Text(
-                          "Passwort vergessen?",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).hintColor),
+                      obscureText: true,
+                      onChanged: (text) => _updateRepeatedPassword(text),
+                    ),
+                  const SizedBox(height: Constants.mediumPadding),
+                  signType == SignType.signIn
+                      ? ElevatedButton(
+                          onPressed: _isSignInValid() ? () => _signIn() : null,
+                          child: const Text("Einloggen"),
+                        )
+                      : ElevatedButton(
+                          onPressed: _isSignUpValid() ? () => _signUp() : null,
+                          child: const Text("Registrieren"),
                         ),
-                      )
-                    : Container(),
-                const SizedBox(height: Constants.largePadding),
-              ],
+                  const SizedBox(height: Constants.smallPadding),
+                  signType == SignType.signIn
+                      ? TextButton(
+                          onPressed: () => _navigateToForgotPasswordScreen(),
+                          child: Text(
+                            "Passwort vergessen?",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).hintColor),
+                          ),
+                        )
+                      : Container(),
+                  const SizedBox(height: Constants.largePadding),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 import 'package:rating/features/social/services/app_user.dart';
@@ -65,24 +66,27 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 48),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Verify your email", style: Theme.of(context).textTheme.headlineMedium),
-              const SizedBox(height: 16),
-              Text("We sent you an email with a link to ${AppUser.currentUser?.email}. Please, click on it to verify your email address."),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _sendButtonBlocked ? null : () => _sendVerificationEmail(),
-                child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Resend verification email"),
-              ),
-            ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Verify your email", style: Theme.of(context).textTheme.headlineMedium),
+                const SizedBox(height: Constants.normalPadding),
+                Text(
+                    "We sent you an email with a link to ${AppUser.currentUser?.email}. Please, click on it to verify your email address."),
+                const SizedBox(height: Constants.mediumPadding),
+                ElevatedButton(
+                  onPressed: _sendButtonBlocked ? null : () => _sendVerificationEmail(),
+                  child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Resend verification email"),
+                ),
+              ],
+            ),
           ),
         ),
       ),

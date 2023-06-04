@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
@@ -49,41 +50,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(32), topRight: Radius.circular(32)),
-        child: Scaffold(
-          // ? resizeToAvoidBottomInset: false,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48),
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Password reset", style: Theme.of(context).textTheme.headlineMedium),
-                  const SizedBox(height: 16),
-                  const Text("Enter your email address to receive a link to reset your password."),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(
-                      label: Text("Email"),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.done,
-                    controller: _emailController,
+      child: Scaffold(
+        // ? resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Password reset", style: Theme.of(context).textTheme.headlineMedium),
+                const SizedBox(height: Constants.normalPadding),
+                const Text("Enter your email address to receive a link to reset your password."),
+                const SizedBox(height: Constants.normalPadding),
+                TextField(
+                  decoration: const InputDecoration(
+                    label: Text("Email"),
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                   ),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _sendButtonBlocked ? null : () => _sendPasswordResetEmail(_emailController.text),
-                    child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Send link"),
-                  ),
-                ],
-              ),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                  controller: _emailController,
+                ),
+                const SizedBox(height: Constants.mediumPadding),
+                ElevatedButton(
+                  onPressed: _sendButtonBlocked ? null : () => _sendPasswordResetEmail(_emailController.text),
+                  child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Send link"),
+                ),
+              ],
             ),
           ),
         ),
