@@ -80,17 +80,16 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<Item>(
       future: _loadItem(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return ErrorInfo(message: snapshot.error.toString());
         }
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
-        if (snapshot.data is! Item) return const ErrorInfo();
-        Item item = snapshot.data as Item;
+        Item item = snapshot.data!;
         return Scaffold(
           backgroundColor: _getValueColor(),
           appBar: AppBar(
