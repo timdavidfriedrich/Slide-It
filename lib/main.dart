@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/config/themes/theme_config.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/ratings/screens/category_screen.dart';
 import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
@@ -49,6 +50,7 @@ class RatingApp extends StatelessWidget {
             initialRoute: AppScaffold.routeName,
             routes: {
               AppScaffold.routeName: (context) => const AppScaffold(),
+              CategoryScreen.routeName: (context) => const CategoryScreen(),
               GroupScreen.routeName: (context) => const GroupScreen(),
               CreateGroupScreen.routeName: (context) => const CreateGroupScreen(),
               JoinGroupScreen.routeName: (context) => const JoinGroupScreen(),

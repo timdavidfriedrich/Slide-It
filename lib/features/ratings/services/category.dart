@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,16 +13,22 @@ class Category {
   final String name;
   String? description;
   List<Item> items;
+  String? createdByUserId;
+  Timestamp createdAt;
 
   Category({required this.groupId, required this.name, this.description, List<Item>? ratings})
       : id = "category--${const Uuid().v4()}",
-        items = ratings ?? [];
+        items = ratings ?? [],
+        createdByUserId = AppUser.currentUser?.uid,
+        createdAt = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
 
   Category.empty()
       : id = "empty-category--${const Uuid().v4()}",
         groupId = "unknown",
         name = "Empty",
-        items = [];
+        items = [],
+        createdByUserId = AppUser.currentUser?.uid,
+        createdAt = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
 
   Map<String, dynamic> toJson() {
     return {
@@ -29,6 +37,8 @@ class Category {
       'name': name,
       'description': description,
       'items': items.map((rating) => rating.toJson()).toList(),
+      'createdByUserId': createdByUserId,
+      'createdAt': createdAt,
     };
   }
 
@@ -37,7 +47,9 @@ class Category {
         groupId = json['groupId'] ?? "",
         name = json['name'] ?? "",
         description = json['description'],
-        items = ((json['items'] ?? []) as List).map((e) => Item.fromJson(e)).toList();
+        items = ((json['items'] ?? []) as List).map((e) => Item.fromJson(e)).toList(),
+        createdByUserId = json['createdByUserId'],
+        createdAt = json['createdAt'] ?? Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
 
   Group get group {
     final List<Group> userGroups = Provider.of<DataProvider>(Global.context, listen: false).userGroups;

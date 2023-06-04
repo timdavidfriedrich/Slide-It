@@ -69,6 +69,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                       children: [
                         TextField(
                           controller: _nameController,
+                          // ! Inrupts the focus, because the the state updates
                           onChanged: (text) => _checkIfInputIsValid(),
                           decoration: const InputDecoration(
                             labelText: "Name der Kategorie",

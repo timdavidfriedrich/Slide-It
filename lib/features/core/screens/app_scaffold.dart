@@ -5,13 +5,13 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
+import 'package:rating/features/feed/screens/feed_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
-import 'package:rating/features/settings/screens/settings_screen.dart';
 import 'package:rating/features/social/screens/social_screen.dart';
 
 class AppScaffold extends StatefulWidget {
@@ -25,10 +25,10 @@ class AppScaffold extends StatefulWidget {
 class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
   final List<ScaffoldScreen> _screens = const [
-    // HomeScreen(),
+    FeedScreen(),
     RatingsScreen(),
     SocialScreen(),
-    SettingsScreen(),
+    // SettingsScreen(),
   ];
 
   bool _platformIsApple() {
