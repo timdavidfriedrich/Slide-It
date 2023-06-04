@@ -14,6 +14,7 @@ import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/social/services/group.dart';
 
 class FeedScreen extends StatefulWidget implements ScaffoldScreen {
+  static const routeName = "/feed";
   const FeedScreen({Key? key}) : super(key: key);
 
   @override

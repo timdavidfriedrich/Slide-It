@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/social/screens/qr_code_scanner_screen.dart';
@@ -22,20 +23,20 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
   }
 
   void _scanGroupId() async {
-    final result = await Navigator.pushNamed(context, QrCodeScannerScreen.routeName);
-    if (result is! String) return;
+    final result = await context.push<String>(QrCodeScannerScreen.routeName);
+    if (result == null) return;
     setState(() => _nameController.text = result);
     _checkIfInputIsValid();
   }
 
   void _cancel() {
-    Navigator.pop(context);
+    context.pop();
   }
 
   void _joinGroup() {
     if (_nameController.text.isEmpty) return;
     CloudService.instance.joinGroup(_nameController.text);
-    Navigator.pop(context);
+    context.pop();
   }
 
   @override

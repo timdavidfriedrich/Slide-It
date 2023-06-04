@@ -1,6 +1,6 @@
 import 'package:rating/features/ratings/services/item.dart';
 
-class ViewItemScreenArguments {
+class ViewItemScreenArgumentsOLD {
   final Item item;
-  const ViewItemScreenArguments({required this.item});
+  const ViewItemScreenArgumentsOLD({required this.item});
 }

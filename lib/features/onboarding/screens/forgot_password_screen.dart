@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
-import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  static const String routeName = "${WelcomeScreen.routeName}/${SignScreen.routeName}/ForgotPassword";
+  static const String routeName = "${SignScreen.routeName}/ForgotPassword";
 
   const ForgotPasswordScreen({super.key});
 

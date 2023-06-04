@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
@@ -8,11 +9,11 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/services/group.dart';
-import 'package:rating/features/social/services/group_screen_arguments.dart';
 import 'package:rating/features/social/widgets/add_group_dialog.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
 class SocialScreen extends StatefulWidget implements ScaffoldScreen {
+  static const routeName = "/social";
   const SocialScreen({super.key});
 
   @override
@@ -37,7 +38,7 @@ class SocialScreen extends StatefulWidget implements ScaffoldScreen {
 
 class _SocialScreenState extends State<SocialScreen> {
   void _goToGroupDetails(Group group) {
-    Navigator.pushNamed(context, GroupScreen.routeName, arguments: GroupScreenArguments(group: group));
+    context.push(GroupScreen.routeName, extra: group);
   }
 
   void _addGroup() {

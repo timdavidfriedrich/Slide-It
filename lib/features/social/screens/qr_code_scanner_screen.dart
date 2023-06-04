@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:rating/constants/constants.dart';
 
@@ -20,7 +21,7 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   );
 
   void _joinGroupByInvitationGroupId(String invitationGroupId) {
-    Navigator.pop(context, invitationGroupId);
+    context.pop(invitationGroupId);
   }
 
   void _toggleTorch() async {

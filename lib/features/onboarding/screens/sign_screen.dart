@@ -1,41 +1,30 @@
-import 'package:flutter/scheduler.dart';
-// import 'package:rating/constants/asset_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/onboarding/services/email_validator.dart';
-import 'package:rating/features/onboarding/services/sign_arguments.dart';
 import 'package:rating/features/onboarding/services/sign_type.dart';
 import 'package:rating/features/onboarding/widgets/passwords_dont_match_dialog.dart';
 
 class SignScreen extends StatefulWidget {
   static const String routeName = "${WelcomeScreen.routeName}/Sign";
-  const SignScreen({super.key});
+  final SignType? signType;
+  const SignScreen({super.key, this.signType = SignType.none});
 
   @override
   State<SignScreen> createState() => _SignScreenState();
 }
 
 class _SignScreenState extends State<SignScreen> {
-  late SignArguments arguments;
-  SignType signType = SignType.none;
-
   String _name = "";
   String _email = "";
   String _password = "";
   String _repeatedPassword = "";
   bool _isEmailValid = false;
   bool _isPasswordObscured = true;
-
-  void _loadArguments() {
-    setState(() {
-      arguments = (ModalRoute.of(context)!.settings.arguments as SignArguments);
-      signType = arguments.signType;
-    });
-  }
 
   void _signIn() {
     AuthService.instance.signInWithEmailAndPassword(_email, _password);
@@ -47,7 +36,7 @@ class _SignScreenState extends State<SignScreen> {
       return;
     }
     bool succeeded = await AuthService.instance.createUserWithEmailAndPassword(_name, _email, _password);
-    if (mounted && succeeded) Navigator.pop(context);
+    if (mounted && succeeded) context.pop();
   }
 
   void _updateName(String name) {
@@ -83,15 +72,7 @@ class _SignScreenState extends State<SignScreen> {
   }
 
   void _navigateToForgotPasswordScreen() {
-    Navigator.pushNamed(context, ForgotPasswordScreen.routeName);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _loadArguments();
-    });
+    context.push(ForgotPasswordScreen.routeName);
   }
 
   @override
@@ -108,7 +89,7 @@ class _SignScreenState extends State<SignScreen> {
           children: [
             // Expanded(
             //   child: Image.asset(
-            //     signType == SignType.signIn ? AssetPath.mascotWaving : AssetPath.mascotHanging,
+            //     widget.signType == widget.signType.signIn ? AssetPath.mascotWaving : AssetPath.mascotHanging,
             //   ),
             // ),
             Padding(
@@ -118,12 +99,12 @@ class _SignScreenState extends State<SignScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    signType == SignType.signIn ? "Schön, dass du\nwieder da bist!" : "Willkommen!",
+                    widget.signType == SignType.signIn ? "Schön, dass du\nwieder da bist!" : "Willkommen!",
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   const SizedBox(height: Constants.largePadding),
-                  if (signType == SignType.signUp)
+                  if (widget.signType == SignType.signUp)
                     TextField(
                       decoration: const InputDecoration(
                         label: Text("Anzeigename"),
@@ -146,7 +127,7 @@ class _SignScreenState extends State<SignScreen> {
                   ),
                   const SizedBox(height: Constants.normalPadding),
                   TextField(
-                    textInputAction: signType == SignType.signIn ? TextInputAction.done : TextInputAction.next,
+                    textInputAction: widget.signType == SignType.signIn ? TextInputAction.done : TextInputAction.next,
                     obscureText: _isPasswordObscured,
                     onChanged: (text) => _updatePassword(text),
                     decoration: InputDecoration(
@@ -161,7 +142,7 @@ class _SignScreenState extends State<SignScreen> {
                     ),
                   ),
                   const SizedBox(height: Constants.normalPadding),
-                  if (signType == SignType.signUp)
+                  if (widget.signType == SignType.signUp)
                     TextField(
                       decoration: const InputDecoration(
                         label: Text("Password wiederholen"),
@@ -171,7 +152,7 @@ class _SignScreenState extends State<SignScreen> {
                       onChanged: (text) => _updateRepeatedPassword(text),
                     ),
                   const SizedBox(height: Constants.mediumPadding),
-                  signType == SignType.signIn
+                  widget.signType == SignType.signIn
                       ? ElevatedButton(
                           onPressed: _isSignInValid() ? () => _signIn() : null,
                           child: const Text("Einloggen"),
@@ -181,7 +162,7 @@ class _SignScreenState extends State<SignScreen> {
                           child: const Text("Registrieren"),
                         ),
                   const SizedBox(height: Constants.smallPadding),
-                  signType == SignType.signIn
+                  widget.signType == SignType.signIn
                       ? TextButton(
                           onPressed: () => _navigateToForgotPasswordScreen(),
                           child: Text(

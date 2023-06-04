@@ -1,26 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
-import 'package:rating/features/ratings/services/edit_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/scaffold_screen.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
 class EditItemScreen extends StatefulWidget implements ScaffoldScreen {
   static const routeName = "/Add";
-  const EditItemScreen({super.key});
+  final Item? itemToEdit;
+  const EditItemScreen({super.key, this.itemToEdit});
 
   @override
   State<EditItemScreen> createState() => _EditItemScreenState();
@@ -45,52 +44,41 @@ class EditItemScreen extends StatefulWidget implements ScaffoldScreen {
 class _EditItemScreenState extends State<EditItemScreen> {
   final TextEditingController _nameController = TextEditingController();
   Category? _category;
-  Item? _itemToEdit;
   bool _isInputValid = false;
 
   double _ratingValue = Constants.noRatingValue;
   String? _comment;
 
   void _checkIfInputValid() {
-    setState(() => _isInputValid = (_nameController.text.isNotEmpty || _itemToEdit != null) && _category != null);
+    setState(() => _isInputValid = (_nameController.text.isNotEmpty || widget.itemToEdit != null) && _category != null);
   }
 
   bool _hasRating() {
     return _ratingValue > 0.0;
   }
 
-  void _loadArguments() {
-    EditItemScreenArguments? arguments = ModalRoute.of(context)?.settings.arguments as EditItemScreenArguments?;
-    if (arguments == null) return;
-    Item? itemToEdit = arguments.itemToEdit;
-    if (itemToEdit == null) return;
+  void initValues() {
     setState(() {
-      _itemToEdit = itemToEdit;
-      _nameController.text = itemToEdit.name;
-      _category = itemToEdit.category;
+      _nameController.text = widget.itemToEdit?.name ?? "";
+      _category = widget.itemToEdit?.category;
     });
   }
 
   void _openCamera() {}
 
   void _changeCategory() async {
-    final result = await Navigator.pushNamed(context, ChooseCategoryScreen.routeName);
-    if (result is! Category) return;
+    final result = await context.push<Category>(ChooseCategoryScreen.routeName);
+    if (result == null) return;
     setState(() => _category = result);
     _checkIfInputValid();
   }
 
   void _addRating() async {
-    final result = await Navigator.pushNamed(
-      context,
+    final result = await context.push<(double, String?)>(
       RateItemScreen.routeName,
-      arguments: RateItemScreenArguments(
-        item: Item(categoryId: _category?.id ?? "", name: _nameController.text),
-        ratingValue: _ratingValue,
-        comment: _comment,
-      ),
+      extra: (Item(categoryId: _category?.id ?? "", name: _nameController.text), _ratingValue, _comment),
     );
-    if (result == null || result is! (double, String?)) return;
+    if (result == null) return;
     final (ratingValue, comment) = result;
     setState(() {
       _ratingValue = ratingValue;
@@ -101,7 +89,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   void _save() {
     if (_category == null) return;
     User? user = AppUser.currentUser;
-    if (user == null) Navigator.pop(context);
+    if (user == null) context.pop();
 
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
     Rating rating = Rating(
@@ -110,28 +98,26 @@ class _EditItemScreenState extends State<EditItemScreen> {
       value: _ratingValue,
       comment: _comment,
     );
-    if (_itemToEdit == null) {
+    if (widget.itemToEdit == null) {
       item.ratings.add(rating);
       CloudService.instance.addItem(category: _category!, item: item);
     } else {
       CloudService.instance.editItem(item: item);
     }
-    Navigator.pop(context);
+    context.pop();
   }
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _loadArguments();
-    });
+    initValues();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_itemToEdit == null ? widget.displayName : "Bearbeiten"),
+        title: Text(widget.itemToEdit == null ? widget.displayName : "Bearbeiten"),
       ),
       body: SafeArea(
         child: ListView(
@@ -146,7 +132,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () => _openCamera(),
-                child: _itemToEdit != null ? _itemToEdit!.image : Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
+                child: widget.itemToEdit != null
+                    ? widget.itemToEdit!.image
+                    : Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
               ),
             ),
             const SizedBox(height: Constants.mediumPadding),
@@ -154,7 +142,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: "Name",
-                hintText: _itemToEdit?.name,
+                hintText: widget.itemToEdit?.name,
               ),
               onChanged: (_) => _checkIfInputValid(),
             ),
@@ -168,7 +156,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
             ),
             const SizedBox(height: Constants.normalPadding),
-            if (_itemToEdit == null)
+            if (widget.itemToEdit == null)
               Card(
                 margin: EdgeInsets.zero,
                 child: ListTile(
@@ -191,7 +179,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
             const SizedBox(height: Constants.mediumPadding),
             ElevatedButton(
               onPressed: _isInputValid ? () => _save() : null,
-              child: Text(_hasRating() || _itemToEdit != null ? "Speichern" : "Ohne Bewertung speichern"),
+              child: Text(_hasRating() || widget.itemToEdit != null ? "Speichern" : "Ohne Bewertung speichern"),
             ),
             const SizedBox(height: Constants.largePadding),
           ],

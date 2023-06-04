@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpFailedDialog extends StatelessWidget {
   final FirebaseAuthException error;
@@ -10,7 +11,7 @@ class SignUpFailedDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void okay() {
-      Navigator.pop(context);
+      context.pop();
     }
 
     String errorMessage() {

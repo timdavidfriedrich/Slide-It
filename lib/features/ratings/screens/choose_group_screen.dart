@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/screens/app_scaffold.dart';
 import 'package:rating/features/social/screens/social_screen.dart';
@@ -19,16 +19,18 @@ class ChooseGroupScreen extends StatelessWidget {
 
     void chooseGroup(Group group) {
       Provider.of<DataProvider>(context, listen: false).selectGroup(group);
-      Navigator.pop(context);
+      context.pop();
     }
 
     void addGroup() {
-      Navigator.pushNamedAndRemoveUntil(context, AppScaffold.routeName, (route) => false,
-          arguments: const AppScaffoldArguments(selectedScreen: SocialScreen()));
+      // Navigator.pushNamedAndRemoveUntil
+      // ! Doesn't go to Socials, but to last AppScaffold route instead
+      context.go(AppScaffold.routeName, extra: const SocialScreen());
     }
 
     void cancel() {
-      Navigator.popUntil(context, ModalRoute.withName(AppScaffold.routeName));
+      // Navigator.popUntil(context, ModalRoute.withName(AppScaffold.routeName));
+      context.pop();
     }
 
     return Scaffold(

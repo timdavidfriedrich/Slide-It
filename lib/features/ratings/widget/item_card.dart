@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/ratings/screens/view_item_screen.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/view_item_screen_arguments.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;
@@ -11,7 +11,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void showItemRatings() {
-      Navigator.pushNamed(context, ViewItemScreen.routeName, arguments: ViewItemScreenArguments(item: item));
+      context.push(ViewItemScreen.routeName, extra: item);
     }
 
     return Card(

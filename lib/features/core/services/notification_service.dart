@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:log/log.dart';
 import 'package:rating/constants/global.dart';
 
@@ -54,7 +55,7 @@ class NotificationService {
         builder: (context) => AlertDialog(
           title: Text(message.notification?.title ?? ""),
           content: Text(message.notification?.body ?? ""),
-          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Okay"))],
+          actions: [TextButton(onPressed: () => context.pop(), child: const Text("Okay"))],
         ),
       );
     });

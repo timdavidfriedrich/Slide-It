@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
@@ -9,11 +10,11 @@ import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/scaffold_screen.dart';
-import 'package:rating/features/ratings/services/create_category_screen_arguments.dart';
 import 'package:rating/features/ratings/widget/item_card.dart';
 import 'package:rating/features/social/services/group.dart';
 
 class RatingsScreen extends StatefulWidget implements ScaffoldScreen {
+  static const routeName = "/ratings";
   const RatingsScreen({Key? key}) : super(key: key);
 
   @override
@@ -40,12 +41,12 @@ class _RatingsScreenState extends State<RatingsScreen> {
   Group? currentGroup;
 
   void _changeGroup() {
-    Navigator.pushNamed(context, ChooseGroupScreen.routeName);
+    context.push(ChooseGroupScreen.routeName);
   }
 
   void _createCategory() {
     if (currentGroup == null) return;
-    Navigator.pushNamed(context, CreateCategoryScreen.routeName, arguments: CreateCategoryScreenArguments(group: currentGroup!));
+    context.push(CreateCategoryScreen.routeName, extra: currentGroup!);
   }
 
   @override

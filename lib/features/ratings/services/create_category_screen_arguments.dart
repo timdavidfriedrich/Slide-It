@@ -1,6 +1,6 @@
 import 'package:rating/features/social/services/group.dart';
 
-class CreateCategoryScreenArguments {
+class CreateCategoryScreenArgumentsOLD {
   final Group group;
-  const CreateCategoryScreenArguments({required this.group});
+  const CreateCategoryScreenArgumentsOLD({required this.group});
 }

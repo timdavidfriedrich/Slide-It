@@ -1,6 +1,6 @@
 import 'package:rating/features/ratings/services/item.dart';
 
-class EditItemScreenArguments {
+class EditItemScreenArgumentsOLD {
   final Item? itemToEdit;
-  const EditItemScreenArguments({this.itemToEdit});
+  const EditItemScreenArgumentsOLD({this.itemToEdit});
 }

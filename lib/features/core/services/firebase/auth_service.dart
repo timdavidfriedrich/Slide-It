@@ -73,7 +73,8 @@ class AuthService {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password);
       await Provider.of<DataProvider>(Global.context, listen: false).loadData();
-      Navigator.pop(Global.context);
+      // Navigator.pop(Global.context);
+      Global.pop();
       Log.hint("User signed in with email and password (User ID: ${user!.uid}).");
     } on FirebaseAuthException catch (error) {
       showDialog(context: Global.context, builder: (context) => SignInFailedDialog(error: error));

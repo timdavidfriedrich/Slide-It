@@ -1,7 +1,7 @@
 import 'package:rating/features/onboarding/services/sign_type.dart';
 
-class SignArguments {
+class SignArgumentsOLD {
   final SignType signType;
 
-  SignArguments({required this.signType});
+  SignArgumentsOLD({required this.signType});
 }

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
-// import 'package:rating/constants/asset_path.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
-import 'package:rating/features/onboarding/services/sign_arguments.dart';
 import 'package:rating/features/onboarding/services/sign_type.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  static const routeName = "/Onboarding";
+  static const routeName = "/Welcome";
   const WelcomeScreen({super.key});
 
   void _navigateToSignIn(BuildContext context) {
-    Navigator.of(context).pushNamed(SignScreen.routeName, arguments: SignArguments(signType: SignType.signIn));
+    context.push(SignScreen.routeName, extra: SignType.signIn);
   }
 
   void _navigateToSignUp(BuildContext context) {
-    Navigator.of(context).pushNamed(SignScreen.routeName, arguments: SignArguments(signType: SignType.signUp));
+    context.push(SignScreen.routeName, extra: SignType.signUp);
   }
 
   void _signInWithGoogle() async {

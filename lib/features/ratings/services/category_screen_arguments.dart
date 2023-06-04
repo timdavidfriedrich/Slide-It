@@ -1,7 +1,7 @@
 import 'package:rating/features/ratings/services/category.dart';
 
-class CategoryScreenArguments {
+class CategoryScreenArgumentsOLD {
   final Category category;
 
-  const CategoryScreenArguments({required this.category});
+  const CategoryScreenArgumentsOLD({required this.category});
 }

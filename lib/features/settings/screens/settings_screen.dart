@@ -5,6 +5,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/scaffold_screen.dart';
 
 class SettingsScreen extends StatefulWidget implements ScaffoldScreen {
+  static const routeName = "/settings";
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override

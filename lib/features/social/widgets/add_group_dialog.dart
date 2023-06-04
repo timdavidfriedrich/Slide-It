@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/features/social/screens/create_group_screen.dart';
 import 'package:rating/features/social/screens/join_group_screen.dart';
 
@@ -9,17 +10,17 @@ class AddGroupDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void cancel() {
-      Navigator.pop(context);
+      context.pop();
     }
 
     void createGroup() {
-      Navigator.pop(context);
-      Navigator.pushNamed(context, CreateGroupScreen.routeName);
+      context.pop();
+      context.push(CreateGroupScreen.routeName);
     }
 
     void joinGroup() {
-      Navigator.pop(context);
-      Navigator.pushNamed(context, JoinGroupScreen.routeName);
+      context.pop();
+      context.push(JoinGroupScreen.routeName);
     }
 
     return PlatformAlertDialog(

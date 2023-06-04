@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 
@@ -21,11 +22,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   void _createGroup() {
     if (_nameController.text.isEmpty) return;
     CloudService.instance.createGroup(_nameController.text);
-    Navigator.pop(context);
+    context.pop();
   }
 
   void _cancel() {
-    Navigator.pop(context);
+    context.pop();
   }
 
   @override

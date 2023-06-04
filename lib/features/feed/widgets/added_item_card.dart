@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -7,9 +8,7 @@ import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/feed/services/history_widget.dart';
 import 'package:rating/features/ratings/screens/category_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
-import 'package:rating/features/ratings/services/category_screen_arguments.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/rate_item_screen_arguments.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
@@ -30,16 +29,11 @@ class _AddedItemCardState extends State<AddedItemCard> {
   void _editOwnRating() async {
     AppUser? appUser = AppUser.current;
     if (appUser == null) return;
-    final result = await Navigator.pushNamed(
-      context,
+    final result = await context.push<(double, String?)>(
       RateItemScreen.routeName,
-      arguments: RateItemScreenArguments(
-        item: widget.item,
-        ratingValue: widget.item.ownRating?.value,
-        comment: widget.item.ownRating?.comment,
-      ),
+      extra: (widget.item, widget.item.ownRating?.value, widget.item.ownRating?.comment),
     );
-    // TODO: Do CloudService logic directly inside RateItemScreen
+    // TODO: Do CloudService logic directly inside RateItemScreen (also for ViewItemScreen)
     if (result is! (double, String?)) return;
     final (ratingValue, comment) = result;
     Rating rating = Rating(
@@ -57,7 +51,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
   }
 
   void _openCategory() {
-    Navigator.pushNamed(context, CategoryScreen.routeName, arguments: CategoryScreenArguments(category: widget.item.category));
+    context.push(CategoryScreen.routeName, extra: widget.item.category);
   }
 
   @override

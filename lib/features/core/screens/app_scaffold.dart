@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:go_router/go_router.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
-import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/screens/feed_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
@@ -16,7 +16,9 @@ import 'package:rating/features/social/screens/social_screen.dart';
 
 class AppScaffold extends StatefulWidget {
   static const routeName = "/";
-  const AppScaffold({super.key});
+  final ScaffoldScreen? selectedScreen;
+  // final Widget child;
+  const AppScaffold({super.key, this.selectedScreen /*, required this.child*/});
 
   @override
   State<AppScaffold> createState() => _AppScaffoldState();
@@ -24,30 +26,33 @@ class AppScaffold extends StatefulWidget {
 
 class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
-  final List<ScaffoldScreen> _screens = const [
-    FeedScreen(),
-    RatingsScreen(),
-    SocialScreen(),
-    // SettingsScreen(),
+  final List<({ScaffoldScreen screen, String routeName})> _screens = const [
+    (screen: FeedScreen(), routeName: FeedScreen.routeName),
+    (screen: RatingsScreen(), routeName: RatingsScreen.routeName),
+    (screen: SocialScreen(), routeName: SocialScreen.routeName),
+    // (SettingsScreen(), SettingsScreen.routeName),
   ];
 
   bool _platformIsApple() {
     return Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS;
   }
 
+  void _selectScreen(int index) {
+    setState(() => _selectedIndex = index);
+    // context.go(_screens[index].routeName);
+  }
+
   void _initSelectedIndex() {
-    AppScaffoldArguments? arguments = ModalRoute.of(context)!.settings.arguments as AppScaffoldArguments?;
+    Log.debug("selectedScreen: ${widget.selectedScreen}");
+    if (widget.selectedScreen == null) return;
     int selectedIndex = 0;
-    if (arguments != null) {
-      selectedIndex = _screens.indexWhere((screen) => screen.runtimeType == arguments.selectedScreen.runtimeType);
-      if (selectedIndex != -1) {
-        setState(() => _selectedIndex = selectedIndex);
-      }
-    }
+    selectedIndex = _screens.indexWhere((screen) => screen.runtimeType == widget.selectedScreen.runtimeType);
+    if (selectedIndex == -1) return;
+    setState(() => _selectedIndex = selectedIndex);
   }
 
   void _navigateToAdd() {
-    Navigator.pushNamed(context, EditItemScreen.routeName);
+    context.push(EditItemScreen.routeName);
   }
 
   Future<void> initData() async {
@@ -57,10 +62,8 @@ class _AppScaffoldState extends State<AppScaffold> {
   @override
   void initState() {
     super.initState();
+    _initSelectedIndex();
     initData();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _initSelectedIndex();
-    });
   }
 
   @override
@@ -83,7 +86,7 @@ class _AppScaffoldState extends State<AppScaffold> {
               : SafeArea(
                   child: Scaffold(
                     appBar: AppBar(
-                      title: Text(_screens[_selectedIndex].displayName),
+                      title: Text(_screens[_selectedIndex].screen.displayName),
                       titleSpacing: 32,
                       actions: [
                         if (_platformIsApple())
@@ -96,26 +99,27 @@ class _AppScaffoldState extends State<AppScaffold> {
                         const SizedBox(width: 32),
                       ],
                     ),
-                    body: _screens[_selectedIndex] as Widget,
+                    body: _screens[_selectedIndex].screen as Widget,
+                    // body: widget.child,
                     bottomNavigationBar: _platformIsApple()
                         ? CupertinoTabBar(
                             currentIndex: _selectedIndex,
-                            onTap: (index) => setState(() => _selectedIndex = index),
+                            onTap: (index) => _selectScreen(index),
                             items: List.generate(_screens.length, (index) {
                               return BottomNavigationBarItem(
-                                icon: _screens[index].cupertinoIcon,
-                                label: _screens[index].displayName,
+                                icon: _screens[index].screen.cupertinoIcon,
+                                label: _screens[index].screen.displayName,
                                 tooltip: "",
                               );
                             }),
                           )
                         : NavigationBar(
                             selectedIndex: _selectedIndex,
-                            onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+                            onDestinationSelected: (index) => _selectScreen(index),
                             destinations: List.generate(_screens.length, (index) {
                               return NavigationDestination(
-                                icon: _screens[index].icon,
-                                label: _screens[index].displayName,
+                                icon: _screens[index].screen.icon,
+                                label: _screens[index].screen.displayName,
                                 tooltip: "",
                               );
                             }),

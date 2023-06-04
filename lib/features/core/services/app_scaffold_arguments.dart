@@ -1,7 +1,7 @@
 import 'package:rating/features/core/services/scaffold_screen.dart';
 
-class AppScaffoldArguments {
+class AppScaffoldArgumentsOLD {
   final ScaffoldScreen selectedScreen;
 
-  const AppScaffoldArguments({required this.selectedScreen});
+  const AppScaffoldArgumentsOLD({required this.selectedScreen});
 }

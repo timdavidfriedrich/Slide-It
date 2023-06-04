@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/feed/services/history_widget.dart';
 import 'package:rating/features/ratings/screens/category_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/ratings/services/category_screen_arguments.dart';
 import 'package:rating/features/social/services/app_user.dart';
 
 class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
@@ -21,7 +21,7 @@ class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
   @override
   Widget build(BuildContext context) {
     void openCategory() {
-      Navigator.pushNamed(context, CategoryScreen.routeName, arguments: CategoryScreenArguments(category: category));
+      context.push(CategoryScreen.routeName, extra: category);
     }
 
     AppUser? appUser = Provider.of<DataProvider>(context, listen: false).getAppUserById(category.createdByUserId);

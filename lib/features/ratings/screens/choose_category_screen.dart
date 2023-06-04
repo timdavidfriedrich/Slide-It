@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/app_scaffold_arguments.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -19,16 +19,16 @@ class ChooseCategoryScreen extends StatelessWidget {
     final List<Group> userGroups = Provider.of<DataProvider>(context).userGroups;
 
     void chooseCategory(Category category) {
-      Navigator.pop(context, category);
+      context.pop(category);
     }
 
     void addCategory() {
-      Navigator.pushNamedAndRemoveUntil(context, AppScaffold.routeName, (route) => false,
-          arguments: const AppScaffoldArguments(selectedScreen: RatingsScreen()));
+      // Navigator.pushNamedAndRemoveUntil
+      context.go(AppScaffold.routeName, extra: const RatingsScreen());
     }
 
     void cancel() {
-      Navigator.pop(context);
+      context.pop();
     }
 
     return Scaffold(
