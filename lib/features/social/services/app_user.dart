@@ -4,6 +4,53 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/global.dart';
 
 class AppUser {
+  String id;
+  String? name;
+  String? avatarUrl;
+  List<String> firebaseMessagingTokens;
+  List<String> groupIds;
+
+  static AppUser? current;
+
+  AppUser({
+    required this.id,
+    this.name = "Unbenannt",
+    this.avatarUrl,
+    this.firebaseMessagingTokens = const [],
+    this.groupIds = const [],
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'avatarUrl': avatarUrl,
+      // ! only gets called when the user is signed in for the first time (or when the user data is deleted)
+      // ! => token is always the same and no newer tokens are added
+      // TODO: Implement a way to update the token.
+      'firebaseMessagingTokens': firebaseMessagingTokens,
+      'groupIds': groupIds,
+    };
+  }
+
+  AppUser.empty() : this(id: "empty");
+
+  AppUser.fromJson(Map<String, dynamic>? json)
+      : id = json?['id'] ?? "",
+        name = json?['name'],
+        avatarUrl = json?['avatarUrl'],
+        firebaseMessagingTokens = ((json?['firebaseMessagingTokens'] ?? []) as List<dynamic>).map((e) => e.toString()).toList(),
+        groupIds = ((json?['groupIds'] ?? []) as List<dynamic>).map((e) => e.toString()).toList();
+
+  Widget getAvatar({double? radius}) {
+    bool hasAvatar = avatarUrl != null;
+    return CircleAvatar(
+      radius: radius,
+      backgroundImage: hasAvatar ? NetworkImage(avatarUrl!) : null,
+      child: hasAvatar ? null : Icon(PlatformIcons(Global.context).person, size: radius),
+    );
+  }
+
   static Widget get currentAvatar {
     final User? user = FirebaseAuth.instance.currentUser;
     bool hasAvatar = user != null && user.photoURL != null;
@@ -17,14 +64,8 @@ class AppUser {
     return FirebaseAuth.instance.currentUser;
   }
 
-  List<String> firebaseMessagingTokens = [];
-  List<String> groupIds = [];
-
-  // AppUser({required this.groupIds});
-
-  AppUser.fromJson(Map<String, dynamic> json) {
-    for (String groupId in json['groups']) {
-      groupIds.add(groupId);
-    }
+  @override
+  String toString() {
+    return "AppUser(id: $id, name: $name, avatarUrl: $avatarUrl, firebaseMessagingTokens: $firebaseMessagingTokens, groupIds: $groupIds)";
   }
 }

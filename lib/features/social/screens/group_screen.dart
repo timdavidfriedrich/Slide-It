@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/social/services/group_screen_arguments.dart';
@@ -52,7 +54,7 @@ class GroupScreen extends StatelessWidget {
                   for (String userId in group.users)
                     ListTile(
                       leading: CircleAvatar(child: Icon(PlatformIcons(context).person)),
-                      title: Text(userId),
+                      title: Text(Provider.of<DataProvider>(context).getAppUserById(userId)?.name ?? "Unbenannt"),
                     )
                 ],
               ),

@@ -5,6 +5,7 @@ import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/onboarding/widgets/password_reset_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_in_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_up_failed_dialog.dart';
@@ -16,18 +17,17 @@ class AuthService {
   static AuthService instance = AuthService();
 
   Future<void> reloadUser() async {
+    if (user == null) reloadUser();
     await user!.reload();
   }
 
   // ? Should anonymous sign in be implemented?
   // static Future signInAnonymously() async {
-  //   // Messenger.loadingAnimation();
   //   try {
   //     await _firebaseAuth.signInAnonymously();
   //   } catch (error) {
   //     Log.error(error);
   //   }
-  //   // Navigator.pop(Global.context);
   // }
 
   Future<void> signInWithGoogle() async {
@@ -44,22 +44,21 @@ class AuthService {
       Log.warning("got credentials");
       await _firebaseAuth.signInWithCredential(credential);
       Log.warning("signed in");
-      // await CloudService.instance.loadUserData();
-      // Log.warning("loaded user data");
     } catch (error) {
       Log.error(error);
     }
   }
 
-  Future<void> createUserWithEmailAndPassword(String email, String password) async {
-    // Messenger.loadingAnimation();
+  Future<bool> createUserWithEmailAndPassword(String name, String email, String password) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password);
       await sendVerificationEmail();
-      // Navigator.pop(Global.context);
+      await CloudService.instance.saveUserData(name: name);
+      return true;
     } on FirebaseAuthException catch (error) {
       showDialog(context: Global.context, builder: (context) => SignUpFailedDialog(error: error));
       Log.error(error);
+      return false;
     }
   }
 
@@ -72,7 +71,6 @@ class AuthService {
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password);
       await Provider.of<DataProvider>(Global.context, listen: false).loadData();
@@ -84,14 +82,11 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    // Messenger.loadingAnimation();
     try {
       await _firebaseAuth.signOut();
-      // await AppUser.instance.signOut();
     } catch (error) {
       Log.error(error);
     }
-    // Navigator.pop(Global.context);
   }
 
   Future<void> sendPasswordResetEmail(String email) async {

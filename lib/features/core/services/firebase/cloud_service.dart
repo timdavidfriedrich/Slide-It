@@ -12,86 +12,143 @@ import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
 class CloudService {
-  static final _userCollection = FirebaseFirestore.instance.collection("users");
-  static final _groupCollection = FirebaseFirestore.instance.collection("groups");
+  static CloudService instance = CloudService();
 
-  static Future<void> saveUserData() async {
+  final _userCollection = FirebaseFirestore.instance.collection("users");
+  final _groupCollection = FirebaseFirestore.instance.collection("groups");
+
+  QuerySnapshot<Map<String, dynamic>>? _rawUsersData;
+  QuerySnapshot<Map<String, dynamic>>? _rawGroupsData;
+
+  // * Currently, only gets called when user is created, not if he changes his name, avatar or something.
+  Future<void> saveUserData({String? name}) async {
     final User? user = FirebaseAuth.instance.currentUser;
+    final String? firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
     if (user == null) return;
-    // final AppUser appUser = AppUser.instance;
-    await _userCollection.doc(user.uid).set({
-      // ! saveUserData only gets called when the user is signed in for the first time (or when the user data is deleted)
-      // ! => token is always the same and no newer tokens are added
-      // TODO: Implement a way to update the token.
-      "firebaseMessagingTokens": FieldValue.arrayUnion(List<String?>.from([await FirebaseMessaging.instance.getToken()])),
-      "groups": [],
-    }, SetOptions(merge: true));
+    AppUser.current = AppUser(
+      id: user.uid,
+      name: name ?? user.displayName,
+      avatarUrl: user.photoURL,
+      firebaseMessagingTokens: firebaseMessagingToken == null ? [] : [firebaseMessagingToken],
+    );
+    if (AppUser.current == null) return;
+    await _userCollection.doc(user.uid).set(AppUser.current!.toJson(), SetOptions(merge: true));
     Log.hint("User data saved (UID: ${user.uid}).");
   }
 
-  static Future<void> loadUserData() async {
+  Future<void> loadRawData() async {
+    await loadRawUsersData();
+    await loadRawGroupsData();
+  }
+
+  Future<void> loadRawUsersData() async {
+    _rawUsersData = await _userCollection.get();
+  }
+
+  Future<void> loadRawGroupsData() async {
+    _rawGroupsData = await _groupCollection.get();
+  }
+
+  Future<void> loadUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    // final AppUser appUser = AppUser.instance;
     DocumentSnapshot snapshot = await _userCollection.doc(user.uid).get();
     if (!snapshot.exists) {
-      // appUser.signOut();
       saveUserData();
       return;
     }
+    AppUser.current = AppUser.fromJson(snapshot.data() as Map<String, dynamic>);
     Log.hint("User data loaded (UID: ${user.uid}).");
-    // Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    // appUser.loadFromJson(data);
   }
 
-  // static Future<List<AppUser> getAllUsers() async {
-  //       List<AppUser> result = [];
-  //   final QuerySnapshot<Map<String, dynamic>> rawData = await _userCollection.get();
-  //   final rawUsers = rawData.docs.map((doc) => doc.data()).toList();
-  //   for (Map<String, dynamic> rawUser in rawUsers) {
-  //     result.add(rawUser);
+  // Future<List<Group>> getUserGroupData() async {
+  //   final User? user = FirebaseAuth.instance.currentUser;
+  //   if (user == null) return [];
+  //   List<Group> result = [];
+  //   List<String> appUserGroupIds = [];
+  //   DocumentSnapshot rawAppUser = await _userCollection.doc(user.uid).get();
+
+  //   AppUser appUser = AppUser.fromJson(rawAppUser.data() as Map<String, dynamic>?);
+  //   for (String groupId in appUser.groupIds) {
+  //     appUserGroupIds.add(groupId);
+  //   }
+  //   final QuerySnapshot<Map<String, dynamic>> rawGroupData = await _groupCollection.get();
+  //   final rawGroups = rawGroupData.docs.map((doc) => doc.data()).toList();
+  //   for (Map<String, dynamic> rawGroup in rawGroups) {
+  //     Group group = Group.fromJson(rawGroup);
+  //     if (!appUserGroupIds.contains(group.id)) continue;
+  //     result.add(group);
   //   }
   //   return result;
-
   // }
 
-  static Future<List<Group>> getUserGroupData() async {
-    // TODO: Refactor getUserGroupData(). This is quite messy.
+  Future<List<Group>> getUserGroups() async {
+    List<Group> result = [];
+
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
-    List<Group> result = [];
-    List<String> appUserGroupIds = [];
-    DocumentSnapshot rawAppUser = await _userCollection.doc(user.uid).get();
-    AppUser appUser = AppUser.fromJson(rawAppUser.data() as Map<String, dynamic>);
-    for (String groupId in appUser.groupIds) {
-      appUserGroupIds.add(groupId);
-    }
-    final QuerySnapshot<Map<String, dynamic>> rawGroupData = await _groupCollection.get();
-    final rawGroups = rawGroupData.docs.map((doc) => doc.data()).toList();
-    for (Map<String, dynamic> rawGroup in rawGroups) {
-      Group group = Group.fromJson(rawGroup);
-      if (!appUserGroupIds.contains(group.id)) continue;
-      result.add(group);
+
+    if (_rawUsersData == null) await loadRawUsersData();
+    if (_rawGroupsData == null) await loadRawGroupsData();
+
+    Map<String, dynamic>? currentRawUsersData = _rawUsersData?.docs.firstWhere((doc) => doc.id == user.uid).data();
+    AppUser.current = AppUser.fromJson(currentRawUsersData);
+    if (AppUser.current == null) return result;
+
+    List<Group> groups = _rawGroupsData?.docs.map((doc) => Group.fromJson(doc.data())).toList() ?? [];
+
+    for (Group g in groups) {
+      if (!AppUser.current!.groupIds.contains(g.id)) continue;
+      result.add(g);
     }
     return result;
   }
 
-  static Future<void> createGroup(String name) async {
+  Future<List<AppUser>> getKnownUsers() async {
+    List<AppUser> result = [];
+
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return [];
+
+    if (_rawUsersData == null) await loadRawUsersData();
+    if (_rawGroupsData == null) await loadRawGroupsData();
+
+    List<AppUser> appUsers = _rawUsersData?.docs.map((doc) => AppUser.fromJson(doc.data())).toList() ?? [];
+    AppUser.current = appUsers.firstWhere((e) => e.id == user.uid);
+    if (AppUser.current == null) return result;
+
+    List<Group> groups = _rawGroupsData?.docs.map((doc) => Group.fromJson(doc.data())).toList() ?? [];
+
+    for (Group g in groups) {
+      if (!AppUser.current!.groupIds.contains(g.id)) continue;
+      for (AppUser a in appUsers) {
+        if (!a.groupIds.contains(g.id)) continue;
+        result.add(a);
+      }
+    }
+    return result;
+  }
+
+  Future<void> createGroup(String name) async {
     final Group group = Group(name: name);
     await _groupCollection.doc(group.id).set(group.toJson(), SetOptions(merge: true));
     await joinGroup(group.id);
     Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
   }
 
-  static Future<void> removeGroup(Group group) async {
+  Future<void> removeGroup(Group group) async {
     await _groupCollection.doc(group.id).delete();
     Provider.of<DataProvider>(Global.context, listen: false).removeGroup(group);
   }
 
-  static Future<void> joinGroup(String groupId) async {
+  Future<void> joinGroup(String groupId) async {
+    AppUser? currentUser = AppUser.current;
+    if (currentUser == null) return;
+    // TODO: Implement error dialog (maybe extra class to reuse) => "already in group"
+    if (currentUser.groupIds.contains(groupId)) return Log.error("Already in group.");
     final User? user = FirebaseAuth.instance.currentUser;
     await _userCollection.doc(user!.uid).set({
-      "groups": FieldValue.arrayUnion(List<String>.from([groupId])),
+      "groupIds": FieldValue.arrayUnion(List<String>.from([groupId])),
     }, SetOptions(merge: true));
     await _groupCollection.doc(groupId).set({
       "users": FieldValue.arrayUnion(List<String>.from([user.uid])),
@@ -102,7 +159,7 @@ class CloudService {
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
   }
 
-  static Future<void> createCategory({required String name, required Group group}) async {
+  Future<void> createCategory({required String name, required Group group}) async {
     final Category category = Category(groupId: group.id, name: name);
     await _groupCollection.doc(group.id).set({
       "categories": FieldValue.arrayUnion(List<Map<String, dynamic>>.from([category.toJson()])),
@@ -110,14 +167,14 @@ class CloudService {
     Provider.of<DataProvider>(Global.context, listen: false).addCategory(category: category, group: group);
   }
 
-  static Future<void> removeCategory(Category category) async {
+  Future<void> removeCategory(Category category) async {
     await _groupCollection.doc(category.groupId).set({
       "categories": FieldValue.arrayRemove(List<Map<String, dynamic>>.from([category.toJson()])),
     }, SetOptions(merge: true));
     Provider.of<DataProvider>(Global.context, listen: false).removeCategory(category);
   }
 
-  static Future<void> addItem({required Category category, required Item item}) async {
+  Future<void> addItem({required Category category, required Item item}) async {
     Provider.of<DataProvider>(Global.context, listen: false).addItem(category: category, item: item);
     Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
@@ -125,12 +182,12 @@ class CloudService {
     }, SetOptions(merge: true));
   }
 
-  static Future<void> editItem({required Item item, String? name, String? imageUrl}) async {
+  Future<void> editItem({required Item item, String? name, String? imageUrl}) async {
     Log.error("EDIT_ITEM NOT IMPLEMENTED");
     return;
   }
 
-  static Future<void> removeItem({required Category category, required Item item}) async {
+  Future<void> removeItem({required Category category, required Item item}) async {
     Provider.of<DataProvider>(Global.context, listen: false).removeItem(category: category, item: item);
     Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
@@ -138,7 +195,7 @@ class CloudService {
     }, SetOptions(merge: true));
   }
 
-  static Future<void> addRating({required Category category, required Rating rating}) async {
+  Future<void> addRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).addRating(category: category, rating: rating);
     Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({
@@ -147,12 +204,12 @@ class CloudService {
     }, SetOptions(merge: true));
   }
 
-  static Future<void> editRating({required Rating rating, String? comment, double? value}) async {
+  Future<void> editRating({required Rating rating, String? comment, double? value}) async {
     Log.error("EDIT_RATING NOT IMPLEMENTED");
     return;
   }
 
-  static Future<void> removeRating({required Category category, required Rating rating}) async {
+  Future<void> removeRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).removeRating(category: category, rating: rating);
     Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
     await _groupCollection.doc(category.groupId).set({

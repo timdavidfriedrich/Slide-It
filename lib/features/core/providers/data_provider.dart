@@ -3,6 +3,7 @@ import 'package:log/log.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/social/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/ratings/services/rating.dart';
 
@@ -11,22 +12,22 @@ import 'package:rating/features/ratings/services/rating.dart';
 class DataProvider extends ChangeNotifier {
   Group? _selectedGroup;
   List<Group> userGroups = [];
-  // List<Group> get userGroups {
-  //   final List<Group> result = [];
-  //   final User? user = AppUser.currentUser;
-  //   if (user == null) return result;
-  //   for (Group g in groups) {
-  //     if (!g.users.contains(user.uid)) continue;
-  //     result.add(g);
-  //   }
-  //   return result;
-  // }
+  List<AppUser> knownUsers = [];
 
   Group? get selectedGroup => _selectedGroup;
 
   void selectGroup(Group group) {
     _selectedGroup = group;
     notifyListeners();
+  }
+
+  AppUser? getAppUserById(String? id) {
+    if (id == null) return null;
+    try {
+      return knownUsers.firstWhere((element) => element.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 
   List<Category> getCategoriesFromGroup(Group group) {
@@ -50,8 +51,9 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> loadData() async {
-    CloudService.loadUserData();
-    userGroups = await CloudService.getUserGroupData();
+    CloudService.instance.loadUserData();
+    userGroups = await CloudService.instance.getUserGroups();
+    knownUsers = await CloudService.instance.getKnownUsers();
     if (userGroups.isEmpty) return;
     _selectedGroup = userGroups.first;
     notifyListeners();

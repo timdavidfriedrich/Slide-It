@@ -11,6 +11,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User? user = AppUser.currentUser;
+    final AppUser? currentUser = AppUser.current;
 
     void signOut() {
       AuthService.instance.signOut();
@@ -19,10 +20,10 @@ class ProfileCard extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.smallPadding),
       leading: CircleAvatar(
-        backgroundImage: user != null && user.photoURL != null ? NetworkImage(user.photoURL!) : null,
-        child: user != null && user.photoURL != null ? null : Icon(PlatformIcons(context).person),
+        backgroundImage: currentUser != null && currentUser.avatarUrl != null ? NetworkImage(currentUser.avatarUrl!) : null,
+        child: currentUser != null && currentUser.avatarUrl != null ? null : Icon(PlatformIcons(context).person),
       ),
-      title: Text(user?.displayName ?? "Unbenannt"),
+      title: Text(currentUser?.name ?? "Unbenannt"),
       subtitle: Text(user?.email ?? "Nicht angemeldet."),
       trailing: IconButton(
         onPressed: () => signOut(),
