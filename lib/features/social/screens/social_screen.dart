@@ -6,13 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/social/widgets/add_group_dialog.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
-class SocialScreen extends StatefulWidget implements ScaffoldScreen {
+class SocialScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/social";
   const SocialScreen({super.key});
 

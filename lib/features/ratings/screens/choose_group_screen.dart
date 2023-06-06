@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/screens/app_scaffold.dart';
+import 'package:rating/features/core/screens/app_shell.dart';
 import 'package:rating/features/social/screens/social_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 
@@ -25,7 +25,7 @@ class ChooseGroupScreen extends StatelessWidget {
     void addGroup() {
       // Navigator.pushNamedAndRemoveUntil
       // ! Doesn't go to Socials, but to last AppScaffold route instead
-      context.go(AppScaffold.routeName, extra: const SocialScreen());
+      context.go(AppShell.routeName, extra: const SocialScreen());
     }
 
     void cancel() {

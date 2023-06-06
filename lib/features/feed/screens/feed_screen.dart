@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/services/history_widget.dart';
 import 'package:rating/features/feed/widgets/added_category_card.dart';
@@ -13,7 +13,7 @@ import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/social/services/group.dart';
 
-class FeedScreen extends StatefulWidget implements ScaffoldScreen {
+class FeedScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/feed";
   const FeedScreen({Key? key}) : super(key: key);
 

@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/core/services/shell_content.dart';
 
-class SettingsScreen extends StatefulWidget implements ScaffoldScreen {
+class SettingsScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/settings";
   const SettingsScreen({Key? key}) : super(key: key);
 

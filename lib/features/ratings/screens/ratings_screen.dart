@@ -9,11 +9,11 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/ratings/widget/item_card.dart';
 import 'package:rating/features/social/services/group.dart';
 
-class RatingsScreen extends StatefulWidget implements ScaffoldScreen {
+class RatingsScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/ratings";
   const RatingsScreen({Key? key}) : super(key: key);
 

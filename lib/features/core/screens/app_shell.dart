@@ -9,24 +9,24 @@ import 'package:rating/features/feed/screens/feed_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/social/screens/social_screen.dart';
 
-class AppScaffold extends StatefulWidget {
+class AppShell extends StatefulWidget {
   static const routeName = "/";
-  final ScaffoldScreen? selectedScreen;
+  final ShellContent? selectedContent;
   // final Widget child;
-  const AppScaffold({super.key, this.selectedScreen /*, required this.child*/});
+  const AppShell({super.key, this.selectedContent /*, required this.child*/});
 
   @override
-  State<AppScaffold> createState() => _AppScaffoldState();
+  State<AppShell> createState() => _AppShellState();
 }
 
-class _AppScaffoldState extends State<AppScaffold> {
+class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
-  final List<({ScaffoldScreen screen, String routeName})> _screens = const [
+  final List<({ShellContent screen, String routeName})> _contents = const [
     (screen: FeedScreen(), routeName: FeedScreen.routeName),
     (screen: RatingsScreen(), routeName: RatingsScreen.routeName),
     (screen: SocialScreen(), routeName: SocialScreen.routeName),
@@ -43,10 +43,10 @@ class _AppScaffoldState extends State<AppScaffold> {
   }
 
   void _initSelectedIndex() {
-    Log.debug("selectedScreen: ${widget.selectedScreen}");
-    if (widget.selectedScreen == null) return;
+    Log.debug("selectedScreen: ${widget.selectedContent}");
+    if (widget.selectedContent == null) return;
     int selectedIndex = 0;
-    selectedIndex = _screens.indexWhere((screen) => screen.runtimeType == widget.selectedScreen.runtimeType);
+    selectedIndex = _contents.indexWhere((screen) => screen.runtimeType == widget.selectedContent.runtimeType);
     if (selectedIndex == -1) return;
     setState(() => _selectedIndex = selectedIndex);
   }
@@ -86,7 +86,7 @@ class _AppScaffoldState extends State<AppScaffold> {
               : SafeArea(
                   child: Scaffold(
                     appBar: AppBar(
-                      title: Text(_screens[_selectedIndex].screen.displayName),
+                      title: Text(_contents[_selectedIndex].screen.displayName),
                       titleSpacing: 32,
                       actions: [
                         if (_platformIsApple())
@@ -99,16 +99,16 @@ class _AppScaffoldState extends State<AppScaffold> {
                         const SizedBox(width: 32),
                       ],
                     ),
-                    body: _screens[_selectedIndex].screen as Widget,
+                    body: _contents[_selectedIndex].screen as Widget,
                     // body: widget.child,
                     bottomNavigationBar: _platformIsApple()
                         ? CupertinoTabBar(
                             currentIndex: _selectedIndex,
                             onTap: (index) => _selectScreen(index),
-                            items: List.generate(_screens.length, (index) {
+                            items: List.generate(_contents.length, (index) {
                               return BottomNavigationBarItem(
-                                icon: _screens[index].screen.cupertinoIcon,
-                                label: _screens[index].screen.displayName,
+                                icon: _contents[index].screen.cupertinoIcon,
+                                label: _contents[index].screen.displayName,
                                 tooltip: "",
                               );
                             }),
@@ -116,10 +116,10 @@ class _AppScaffoldState extends State<AppScaffold> {
                         : NavigationBar(
                             selectedIndex: _selectedIndex,
                             onDestinationSelected: (index) => _selectScreen(index),
-                            destinations: List.generate(_screens.length, (index) {
+                            destinations: List.generate(_contents.length, (index) {
                               return NavigationDestination(
-                                icon: _screens[index].screen.icon,
-                                label: _screens[index].screen.displayName,
+                                icon: _contents[index].screen.icon,
+                                label: _contents[index].screen.displayName,
                                 tooltip: "",
                               );
                             }),

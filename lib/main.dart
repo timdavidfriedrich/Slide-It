@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/config/themes/theme_config.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/services/scaffold_screen.dart';
+import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/onboarding/services/sign_type.dart';
 import 'package:rating/features/ratings/screens/category_screen.dart';
@@ -13,7 +13,7 @@ import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/screens/app_scaffold.dart';
+import 'package:rating/features/core/screens/app_shell.dart';
 import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
@@ -55,7 +55,7 @@ class RatingApp extends StatelessWidget {
             darkTheme: ThemeConfig.dark(context, darkDynamic),
             routerConfig: GoRouter(
               navigatorKey: Global.navigatorState,
-              initialLocation: AppScaffold.routeName,
+              initialLocation: AppShell.routeName,
               debugLogDiagnostics: true,
               errorBuilder: (context, state) => Scaffold(body: ErrorInfo(message: state.error.toString())),
               routes: [
@@ -81,10 +81,10 @@ class RatingApp extends StatelessWidget {
                 //   ],
                 // ),
                 GoRoute(
-                  path: AppScaffold.routeName,
+                  path: AppShell.routeName,
                   builder: (context, state) {
-                    final ScaffoldScreen? scaffoldScreen = state.extra as ScaffoldScreen?;
-                    return AppScaffold(selectedScreen: scaffoldScreen);
+                    final ShellContent? scaffoldScreen = state.extra as ShellContent?;
+                    return AppShell(selectedContent: scaffoldScreen);
                   },
                 ),
                 GoRoute(

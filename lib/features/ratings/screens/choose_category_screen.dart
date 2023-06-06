@@ -6,7 +6,7 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/screens/app_scaffold.dart';
+import 'package:rating/features/core/screens/app_shell.dart';
 import 'package:rating/features/social/services/group.dart';
 
 class ChooseCategoryScreen extends StatelessWidget {
@@ -24,7 +24,7 @@ class ChooseCategoryScreen extends StatelessWidget {
 
     void addCategory() {
       // Navigator.pushNamedAndRemoveUntil
-      context.go(AppScaffold.routeName, extra: const RatingsScreen());
+      context.go(AppShell.routeName, extra: const RatingsScreen());
     }
 
     void cancel() {
