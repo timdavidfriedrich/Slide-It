@@ -20,7 +20,7 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     torchEnabled: false,
   );
 
-  void _joinGroupByInvitationGroupId(String invitationGroupId) {
+  void _popWithInvitationGroupId(String invitationGroupId) {
     context.pop(invitationGroupId);
   }
 
@@ -38,7 +38,7 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
       invitationGroupId = barcode.rawValue;
     }
     if (invitationGroupId == null) return;
-    _joinGroupByInvitationGroupId(invitationGroupId);
+    _popWithInvitationGroupId(invitationGroupId);
   }
 
   @override

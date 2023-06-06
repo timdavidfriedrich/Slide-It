@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:rating/constants/global.dart';
 
 class ErrorDialog extends StatelessWidget {
   final String? message;
   const ErrorDialog({super.key, this.message});
 
-  static void open({String? message}) {
-    showDialog(context: Global.context, builder: (context) => ErrorDialog(message: message));
+  static void show(BuildContext context, {String? message}) {
+    showDialog(context: context, builder: (context) => ErrorDialog(message: message));
   }
 
   @override

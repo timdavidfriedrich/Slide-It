@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:log/log.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
+import 'package:rating/features/core/widgets/error_dialog.dart';
 import 'package:rating/features/social/screens/qr_code_scanner_screen.dart';
 
 class JoinGroupScreen extends StatefulWidget {
@@ -33,9 +35,15 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
     context.pop();
   }
 
-  void _joinGroup() {
+  void _joinGroup() async {
     if (_nameController.text.isEmpty) return;
-    CloudService.instance.joinGroup(_nameController.text);
+    final bool success = await CloudService.instance.joinGroup(_nameController.text);
+    Log.error(success);
+    if (!mounted) return;
+    if (!success) {
+      ErrorDialog.show(context, message: "You are already a member of this group.");
+      return;
+    }
     context.pop();
   }
 

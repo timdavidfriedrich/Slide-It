@@ -33,7 +33,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
       RateItemScreen.routeName,
       extra: (widget.item, widget.item.ownRating?.value, widget.item.ownRating?.comment),
     );
-    // TODO: Do CloudService logic directly inside RateItemScreen (also for ViewItemScreen)
+    // TODO: Put CloudService logic directly inside RateItemScreen (also for ViewItemScreen)
     if (result is! (double, String?)) return;
     final (ratingValue, comment) = result;
     Rating rating = Rating(

@@ -71,10 +71,6 @@ class _AppShellState extends State<AppShell> {
     return StreamBuilder(
       stream: FirebaseAuth.instance.userChanges(),
       builder: (context, snapshot) {
-        // TODO: Find a solution (interupts the regular scaffold).
-        // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
-        // }
         if (snapshot.hasError) {
           return ErrorInfo(message: snapshot.error.toString());
         }
@@ -99,7 +95,9 @@ class _AppShellState extends State<AppShell> {
                         const SizedBox(width: 32),
                       ],
                     ),
-                    body: _contents[_selectedIndex].screen as Widget,
+                    body: snapshot.connectionState == ConnectionState.waiting
+                        ? const Center(child: CircularProgressIndicator.adaptive())
+                        : _contents[_selectedIndex].screen as Widget,
                     // body: widget.child,
                     bottomNavigationBar: _platformIsApple()
                         ? CupertinoTabBar(

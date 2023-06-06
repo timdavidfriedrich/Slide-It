@@ -124,11 +124,13 @@ class CloudService {
     Log.hint("Removed Group \"${group.name}\" (ID: ${group.id}) from cloud.");
   }
 
-  Future<void> joinGroup(String groupId) async {
+  Future<bool> joinGroup(String groupId) async {
     AppUser? currentUser = AppUser.current;
-    if (currentUser == null) return;
-    // TODO: Implement error dialog (maybe extra class to reuse) => "already in group"
-    if (currentUser.groupIds.contains(groupId)) return Log.error("JOIN GROUP: Already in group (ID: $groupId).");
+    if (currentUser == null) return false;
+    if (currentUser.groupIds.contains(groupId)) {
+      Log.error("JOIN GROUP: Already in group (ID: $groupId).");
+      return false;
+    }
     final User? user = FirebaseAuth.instance.currentUser;
     await _userCollection.doc(user!.uid).set({
       "groupIds": FieldValue.arrayUnion(List<String>.from([groupId])),
@@ -141,6 +143,7 @@ class CloudService {
     // TODO: Implement a way to not load everything, but only the group.
     Provider.of<DataProvider>(Global.context, listen: false).loadData();
     Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.id}) joined a group (ID: $groupId) and data saved to cloud.");
+    return true;
   }
 
   Future<void> createCategory({required String name, required Group group}) async {

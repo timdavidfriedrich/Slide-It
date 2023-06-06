@@ -50,12 +50,6 @@ class _RatingsScreenState extends State<RatingsScreen> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     currentGroup = Provider.of<DataProvider>(context).selectedGroup;
     return SafeArea(
