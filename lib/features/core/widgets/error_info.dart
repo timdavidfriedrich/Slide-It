@@ -3,8 +3,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
 
 class ErrorInfo extends StatelessWidget {
-  final String message;
-  const ErrorInfo({super.key, this.message = "Ein Fehler ist aufgetreten."});
+  final String? message;
+  const ErrorInfo({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ErrorInfo extends StatelessWidget {
           const SizedBox(height: Constants.smallPadding),
           Flexible(
             child: Text(
-              message,
+              message ?? "Es ist ein Fehler aufgetreten.",
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.error,
                   ),
