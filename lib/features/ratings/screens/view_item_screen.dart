@@ -73,7 +73,9 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                AspectRatio(aspectRatio: 4 / 3, child: widget.item.image),
+                AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: ClipRRect(borderRadius: BorderRadius.circular(Constants.defaultBorderRadius), child: widget.item.image)),
                 Positioned(
                   bottom: -Constants.mediumPadding / 2,
                   right: -Constants.mediumPadding / 2,
@@ -81,7 +83,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                     elevation: 0,
                     color: Theme.of(context).colorScheme.background,
                     child: Padding(
-                      padding: const EdgeInsets.all(Constants.smallPadding),
+                      padding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.smallPadding),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

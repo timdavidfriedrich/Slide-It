@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Constants {
+  static const int imageCompressionQuality = 80;
+  static const int imageMaxSize = 800;
+
   static const Color greatColor = Color(0xFF20BF6B);
   static const Color mediumColor = Color(0xFFF7B731);
   static const Color badColor = Color(0xFFEB3B5A);

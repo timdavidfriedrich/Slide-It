@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
+import 'package:rating/features/core/services/firebase/storage_service.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/services/item.dart';
@@ -50,10 +51,21 @@ class DataProvider extends ChangeNotifier {
     return userGroups.firstWhere((element) => element.id == category.groupId);
   }
 
+  // Future<void> loadItemImages() async {
+  //   for (Group g in userGroups) {
+  //     for (Category c in g.categories) {
+  //       for (Item i in c.items) {
+  //         i.firebaseImageUrl = await StorageService.instance.getItemImageDownloadUrl(item: i);
+  //       }
+  //     }
+  //   }
+  // }
+
   Future<void> loadData() async {
     CloudService.instance.loadUserData();
     userGroups = await CloudService.instance.getUserGroups();
     knownUsers = await CloudService.instance.getKnownUsers();
+    // loadItemImages();
     if (userGroups.isEmpty) return;
     _selectedGroup = userGroups.first;
     notifyListeners();

@@ -12,14 +12,17 @@ import 'package:rating/features/onboarding/widgets/sign_up_failed_dialog.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final User? user = FirebaseAuth.instance.currentUser;
 
   static AuthService instance = AuthService();
 
   Future<void> reloadUser() async {
-    if (user == null) reloadUser();
-    await user!.reload();
-    Log.hint("Reloaded user (User ID: ${user!.uid}).");
+    User? user = FirebaseAuth.instance.currentUser;
+    try {
+      await user!.reload();
+      Log.hint("Reloaded user (User ID: ${user.uid}).");
+    } catch (e) {
+      Log.error(e);
+    }
   }
 
   // ? Should anonymous sign in be implemented?
@@ -32,6 +35,7 @@ class AuthService {
   // }
 
   Future<void> signInWithGoogle() async {
+    User? user = FirebaseAuth.instance.currentUser;
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
@@ -47,29 +51,33 @@ class AuthService {
   }
 
   Future<bool> createUserWithEmailAndPassword(String name, String email, String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password);
       await sendVerificationEmail();
       await CloudService.instance.saveUserData(name: name);
-      Log.hint("Created user with email and password (User ID: ${user!.uid}).");
+      Log.hint("Created user with email and password (User ID: ${user?.uid}).");
       return true;
-    } on FirebaseAuthException catch (error) {
-      showDialog(context: Global.context, builder: (context) => SignUpFailedDialog(error: error));
+    } catch (error) {
       Log.error("EMAIL SIGN UP: $error");
+      if (error is! FirebaseAuthException) return false;
+      showDialog(context: Global.context, builder: (context) => SignUpFailedDialog(error: error));
       return false;
     }
   }
 
   Future<void> sendVerificationEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
     try {
       await user!.sendEmailVerification();
-      Log.hint("Send verification email (User ID: ${user!.uid}).");
+      Log.hint("Send verification email (User ID: ${user.uid}).");
     } catch (error) {
       Log.error("VERIFICATION EMAIL: $error");
     }
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password);
       await Provider.of<DataProvider>(Global.context, listen: false).loadData();
@@ -83,6 +91,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    User? user = FirebaseAuth.instance.currentUser;
     try {
       await _firebaseAuth.signOut();
       Log.hint("User signed out (User ID: ${user!.uid}).");

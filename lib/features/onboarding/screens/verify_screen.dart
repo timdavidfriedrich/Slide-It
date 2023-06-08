@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:log/log.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/screens/app_shell.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
@@ -26,8 +28,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   void _reload() async {
+    User? user = AppUser.currentUser;
+    if (user == null) return;
     await AuthService.instance.reloadUser().whenComplete(() {
-      if (AppUser.currentUser!.emailVerified) {
+      if (user.emailVerified) {
         reloadTimer?.cancel();
         context.go(AppShell.routeName);
       }

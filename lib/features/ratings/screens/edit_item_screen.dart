@@ -1,12 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/firebase/storage_service.dart';
+import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/ratings/services/item.dart';
@@ -46,6 +51,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
   Category? _category;
   bool _isInputValid = false;
 
+  Uint8List? _cameraImageData;
+
   double _ratingValue = Constants.noRatingValue;
   String? _comment;
 
@@ -64,7 +71,34 @@ class _EditItemScreenState extends State<EditItemScreen> {
     });
   }
 
-  void _openCamera() {}
+  Widget _getImage() {
+    if (_cameraImageData != null) {
+      return FittedBox(fit: BoxFit.cover, clipBehavior: Clip.hardEdge, child: Image.memory(_cameraImageData!));
+    }
+    if (widget.itemToEdit?.image != null) {
+      return widget.itemToEdit!.image!;
+    }
+    return Center(child: Icon(PlatformIcons(context).photoCamera));
+  }
+
+  void _loadImageFromCamera() async {
+    XFile? image;
+    try {
+      // TODO: Get ImageSource by dialog
+      image = await ImagePicker().pickImage(source: ImageSource.camera);
+    } catch (e) {
+      Log.error(e);
+    }
+    if (image == null) return;
+    Uint8List imageData = await image.readAsBytes();
+    Uint8List compressImageData = await FlutterImageCompress.compressWithList(
+      imageData,
+      quality: Constants.imageCompressionQuality,
+      minHeight: Constants.imageMaxSize,
+      minWidth: Constants.imageMaxSize,
+    );
+    setState(() => _cameraImageData = compressImageData);
+  }
 
   void _changeCategory() async {
     final result = await context.push<Category>(ChooseCategoryScreen.routeName);
@@ -86,15 +120,22 @@ class _EditItemScreenState extends State<EditItemScreen> {
     });
   }
 
-  void _save() {
+  void _save() async {
     if (_category == null) return;
-    User? user = AppUser.currentUser;
-    if (user == null) context.pop();
-
+    AppUser? appUser = AppUser.current;
+    if (appUser == null) return context.pop();
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
+    item.firebaseImageUrl = StorageService.instance.getItemImageDownloadUrl(item: item);
+    // TODO: Implement a loading indicator somehow
+    await _uploadImage(item);
+    _saveItem(item: item, user: appUser);
+    if (mounted) context.pop();
+  }
+
+  void _saveItem({required Item item, required AppUser user}) {
     Rating rating = Rating(
       itemId: item.id,
-      userId: user!.uid,
+      userId: user.id,
       value: _ratingValue,
       comment: _comment,
     );
@@ -104,13 +145,13 @@ class _EditItemScreenState extends State<EditItemScreen> {
     } else {
       CloudService.instance.editItem(item: item);
     }
-    context.pop();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    initValues();
+  Future<void> _uploadImage(Item item) async {
+    if (_cameraImageData != null) {
+      StorageService.instance.uploadItemImage(item: item, imageData: _cameraImageData!);
+      // item.firebaseImageUrl = await StorageService.instance.getItemImageDownloadUrl(item: item);
+    }
   }
 
   @override
@@ -125,18 +166,29 @@ class _EditItemScreenState extends State<EditItemScreen> {
           children: [
             const SizedBox(height: Constants.normalPadding),
             AspectRatio(
-              aspectRatio: 3 / 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                ),
-                onPressed: () => _openCamera(),
-                child: widget.itemToEdit != null
-                    ? widget.itemToEdit!.image
-                    : Icon(PlatformIcons(context).photoCamera, size: Constants.mediumPadding),
-              ),
-            ),
+                aspectRatio: 4 / 3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    clipBehavior: Clip.hardEdge,
+                    children: [
+                      _getImage(),
+                      Positioned.fill(
+                        child: Material(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                            side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                          ),
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _loadImageFromCamera(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
             const SizedBox(height: Constants.mediumPadding),
             TextField(
               controller: _nameController,

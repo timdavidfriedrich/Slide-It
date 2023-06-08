@@ -69,19 +69,24 @@ class CloudService {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
 
-    if (_rawUsersData == null) await loadRawUsersData();
-    if (_rawGroupsData == null) await loadRawGroupsData();
+    try {
+      if (_rawUsersData == null) await loadRawUsersData();
+      if (_rawGroupsData == null) await loadRawGroupsData();
 
-    Map<String, dynamic>? currentRawUsersData = _rawUsersData?.docs.firstWhere((doc) => doc.id == user.uid).data();
-    AppUser.current = AppUser.fromJson(currentRawUsersData);
-    if (AppUser.current == null) return result;
+      Map<String, dynamic>? currentRawUsersData = _rawUsersData?.docs.firstWhere((doc) => doc.id == user.uid).data();
+      AppUser.current = AppUser.fromJson(currentRawUsersData);
+      if (AppUser.current == null) return result;
 
-    List<Group> groups = _rawGroupsData?.docs.map((doc) => Group.fromJson(doc.data())).toList() ?? [];
+      List<Group> groups = _rawGroupsData?.docs.map((doc) => Group.fromJson(doc.data())).toList() ?? [];
 
-    for (Group g in groups) {
-      if (!AppUser.current!.groupIds.contains(g.id)) continue;
-      result.add(g);
+      for (Group g in groups) {
+        if (!AppUser.current!.groupIds.contains(g.id)) continue;
+        result.add(g);
+      }
+    } catch (e) {
+      Log.error(e);
     }
+
     return result;
   }
 

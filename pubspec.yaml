@@ -10,7 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  firebase_cached_image: ^0.4.3
+  flutter_image_compress: ^2.0.3
+  go_router: ^7.1.1
+  image_picker: ^0.8.7+5
   mobile_scanner: ^3.2.0
+  path_provider: ^2.0.15
   provider: ^6.0.5
   qr_flutter: ^4.1.0
   uuid: ^3.0.7
@@ -30,7 +35,6 @@ dependencies:
   # own packages
   log:
     path: ./packages/log
-  go_router: ^7.1.1
 
 
 dev_dependencies:

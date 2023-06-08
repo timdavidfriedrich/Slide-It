@@ -79,14 +79,34 @@ class _AddedItemCardState extends State<AddedItemCard> {
               ],
             ),
             const SizedBox(height: Constants.smallPadding),
-            Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                onTap: () => _viewItem(),
-                leading: SizedBox(width: 32, height: 32, child: widget.item.image),
-                title: Text(widget.item.name),
-                subtitle: Text(widget.item.category.name),
-                trailing: Text(widget.item.group.name),
+            InkWell(
+              onTap: () => _viewItem(),
+              borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+              child: Card(
+                margin: EdgeInsets.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.item.image != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(Constants.normalPadding, Constants.normalPadding, Constants.normalPadding, 0),
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                Constants.defaultBorderRadius,
+                              ),
+                              child: widget.item.image),
+                        ),
+                      ),
+                    ListTile(
+                      // onTap: () => _viewItem(),
+                      title: Text(widget.item.name),
+                      subtitle: Text(widget.item.category.name),
+                      trailing: Text(widget.item.group.name),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: Constants.smallPadding),
