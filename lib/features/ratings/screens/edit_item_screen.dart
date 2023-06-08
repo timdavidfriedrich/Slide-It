@@ -11,7 +11,6 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/firebase/storage_service.dart';
-import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/ratings/screens/choose_category_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/ratings/services/item.dart';
