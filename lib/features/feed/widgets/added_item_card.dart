@@ -29,24 +29,15 @@ class _AddedItemCardState extends State<AddedItemCard> {
   void _editOwnRating() async {
     AppUser? appUser = AppUser.current;
     if (appUser == null) return;
-    final result = await context.push<(double, String?)>(
-      RateItemScreen.routeName,
-      extra: (widget.item, widget.item.ownRating?.value, widget.item.ownRating?.comment),
-    );
-    // TODO: Put CloudService logic directly inside RateItemScreen (also for ViewItemScreen)
-    if (result is! (double, String?)) return;
-    final (ratingValue, comment) = result;
-    Rating rating = Rating(
-      value: ratingValue,
-      comment: comment,
-      userId: appUser.id,
-      itemId: widget.item.id,
-    );
+    final result = await context.push<Rating>(RateItemScreen.routeName, extra: (widget.item, widget.item.ownRating));
+    if (result is! Rating) return;
+    final Rating rating = result;
     if (widget.item.ownRating == null) {
       CloudService.instance.addRating(category: widget.item.category, rating: rating);
     } else {
       CloudService.instance.editRating(rating: rating);
     }
+    if (!mounted) return;
     setState(() {});
   }
 

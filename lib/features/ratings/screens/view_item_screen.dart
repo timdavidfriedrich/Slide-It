@@ -29,18 +29,9 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   void _editOwnRating() async {
     User? user = AppUser.currentUser;
     if (user == null) return;
-    final result = await context.push<(double, String?)>(
-      RateItemScreen.routeName,
-      extra: (widget.item, widget.item.ownRating?.value, widget.item.ownRating?.comment),
-    );
-    if (result == null) return;
-    final (ratingValue, comment) = result;
-    Rating rating = Rating(
-      value: ratingValue,
-      comment: comment,
-      userId: user.uid,
-      itemId: widget.item.id,
-    );
+    final result = await context.push<Rating>(RateItemScreen.routeName, extra: (widget.item, widget.item.ownRating));
+    if (result is! Rating) return;
+    final Rating rating = result;
     if (widget.item.ownRating == null) {
       CloudService.instance.addRating(category: widget.item.category, rating: rating);
     } else {

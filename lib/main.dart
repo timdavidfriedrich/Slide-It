@@ -23,6 +23,7 @@ import 'package:rating/features/ratings/screens/view_item_screen.dart';
 import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/ratings/services/rating.dart';
 import 'package:rating/features/social/screens/create_group_screen.dart';
 import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/screens/join_group_screen.dart';
@@ -146,8 +147,8 @@ class RatingApp extends StatelessWidget {
                   path: RateItemScreen.routeName,
                   builder: (context, state) {
                     // TODO: Use records with named parameters, if that is possible
-                    final (Item item, double? ratingValue, String? comment) = state.extra as (Item, double?, String?);
-                    return RateItemScreen(item: item, ratingValue: ratingValue, comment: comment);
+                    final (Item item, Rating? rating) = state.extra as (Item, Rating?);
+                    return RateItemScreen(item: item, rating: rating);
                   },
                 ),
                 GoRoute(

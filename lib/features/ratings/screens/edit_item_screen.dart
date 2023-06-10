@@ -52,21 +52,21 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   Uint8List? _cameraImageData;
 
-  double _ratingValue = Constants.noRatingValue;
-  String? _comment;
+  Rating? _rating;
 
   void _checkIfInputValid() {
     setState(() => _isInputValid = (_nameController.text.isNotEmpty || widget.itemToEdit != null) && _category != null);
   }
 
   bool _hasRating() {
-    return _ratingValue > 0.0;
+    if (_rating == null) return false;
+    if (_rating!.value <= 0.0) return false;
+    return true;
   }
 
-  void initValues() {
+  void _initRating() {
     setState(() {
-      _nameController.text = widget.itemToEdit?.name ?? "";
-      _category = widget.itemToEdit?.category;
+      _rating = widget.itemToEdit?.ownRating;
     });
   }
 
@@ -77,7 +77,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     if (widget.itemToEdit?.image != null) {
       return widget.itemToEdit!.image!;
     }
-    return Center(child: Icon(PlatformIcons(context).photoCamera));
+    return Center(child: Icon(PlatformIcons(context).photoCamera, color: Theme.of(context).colorScheme.primary));
   }
 
   void _loadImageFromCamera() async {
@@ -107,16 +107,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void _addRating() async {
-    final result = await context.push<(double, String?)>(
+    final result = await context.push<Rating>(
       RateItemScreen.routeName,
-      extra: (Item(categoryId: _category?.id ?? "", name: _nameController.text), _ratingValue, _comment),
+      extra: (Item(categoryId: _category?.id ?? "", name: _nameController.text), widget.itemToEdit?.ownRating),
     );
-    if (result == null) return;
-    final (ratingValue, comment) = result;
-    setState(() {
-      _ratingValue = ratingValue;
-      _comment = comment;
-    });
+    if (result is! Rating) return;
+    setState(() => _rating = result);
   }
 
   void _save() async {
@@ -124,7 +120,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
     AppUser? appUser = AppUser.current;
     if (appUser == null) return context.pop();
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
-    item.firebaseImageUrl = StorageService.instance.getItemImageDownloadUrl(item: item);
     // TODO: Implement a loading indicator somehow
     await _uploadImage(item);
     _saveItem(item: item, user: appUser);
@@ -132,14 +127,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void _saveItem({required Item item, required AppUser user}) {
-    Rating rating = Rating(
-      itemId: item.id,
-      userId: user.id,
-      value: _ratingValue,
-      comment: _comment,
-    );
     if (widget.itemToEdit == null) {
-      item.ratings.add(rating);
+      if (_rating != null) item.ratings.add(_rating!);
       CloudService.instance.addItem(category: _category!, item: item);
     } else {
       CloudService.instance.editItem(item: item);
@@ -147,10 +136,16 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   Future<void> _uploadImage(Item item) async {
-    if (_cameraImageData != null) {
-      StorageService.instance.uploadItemImage(item: item, imageData: _cameraImageData!);
-      // item.firebaseImageUrl = await StorageService.instance.getItemImageDownloadUrl(item: item);
-    }
+    if (_cameraImageData == null) return;
+    item.firebaseImageUrl = StorageService.instance.getItemImageDownloadUrl(item: item);
+    StorageService.instance.uploadItemImage(item: item, imageData: _cameraImageData!);
+    // item.firebaseImageUrl = await StorageService.instance.getItemImageDownloadUrl(item: item);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initRating();
   }
 
   @override
@@ -214,12 +209,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   enabled: _category != null && _nameController.text.isNotEmpty,
                   onTap: () => _addRating(),
                   title: Text(_hasRating() ? "Meine Bewertung:" : "(Klicke zum Bewerten)"),
-                  subtitle: _comment != null ? Text(_comment!) : null,
+                  subtitle: _rating?.comment != null ? Text(_rating!.comment!) : null,
                   trailing: _hasRating()
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(_ratingValue.toStringAsFixed(Constants.ratingValueDigit)),
+                            Text(_rating!.value.toStringAsFixed(Constants.ratingValueDigit)),
                             const SizedBox(width: Constants.smallPadding),
                             const Text("🔥"),
                           ],

@@ -5,14 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/ratings/services/rating.dart';
 
 class RateItemScreen extends StatefulWidget {
   static const routeName = "/Rate";
   final Item item;
-  final double? ratingValue;
-  final String? comment;
-  const RateItemScreen({super.key, required this.item, this.ratingValue = Constants.noRatingValue, this.comment});
+  final Rating? rating;
+  const RateItemScreen({super.key, required this.item, this.rating});
 
   @override
   State<RateItemScreen> createState() => _RateItemScreenState();
@@ -20,6 +21,7 @@ class RateItemScreen extends StatefulWidget {
 
 class _RateItemScreenState extends State<RateItemScreen> {
   final TextEditingController _commentController = TextEditingController();
+  late final Widget? _image;
 
   double _sliderValue = Constants.noRatingValue;
 
@@ -55,13 +57,16 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   void _save() {
     String? text = _commentController.text.isNotEmpty ? _commentController.text : null;
-    context.pop((_sliderValue, text));
+    AppUser? currentUser = AppUser.current;
+    if (currentUser == null) return context.pop();
+    context.pop(Rating(itemId: widget.item.id, userId: currentUser.id, value: _sliderValue, comment: text));
   }
 
   @override
   void initState() {
     super.initState();
-    _sliderValue = widget.ratingValue ?? Constants.noRatingValue;
+    _sliderValue = widget.rating?.value ?? Constants.noRatingValue;
+    _image = widget.item.image;
   }
 
   @override
@@ -84,7 +89,14 @@ class _RateItemScreenState extends State<RateItemScreen> {
           padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
           children: [
             const SizedBox(height: Constants.normalPadding),
-            const AspectRatio(aspectRatio: 3 / 2, child: Placeholder()),
+            if (_image != null)
+              AspectRatio(
+                aspectRatio: 3 / 2,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                  child: _image,
+                ),
+              ),
             const SizedBox(height: Constants.mediumPadding),
             Text(
               "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
