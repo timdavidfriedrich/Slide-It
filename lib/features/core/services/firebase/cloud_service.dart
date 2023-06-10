@@ -115,12 +115,22 @@ class CloudService {
     return result;
   }
 
-  Future<void> createGroup(String name) async {
-    final Group group = Group(name: name);
-    await _groupCollection.doc(group.id).set(group.toJson(), SetOptions(merge: true));
-    await joinGroup(group.id);
-    Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
-    Log.hint("Created Group \"${group.name}\" (ID: ${group.id}) and saved to cloud.");
+  Future<bool> createGroup(String name) async {
+    AppUser? currentUser = AppUser.current;
+    if (currentUser == null) return false;
+    final Group group = Group(name: name, autoJoin: true);
+    try {
+      await _groupCollection.doc(group.id).set(group.toJson(), SetOptions(merge: true));
+      await _userCollection.doc(currentUser.id).set({
+        "groupIds": FieldValue.arrayUnion(List<String>.from([group.id])),
+      }, SetOptions(merge: true));
+      Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
+      Log.hint("Created Group \"${group.name}\" (ID: ${group.id}) and saved to cloud.");
+      return true;
+    } catch (e) {
+      Log.error(e);
+      return false;
+    }
   }
 
   Future<void> removeGroup(Group group) async {
@@ -137,7 +147,8 @@ class CloudService {
       return false;
     }
     final User? user = FirebaseAuth.instance.currentUser;
-    await _userCollection.doc(user!.uid).set({
+    if (user == null) return false;
+    await _userCollection.doc(user.uid).set({
       "groupIds": FieldValue.arrayUnion(List<String>.from([groupId])),
     }, SetOptions(merge: true));
     await _groupCollection.doc(groupId).set({
@@ -145,9 +156,8 @@ class CloudService {
     }, SetOptions(merge: true));
 
     // FirebaseMessaging.instance.subscribeToTopic(id);
-    // TODO: Implement a way to not load everything, but only the group.
-    Provider.of<DataProvider>(Global.context, listen: false).loadData();
-    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.id}) joined a group (ID: $groupId) and data saved to cloud.");
+    await Provider.of<DataProvider>(Global.context, listen: false).reloadData();
+    Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.id}) joined a group (ID: $groupId). Cloud data got saved and reloaded.");
     return true;
   }
 

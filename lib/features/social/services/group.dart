@@ -14,8 +14,8 @@ class Group {
   List<String> users = [];
   List<Category> categories = [];
 
-  Group({required this.name, bool autoJoin = true}) : id = "group--${const Uuid().v4()}" {
-    if (autoJoin) users.add(AppUser.currentUser!.uid);
+  Group({required this.name, bool autoJoin = false}) : id = "group--${const Uuid().v4()}" {
+    if (autoJoin && AppUser.current != null) users.add(AppUser.current!.id);
   }
 
   Group.empty()

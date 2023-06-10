@@ -16,6 +16,22 @@ class DataProvider extends ChangeNotifier {
 
   Group? get selectedGroup => _selectedGroup;
 
+  Future<void> loadData() async {
+    CloudService.instance.loadUserData();
+    userGroups = await CloudService.instance.getUserGroups();
+    knownUsers = await CloudService.instance.getKnownUsers();
+    if (userGroups.isEmpty) return;
+    _selectedGroup = userGroups.first;
+    notifyListeners();
+    Log.hint("Loaded ${userGroups.length} groups to runtime storage.");
+  }
+
+  Future<void> reloadData() async {
+    await CloudService.instance.loadRawData();
+    await loadData();
+    notifyListeners();
+  }
+
   void selectGroup(Group group) {
     _selectedGroup = group;
     notifyListeners();
@@ -48,27 +64,6 @@ class DataProvider extends ChangeNotifier {
   Group getGroupFromCategory(Category category) {
     if (userGroups.isEmpty) return Group.empty();
     return userGroups.firstWhere((element) => element.id == category.groupId);
-  }
-
-  // Future<void> loadItemImages() async {
-  //   for (Group g in userGroups) {
-  //     for (Category c in g.categories) {
-  //       for (Item i in c.items) {
-  //         i.firebaseImageUrl = await StorageService.instance.getItemImageDownloadUrl(item: i);
-  //       }
-  //     }
-  //   }
-  // }
-
-  Future<void> loadData() async {
-    CloudService.instance.loadUserData();
-    userGroups = await CloudService.instance.getUserGroups();
-    knownUsers = await CloudService.instance.getKnownUsers();
-    // loadItemImages();
-    if (userGroups.isEmpty) return;
-    _selectedGroup = userGroups.first;
-    notifyListeners();
-    Log.hint("Loaded ${userGroups.length} groups to runtime storage.");
   }
 
   void addGroup(Group group) {

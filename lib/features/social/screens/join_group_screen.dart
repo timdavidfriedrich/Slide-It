@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:log/log.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/core/widgets/error_dialog.dart';
@@ -16,18 +15,18 @@ class JoinGroupScreen extends StatefulWidget {
 }
 
 class _JoinGroupScreenState extends State<JoinGroupScreen> {
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
 
   bool _isInputValid = false;
 
   void _checkIfInputIsValid() {
-    setState(() => _isInputValid = _nameController.text.isNotEmpty);
+    setState(() => _isInputValid = _idController.text.isNotEmpty);
   }
 
   void _scanGroupId() async {
     final result = await context.push<String>(QrCodeScannerScreen.routeName);
     if (result == null) return;
-    setState(() => _nameController.text = result);
+    setState(() => _idController.text = result);
     _checkIfInputIsValid();
   }
 
@@ -36,9 +35,8 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
   }
 
   void _joinGroup() async {
-    if (_nameController.text.isEmpty) return;
-    final bool success = await CloudService.instance.joinGroup(_nameController.text);
-    Log.error(success);
+    if (_idController.text.isEmpty) return;
+    final bool success = await CloudService.instance.joinGroup(_idController.text);
     if (!mounted) return;
     if (!success) {
       ErrorDialog.show(context, message: "You are already a member of this group.");
@@ -64,7 +62,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: _nameController,
+                          controller: _idController,
                           onChanged: (text) => _checkIfInputIsValid(),
                           decoration: const InputDecoration(
                             labelText: "Gruppen-ID",
