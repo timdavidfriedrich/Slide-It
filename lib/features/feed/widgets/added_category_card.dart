@@ -7,7 +7,7 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/feed/services/history_widget.dart';
 import 'package:rating/features/ratings/screens/category_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/social/services/app_user.dart';
+import 'package:rating/features/core/services/app_user.dart';
 
 class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
   final Category category;

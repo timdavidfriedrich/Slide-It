@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/screens/app_shell.dart';
 import 'package:rating/features/core/services/firebase/auth_service.dart';
-import 'package:rating/features/social/services/app_user.dart';
+import 'package:rating/features/core/services/app_user.dart';
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({super.key});

@@ -8,7 +8,7 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/ratings/services/rating.dart';
-import 'package:rating/features/social/services/app_user.dart';
+import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:uuid/uuid.dart';
 

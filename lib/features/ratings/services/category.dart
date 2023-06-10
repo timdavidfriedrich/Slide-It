@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/social/services/app_user.dart';
+import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:uuid/uuid.dart';
 

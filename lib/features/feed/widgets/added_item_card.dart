@@ -10,7 +10,7 @@ import 'package:rating/features/ratings/screens/rate_item_screen.dart';
 import 'package:rating/features/ratings/screens/view_item_screen.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/rating.dart';
-import 'package:rating/features/social/services/app_user.dart';
+import 'package:rating/features/core/services/app_user.dart';
 
 class AddedItemCard extends StatefulWidget implements HistoryWidget {
   final Item item;

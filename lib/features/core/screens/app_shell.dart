@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
+import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/screens/feed_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
@@ -68,68 +69,66 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.userChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return ErrorInfo(message: snapshot.error.toString());
-        }
-        if (snapshot.hasData) {
-          if (snapshot.data is! User) return const ErrorInfo();
-          bool isEmailVerified = snapshot.data!.isAnonymous || snapshot.data!.emailVerified;
-          return !isEmailVerified
-              ? const VerifyScreen()
-              : SafeArea(
-                  child: Scaffold(
-                    appBar: AppBar(
-                      title: Text(_contents[_selectedIndex].screen.displayName),
-                      titleSpacing: 32,
-                      actions: [
-                        if (_platformIsApple())
-                          FilledButton(
-                            onPressed: () => _navigateToAdd(),
-                            child: Row(
-                              children: [const EditItemScreen().icon, const Text("Objekt")],
-                            ),
-                          ),
-                        const SizedBox(width: 32),
-                      ],
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.userChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorInfo(message: snapshot.error.toString());
+          }
+          if (!snapshot.hasData) return const WelcomeScreen();
+          User? user = snapshot.data;
+          if (user == null) return const ErrorInfo(message: "User has been loaded, but it's still null.");
+          bool isEmailVerified = user.isAnonymous || user.emailVerified;
+          AppUser? appUser = AppUser.current;
+          if (appUser != null && appUser.isBlocked) return const ErrorInfo(message: "Dein Account wurde gesperrt.");
+          if (!isEmailVerified) return const VerifyScreen();
+          return SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(_contents[_selectedIndex].screen.displayName),
+                titleSpacing: 32,
+                actions: [
+                  if (_platformIsApple())
+                    FilledButton(
+                      onPressed: () => _navigateToAdd(),
+                      child: Row(
+                        children: [const EditItemScreen().icon, const Text("Objekt")],
+                      ),
                     ),
-                    body: snapshot.connectionState == ConnectionState.waiting
-                        ? const Center(child: CircularProgressIndicator.adaptive())
-                        : _contents[_selectedIndex].screen as Widget,
-                    // body: widget.child,
-                    bottomNavigationBar: _platformIsApple()
-                        ? CupertinoTabBar(
-                            currentIndex: _selectedIndex,
-                            onTap: (index) => _selectScreen(index),
-                            items: List.generate(_contents.length, (index) {
-                              return BottomNavigationBarItem(
-                                icon: _contents[index].screen.cupertinoIcon,
-                                label: _contents[index].screen.displayName,
-                                tooltip: "",
-                              );
-                            }),
-                          )
-                        : NavigationBar(
-                            selectedIndex: _selectedIndex,
-                            onDestinationSelected: (index) => _selectScreen(index),
-                            destinations: List.generate(_contents.length, (index) {
-                              return NavigationDestination(
-                                icon: _contents[index].screen.icon,
-                                label: _contents[index].screen.displayName,
-                                tooltip: "",
-                              );
-                            }),
-                          ),
-                    floatingActionButton: _platformIsApple()
-                        ? null
-                        : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const EditItemScreen().icon),
-                  ),
-                );
-        }
-        return const WelcomeScreen();
-      },
-    );
+                  const SizedBox(width: 32),
+                ],
+              ),
+              body: snapshot.connectionState == ConnectionState.waiting
+                  ? const Center(child: CircularProgressIndicator.adaptive())
+                  : _contents[_selectedIndex].screen as Widget,
+              // body: widget.child,
+              bottomNavigationBar: _platformIsApple()
+                  ? CupertinoTabBar(
+                      currentIndex: _selectedIndex,
+                      onTap: (index) => _selectScreen(index),
+                      items: List.generate(_contents.length, (index) {
+                        return BottomNavigationBarItem(
+                          icon: _contents[index].screen.cupertinoIcon,
+                          label: _contents[index].screen.displayName,
+                          tooltip: "",
+                        );
+                      }),
+                    )
+                  : NavigationBar(
+                      selectedIndex: _selectedIndex,
+                      onDestinationSelected: (index) => _selectScreen(index),
+                      destinations: List.generate(_contents.length, (index) {
+                        return NavigationDestination(
+                          icon: _contents[index].screen.icon,
+                          label: _contents[index].screen.displayName,
+                          tooltip: "",
+                        );
+                      }),
+                    ),
+              floatingActionButton:
+                  _platformIsApple() ? null : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const EditItemScreen().icon),
+            ),
+          );
+        });
   }
 }
