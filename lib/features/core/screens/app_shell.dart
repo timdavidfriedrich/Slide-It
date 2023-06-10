@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/screens/feed_screen.dart';
+import 'package:rating/features/onboarding/screens/empty_groups_screen.dart';
 import 'package:rating/features/ratings/screens/edit_item_screen.dart';
 import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -78,10 +79,12 @@ class _AppShellState extends State<AppShell> {
           if (!snapshot.hasData) return const WelcomeScreen();
           User? user = snapshot.data;
           if (user == null) return const ErrorInfo(message: "User has been loaded, but it's still null.");
-          bool isEmailVerified = user.isAnonymous || user.emailVerified;
           AppUser? appUser = AppUser.current;
           if (appUser?.isBlocked ?? false) return const ErrorInfo(message: "Dein Account wurde gesperrt.");
+          bool isEmailVerified = user.isAnonymous || user.emailVerified;
           if (!isEmailVerified) return const VerifyScreen();
+          bool areGroupsEmpty = Provider.of<DataProvider>(context).userGroups.isEmpty;
+          if (areGroupsEmpty) return const EmptyGroupsScreen();
           return StatefulBuilder(
             builder: (context, setState) => SafeArea(
               child: Scaffold(

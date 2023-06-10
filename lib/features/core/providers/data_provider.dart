@@ -85,6 +85,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   void clearGroups() {
+    _selectedGroup = null;
     userGroups.clear();
     notifyListeners();
     Log.hint("Cleared all groups from runtime storage.");
