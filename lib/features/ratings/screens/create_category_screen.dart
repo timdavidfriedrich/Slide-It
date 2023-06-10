@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 
 class CreateCategoryScreen extends StatefulWidget {
   static const String routeName = "/CreateCategory";
-  final Group group;
+  final Group? group;
   const CreateCategoryScreen({super.key, required this.group});
 
   @override
@@ -17,6 +19,7 @@ class CreateCategoryScreen extends StatefulWidget {
 class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
   final TextEditingController _nameController = TextEditingController();
   bool _isInputValid = false;
+  Group? selectedGroup;
 
   void _checkIfInputIsValid() {
     setState(() => _isInputValid = _nameController.text.isNotEmpty);
@@ -26,9 +29,10 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
     context.push(ChooseGroupScreen.routeName);
   }
 
-  void _createCategoryInGroup(Group group) {
+  void _createCategory() {
     if (_nameController.text.isEmpty) return;
-    CloudService.instance.createCategory(name: _nameController.text, group: group);
+    if (selectedGroup == null) return;
+    CloudService.instance.createCategory(name: _nameController.text, group: selectedGroup!);
     context.pop();
   }
 
@@ -38,6 +42,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    selectedGroup = Provider.of<DataProvider>(context).selectedGroup;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -51,7 +56,6 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                 children: [
                   TextField(
                     controller: _nameController,
-                    // ! Inrupts the focus, because the the state updates
                     onChanged: (text) => _checkIfInputIsValid(),
                     decoration: const InputDecoration(
                       labelText: "Name der Kategorie",
@@ -63,9 +67,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                   Card(
                     margin: EdgeInsets.zero,
                     child: ListTile(
-                      leading: widget.group.avatar,
-                      title: Text(widget.group.name),
-                      subtitle: const Text("(Tippen zum wechseln)"),
+                      leading: selectedGroup?.avatar,
+                      title: Text(selectedGroup?.name ?? "(Wähle eine Gruppe)"),
+                      subtitle: selectedGroup == null ? null : const Text("(Tippen zum wechseln)"),
                       onTap: () => _changeGroup(),
                     ),
                   ),
@@ -73,7 +77,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
               ),
             ),
             const SizedBox(height: Constants.mediumPadding),
-            ElevatedButton(onPressed: _isInputValid ? () => _createCategoryInGroup(widget.group) : null, child: const Text("Erstellen")),
+            ElevatedButton(onPressed: _isInputValid ? () => _createCategory() : null, child: const Text("Erstellen")),
             const SizedBox(height: Constants.smallPadding),
             TextButton(onPressed: () => _cancel(), child: const Text("Abbrechen")),
             const SizedBox(height: Constants.largePadding),

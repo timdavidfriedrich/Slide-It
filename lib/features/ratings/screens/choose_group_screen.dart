@@ -4,9 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/screens/app_shell.dart';
-import 'package:rating/features/social/screens/social_screen.dart';
 import 'package:rating/features/social/services/group.dart';
+import 'package:rating/features/social/widgets/add_group_dialog.dart';
 
 class ChooseGroupScreen extends StatelessWidget {
   static const routeName = "/ChooseGroup";
@@ -23,13 +22,10 @@ class ChooseGroupScreen extends StatelessWidget {
     }
 
     void addGroup() {
-      // Navigator.pushNamedAndRemoveUntil
-      // ! Doesn't go to Socials, but to last AppScaffold route instead
-      context.go(AppShell.routeName, extra: const SocialScreen());
+      showDialog(context: context, builder: (context) => const AddGroupDialog());
     }
 
     void cancel() {
-      // Navigator.popUntil(context, ModalRoute.withName(AppScaffold.routeName));
       context.pop();
     }
 

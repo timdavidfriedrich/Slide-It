@@ -121,7 +121,7 @@ class RatingApp extends StatelessWidget {
                 GoRoute(
                   path: CreateCategoryScreen.routeName,
                   builder: (context, state) {
-                    final Group group = state.extra as Group;
+                    final Group? group = state.extra as Group?;
                     return CreateCategoryScreen(group: group);
                   },
                 ),
