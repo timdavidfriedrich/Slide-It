@@ -38,7 +38,7 @@ class _AppShellState extends State<AppShell> {
     return Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS;
   }
 
-  void _selectScreen(int index) {
+  void _selectScreen(int index, setState) {
     setState(() => _selectedIndex = index);
     // context.go(_screens[index].routeName);
   }
@@ -82,51 +82,53 @@ class _AppShellState extends State<AppShell> {
           AppUser? appUser = AppUser.current;
           if (appUser?.isBlocked ?? false) return const ErrorInfo(message: "Dein Account wurde gesperrt.");
           if (!isEmailVerified) return const VerifyScreen();
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(_contents[_selectedIndex].screen.displayName),
-                titleSpacing: 32,
-                actions: [
-                  if (_platformIsApple())
-                    FilledButton(
-                      onPressed: () => _navigateToAdd(),
-                      child: Row(
-                        children: [const EditItemScreen().icon, const Text("Objekt")],
+          return StatefulBuilder(
+            builder: (context, setState) => SafeArea(
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text(_contents[_selectedIndex].screen.displayName),
+                  titleSpacing: 32,
+                  actions: [
+                    if (_platformIsApple())
+                      FilledButton(
+                        onPressed: () => _navigateToAdd(),
+                        child: Row(
+                          children: [const EditItemScreen().icon, const Text("Objekt")],
+                        ),
                       ),
-                    ),
-                  const SizedBox(width: 32),
-                ],
+                    const SizedBox(width: 32),
+                  ],
+                ),
+                body: snapshot.connectionState == ConnectionState.waiting
+                    ? const Center(child: CircularProgressIndicator.adaptive())
+                    : _contents[_selectedIndex].screen as Widget,
+                // body: widget.child,
+                bottomNavigationBar: _platformIsApple()
+                    ? CupertinoTabBar(
+                        currentIndex: _selectedIndex,
+                        onTap: (index) => _selectScreen(index, setState),
+                        items: List.generate(_contents.length, (index) {
+                          return BottomNavigationBarItem(
+                            icon: _contents[index].screen.cupertinoIcon,
+                            label: _contents[index].screen.displayName,
+                            tooltip: "",
+                          );
+                        }),
+                      )
+                    : NavigationBar(
+                        selectedIndex: _selectedIndex,
+                        onDestinationSelected: (index) => _selectScreen(index, setState),
+                        destinations: List.generate(_contents.length, (index) {
+                          return NavigationDestination(
+                            icon: _contents[index].screen.icon,
+                            label: _contents[index].screen.displayName,
+                            tooltip: "",
+                          );
+                        }),
+                      ),
+                floatingActionButton:
+                    _platformIsApple() ? null : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const EditItemScreen().icon),
               ),
-              body: snapshot.connectionState == ConnectionState.waiting
-                  ? const Center(child: CircularProgressIndicator.adaptive())
-                  : _contents[_selectedIndex].screen as Widget,
-              // body: widget.child,
-              bottomNavigationBar: _platformIsApple()
-                  ? CupertinoTabBar(
-                      currentIndex: _selectedIndex,
-                      onTap: (index) => _selectScreen(index),
-                      items: List.generate(_contents.length, (index) {
-                        return BottomNavigationBarItem(
-                          icon: _contents[index].screen.cupertinoIcon,
-                          label: _contents[index].screen.displayName,
-                          tooltip: "",
-                        );
-                      }),
-                    )
-                  : NavigationBar(
-                      selectedIndex: _selectedIndex,
-                      onDestinationSelected: (index) => _selectScreen(index),
-                      destinations: List.generate(_contents.length, (index) {
-                        return NavigationDestination(
-                          icon: _contents[index].screen.icon,
-                          label: _contents[index].screen.displayName,
-                          tooltip: "",
-                        );
-                      }),
-                    ),
-              floatingActionButton:
-                  _platformIsApple() ? null : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const EditItemScreen().icon),
             ),
           );
         });
