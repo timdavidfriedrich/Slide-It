@@ -80,7 +80,7 @@ class _AppShellState extends State<AppShell> {
           if (user == null) return const ErrorInfo(message: "User has been loaded, but it's still null.");
           bool isEmailVerified = user.isAnonymous || user.emailVerified;
           AppUser? appUser = AppUser.current;
-          if (appUser != null && appUser.isBlocked) return const ErrorInfo(message: "Dein Account wurde gesperrt.");
+          if (appUser?.isBlocked ?? false) return const ErrorInfo(message: "Dein Account wurde gesperrt.");
           if (!isEmailVerified) return const VerifyScreen();
           return SafeArea(
             child: Scaffold(
