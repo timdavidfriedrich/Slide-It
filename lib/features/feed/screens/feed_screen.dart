@@ -79,14 +79,25 @@ class _FeedScreenState extends State<FeedScreen> {
           }
           final List<HistoryWidget> widgets = snapshot.data as List<HistoryWidget>;
           return Scaffold(
-            body: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-              children: List.generate(widgets.length * 2 + 1, (index) {
-                if (index == widgets.length * 2) return const SizedBox(height: Constants.largePadding);
-                if (index.isEven) return const SizedBox(height: Constants.normalPadding);
-                return widgets[index ~/ 2];
-              }),
-            ),
+            body: widgets.isEmpty
+                ? const Center(
+                    child: Text(
+                      "Wenn du oder deine Freunde\n"
+                      "Objekte oder Kategorien erstellt,\n"
+                      "werden diese hier angezeigt.",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                    children: List.generate(widgets.length + 1, (index) {
+                      if (index == widgets.length) return const SizedBox(height: Constants.largePadding);
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: Constants.normalPadding),
+                        child: widgets[index],
+                      );
+                    }),
+                  ),
           );
         });
   }
