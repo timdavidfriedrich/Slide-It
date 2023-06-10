@@ -17,6 +17,10 @@ class GroupScreen extends StatelessWidget {
       showDialog(context: context, builder: ((context) => GroupInvitationDialog(group: group)));
     }
 
+    void edit() {
+      // context.push(EditGroupScreen.routeName, extra: widget.category);
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -25,6 +29,10 @@ class GroupScreen extends StatelessWidget {
             IconButton(
               onPressed: () => showGroupInvitation(group),
               icon: Icon(PlatformIcons(context).personAdd),
+            ),
+            IconButton(
+              onPressed: () => edit(),
+              icon: Icon(PlatformIcons(context).edit),
             ),
           ],
         ),
