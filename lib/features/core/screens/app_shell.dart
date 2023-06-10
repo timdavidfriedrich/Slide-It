@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
@@ -45,7 +44,6 @@ class _AppShellState extends State<AppShell> {
   }
 
   void _initSelectedIndex() {
-    Log.debug("selectedScreen: ${widget.selectedContent}");
     if (widget.selectedContent == null) return;
     int selectedIndex = 0;
     selectedIndex = _contents.indexWhere((screen) => screen.runtimeType == widget.selectedContent.runtimeType);
