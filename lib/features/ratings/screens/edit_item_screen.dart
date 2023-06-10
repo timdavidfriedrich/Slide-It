@@ -64,9 +64,11 @@ class _EditItemScreenState extends State<EditItemScreen> {
     return true;
   }
 
-  void _initRating() {
+  void _initValues() {
     setState(() {
       _rating = widget.itemToEdit?.ownRating;
+      _nameController.text = widget.itemToEdit?.name ?? "";
+      _category = widget.itemToEdit?.category;
     });
   }
 
@@ -145,7 +147,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   @override
   void initState() {
     super.initState();
-    _initRating();
+    _initValues();
   }
 
   @override
