@@ -13,6 +13,9 @@ class DataProvider extends ChangeNotifier {
   Group? _selectedGroup;
   List<Group> userGroups = [];
   List<AppUser> knownUsers = [];
+  bool _dataHasBeenInitialized = false;
+
+  bool get dataHasBeenInitialized => _dataHasBeenInitialized;
 
   Group? get selectedGroup => _selectedGroup;
 
@@ -20,10 +23,11 @@ class DataProvider extends ChangeNotifier {
     CloudService.instance.loadUserData();
     userGroups = await CloudService.instance.getUserGroups();
     knownUsers = await CloudService.instance.getKnownUsers();
-    if (userGroups.isEmpty) return;
-    _selectedGroup = userGroups.first;
+    _dataHasBeenInitialized = true;
     notifyListeners();
     Log.hint("Loaded ${userGroups.length} groups to runtime storage.");
+    if (userGroups.isEmpty) return;
+    selectGroup(userGroups.first);
   }
 
   Future<void> reloadData() async {

@@ -74,15 +74,29 @@ class _AppShellState extends State<AppShell> {
           if (snapshot.hasError) {
             return ErrorInfo(message: snapshot.error.toString());
           }
-          if (!snapshot.hasData) return const WelcomeScreen();
+          if (!snapshot.hasData) {
+            return const WelcomeScreen();
+          }
           User? user = snapshot.data;
-          if (user == null) return const ErrorInfo(message: "User has been loaded, but it's still null.");
+          if (user == null) {
+            return const ErrorInfo(message: "User has been loaded, but it's still null.");
+          }
           AppUser? appUser = AppUser.current;
-          if (appUser?.isBlocked ?? false) return const ErrorInfo(message: "Dein Account wurde gesperrt.");
-          bool isEmailVerified = user.isAnonymous || user.emailVerified;
-          if (!isEmailVerified) return const VerifyScreen();
-          bool areGroupsEmpty = Provider.of<DataProvider>(context).userGroups.isEmpty;
-          if (areGroupsEmpty) return const EmptyGroupsScreen();
+          if (appUser?.isBlocked ?? false) {
+            return const ErrorInfo(message: "Dein Account wurde gesperrt.");
+          }
+          bool emailIsNotVerified = !user.isAnonymous && !user.emailVerified;
+          if (emailIsNotVerified) {
+            return const VerifyScreen();
+          }
+          bool dataHasNotBeenInitialized = !Provider.of<DataProvider>(context).dataHasBeenInitialized;
+          if (dataHasNotBeenInitialized) {
+            return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
+          }
+          bool groupsAreEmpty = Provider.of<DataProvider>(context).userGroups.isEmpty;
+          if (groupsAreEmpty) {
+            return const EmptyGroupsScreen();
+          }
           return StatefulBuilder(
             builder: (context, setState) => SafeArea(
               child: Scaffold(
@@ -100,9 +114,7 @@ class _AppShellState extends State<AppShell> {
                     const SizedBox(width: 32),
                   ],
                 ),
-                body: snapshot.connectionState == ConnectionState.waiting
-                    ? const Center(child: CircularProgressIndicator.adaptive())
-                    : _contents[_selectedIndex].screen as Widget,
+                body: _contents[_selectedIndex].screen as Widget,
                 // body: widget.child,
                 bottomNavigationBar: _platformIsApple()
                     ? CupertinoTabBar(
