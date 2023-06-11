@@ -140,7 +140,7 @@ class _AppShellState extends State<AppShell> {
                     const SizedBox(width: 32),
                   ],
                 ),
-                body: RefreshIndicator(
+                body: RefreshIndicator.adaptive(
                   onRefresh: () async => await _refresh(),
                   child: _contents[_selectedIndex].screen as Widget,
                 ),
