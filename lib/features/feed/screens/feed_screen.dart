@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
@@ -57,9 +60,8 @@ class _FeedScreenState extends State<FeedScreen> {
     for (Item i in items) {
       result.add(AddedItemCard(item: i));
     }
-
     result.sort((a, b) => b.getCreatedAt().compareTo(a.getCreatedAt()));
-
+    Log.hint("Feed has been loaded.");
     return result;
   }
 
