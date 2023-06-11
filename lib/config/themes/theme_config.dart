@@ -14,7 +14,7 @@ class ThemeConfig {
     onError: Colors.white,
     background: Color(0xFF101010),
     onBackground: Colors.white,
-    surface: Color(0x0AFFFFFF),
+    surface: Color(0x12868686),
     onSurface: Colors.white,
   );
 
@@ -28,7 +28,7 @@ class ThemeConfig {
     onError: Colors.white,
     background: Color(0xFF101010),
     onBackground: Colors.white,
-    surface: Color(0x0AFFFFFF),
+    surface: Color(0x12868686),
     onSurface: Colors.white,
   );
 
@@ -49,6 +49,16 @@ class ThemeConfig {
         centerTitle: false,
       ),
       scaffoldBackgroundColor: colorScheme.background,
+      sliderTheme: SliderThemeData(
+        activeTrackColor: colorScheme.onBackground,
+        inactiveTrackColor: colorScheme.onSurface.withOpacity(0.5),
+        thumbColor: colorScheme.onBackground,
+        overlayColor: colorScheme.onBackground.withOpacity(0.2),
+        trackHeight: 8,
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+        trackShape: const RoundedRectSliderTrackShape(),
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 0),
+      ),
       cardTheme: const CardTheme(
         elevation: 0,
         // margin: EdgeInsets.zero,
@@ -74,12 +84,12 @@ class ThemeConfig {
           ),
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
-              return colorScheme.primary.withOpacity(0.1);
+              return colorScheme.onBackground.withOpacity(0.1);
             }
             if (states.contains(MaterialState.pressed) || states.contains(MaterialState.hovered)) {
-              return colorScheme.primary.withOpacity(0.2);
+              return colorScheme.onBackground.withOpacity(0.2);
             }
-            return colorScheme.primary;
+            return colorScheme.onBackground;
           }),
           foregroundColor: MaterialStateProperty.all(colorScheme.onPrimary),
         ),
@@ -94,18 +104,24 @@ class ThemeConfig {
           ),
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
-              return colorScheme.primary.withOpacity(0.1);
+              return colorScheme.onBackground.withOpacity(0.1);
             }
             if (states.contains(MaterialState.pressed) || states.contains(MaterialState.hovered)) {
-              return colorScheme.primary.withOpacity(0.2);
+              return colorScheme.onBackground.withOpacity(0.2);
             }
-            return colorScheme.primary;
+            return colorScheme.onBackground;
           }),
           foregroundColor: MaterialStateProperty.all(colorScheme.onPrimary),
         ),
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(32, 16, 32, 16)),
+          foregroundColor: MaterialStateProperty.all(colorScheme.onBackground),
+        ),
+      ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: colorScheme.primary,
+        backgroundColor: colorScheme.onBackground,
         foregroundColor: colorScheme.onPrimary,
       ),
       cupertinoOverrideTheme: CupertinoThemeData(
@@ -116,6 +132,9 @@ class ThemeConfig {
       ),
       textTheme: GoogleFonts.poppinsTextTheme(
         TextTheme(
+          displayLarge: const TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
           bodySmall: TextStyle(
             color: colorScheme.onSurface.withOpacity(0.5),
           ),

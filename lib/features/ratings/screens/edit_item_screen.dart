@@ -221,7 +221,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                           children: [
                             Text(_rating!.value.toStringAsFixed(Constants.ratingValueDigit)),
                             const SizedBox(width: Constants.smallPadding),
-                            const Text("🔥"),
+                            const Text(Constants.ratingValueUnit),
                           ],
                         )
                       : null,

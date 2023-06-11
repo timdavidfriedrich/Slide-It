@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -71,56 +72,84 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _getValueColor(),
-      appBar: AppBar(
-        backgroundColor: _getValueColor(),
-        title: ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(widget.item.name, style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(
-            "${widget.item.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(widget.item.category).name})",
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Theme.of(context).colorScheme.background, _getValueColor()],
+          begin: Alignment(0, -0.5 * _sliderValue),
+          end: Alignment.bottomCenter,
         ),
       ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-          children: [
-            const SizedBox(height: Constants.normalPadding),
-            if (_image != null)
-              AspectRatio(
-                aspectRatio: 3 / 2,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
-                  child: _image,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(widget.item.name, style: Theme.of(context).textTheme.titleMedium),
+            subtitle: Text(
+              "${widget.item.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(widget.item.category).name})",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+            child: Column(
+              children: [
+                const SizedBox(height: Constants.normalPadding),
+                if (_image != null)
+                  AspectRatio(
+                    aspectRatio: 3 / 2,
+                    child: Opacity(
+                      opacity: 0.9,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                        child: _image,
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: Constants.mediumPadding),
+                Expanded(
+                  child: FittedBox(
+                    child: Text(
+                      "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.azeretMono(
+                        fontWeight: FontWeight.w500,
+                        fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            const SizedBox(height: Constants.mediumPadding),
-            Text(
-              "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.displayLarge,
+                const SizedBox(height: Constants.normalPadding),
+                Slider(
+                  min: _minValue,
+                  max: _maxValue,
+                  value: _sliderValue,
+                  onChanged: (value) => _updateSliderValue(value),
+                ),
+                const SizedBox(height: Constants.mediumPadding),
+                TextField(
+                  controller: _commentController,
+                  maxLines: 3,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                  decoration: InputDecoration(
+                    fillColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+                    labelText: "Begründung (optional)",
+                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                  ),
+                ),
+                const SizedBox(height: Constants.mediumPadding),
+                ElevatedButton(
+                  onPressed: _isInputValid() ? () => _save() : null,
+                  child: const Text("Bewerten"),
+                ),
+                const SizedBox(height: Constants.largePadding),
+              ],
             ),
-            Slider(
-              min: _minValue,
-              max: _maxValue,
-              value: _sliderValue,
-              onChanged: (value) => _updateSliderValue(value),
-            ),
-            const SizedBox(height: Constants.smallPadding),
-            TextField(
-              controller: _commentController,
-              maxLines: 3,
-              decoration: const InputDecoration(labelText: "Begründung (optional)"),
-            ),
-            const SizedBox(height: Constants.mediumPadding),
-            ElevatedButton(
-              onPressed: _isInputValid() ? () => _save() : null,
-              child: const Text("Bewerten"),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -81,7 +81,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                           Text(widget.item.averageRating.toStringAsFixed(Constants.ratingValueDigit),
                               style: Theme.of(context).textTheme.displaySmall),
                           const SizedBox(width: Constants.smallPadding),
-                          const Text("🔥"),
+                          const Text(Constants.ratingValueUnit),
                         ],
                       ),
                     ),
@@ -106,7 +106,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                       title: const Text("Ich"),
                       subtitle: Text(widget.item.ownRating!.comment ?? "Ohne Kommentar."),
                       trailing: Text(
-                        "${widget.item.ownRating!.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
+                        "${widget.item.ownRating!.value.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                     ),
@@ -122,7 +122,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                   title: Text(Provider.of<DataProvider>(context).getAppUserById(r.userId)?.name ?? "Unbenannt"),
                   subtitle: Text(r.comment ?? "Ohne Kommentar."),
                   trailing: Text(
-                    "${r.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥",
+                    "${r.value.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),

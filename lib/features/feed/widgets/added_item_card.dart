@@ -109,7 +109,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
                 subtitle: widget.item.ownRating?.comment == null ? null : Text(widget.item.ownRating!.comment!),
                 trailing: widget.item.ownRating == null
                     ? null
-                    : Text("${widget.item.ownRating?.value.toStringAsFixed(Constants.ratingValueDigit)} 🔥"),
+                    : Text("${widget.item.ownRating?.value.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}"),
               ),
             ),
             const SizedBox(height: Constants.smallPadding),

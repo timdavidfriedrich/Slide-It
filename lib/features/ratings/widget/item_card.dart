@@ -43,7 +43,7 @@ class ItemCard extends StatelessWidget {
                   children: [
                     Text(item.averageRating.toStringAsFixed(Constants.ratingValueDigit)),
                     const SizedBox(width: Constants.smallPadding),
-                    const Text("🔥"),
+                    const Text(Constants.ratingValueUnit),
                   ],
                 ),
               ],

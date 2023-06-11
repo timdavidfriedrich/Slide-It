@@ -4,10 +4,11 @@ class Constants {
   static const int imageCompressionQuality = 80;
   static const int imageMaxSize = 800;
 
-  static const Color greatColor = Color(0xFF05c46b);
+  static const Color greatColor = Color(0xFF68D137);
   static const Color mediumColor = Color(0xFFffd32a);
   static const Color badColor = Color(0xFFff3f34);
 
+  static const String ratingValueUnit = ""; // 🔥
   static const double noRatingValue = 0.0;
   static const double minRatingValue = 1.0;
   static const double maxRatingValue = 10.0;
