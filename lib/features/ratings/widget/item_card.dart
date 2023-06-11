@@ -27,14 +27,15 @@ class ItemCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          Constants.defaultBorderRadius,
-                        ),
-                        child: item.image)),
+                if (item.image != null)
+                  SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            Constants.defaultBorderRadius,
+                          ),
+                          child: item.image)),
                 const SizedBox(height: Constants.smallPadding),
                 Flexible(child: Text(item.name)),
                 const SizedBox(height: Constants.minimalPadding),
