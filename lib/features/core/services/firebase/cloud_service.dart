@@ -153,6 +153,8 @@ class CloudService {
   }
 
   Future<bool> joinGroup(String groupId) async {
+    // TODO: reload data to ensure that all groups are loaded
+    // TODO: check if group exists
     AppUser? currentUser = AppUser.current;
     if (currentUser == null) return false;
     if (currentUser.groupIds.contains(groupId)) {

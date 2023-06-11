@@ -111,7 +111,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
   void _addRating() async {
     final result = await context.push<Rating>(
       RateItemScreen.routeName,
-      extra: (Item(categoryId: _category?.id ?? "", name: _nameController.text), widget.itemToEdit?.ownRating),
+      extra: (
+        widget.itemToEdit ?? Item(categoryId: _category?.id ?? "", name: _nameController.text),
+        widget.itemToEdit?.ownRating,
+      ),
     );
     if (result is! Rating) return;
     setState(() => _rating = result);

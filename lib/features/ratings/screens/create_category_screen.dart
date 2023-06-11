@@ -9,8 +9,7 @@ import 'package:rating/features/social/services/group.dart';
 
 class CreateCategoryScreen extends StatefulWidget {
   static const String routeName = "/CreateCategory";
-  final Group? group;
-  const CreateCategoryScreen({super.key, required this.group});
+  const CreateCategoryScreen({super.key});
 
   @override
   State<CreateCategoryScreen> createState() => _CreateCategoryScreenState();
