@@ -47,6 +47,7 @@ class _SocialScreenState extends State<SocialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Group> userGroups = Provider.of<DataProvider>(context).userGroups;
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
@@ -56,7 +57,7 @@ class _SocialScreenState extends State<SocialScreen> {
           Text("Meine Gruppen", style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: Constants.smallPadding),
           const SizedBox(height: Constants.normalPadding),
-          for (Group group in Provider.of<DataProvider>(context).userGroups)
+          for (Group group in userGroups)
             Card(
               // ? Keep color ?
               // color: group.color,
