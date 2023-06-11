@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
@@ -27,6 +30,22 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
+  Timer? _timer;
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) => _resetRefreshedCounter());
+  }
+
+  void _resetRefreshedCounter() {
+    Provider.of<DataProvider>(context, listen: false).refreshCounter = 0;
+  }
+
+  Future<void> _refresh() async {
+    if (0 < Provider.of<DataProvider>(context, listen: false).refreshCounter++) return;
+    await Provider.of<DataProvider>(context, listen: false).reloadData();
+    Log.hint("Reloaded data.");
+  }
+
   final List<({ShellContent screen, String routeName})> _contents = const [
     (screen: FeedScreen(), routeName: FeedScreen.routeName),
     (screen: RatingsScreen(), routeName: RatingsScreen.routeName),
@@ -64,6 +83,13 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _initSelectedIndex();
     initData();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 
   @override
@@ -114,7 +140,10 @@ class _AppShellState extends State<AppShell> {
                     const SizedBox(width: 32),
                   ],
                 ),
-                body: _contents[_selectedIndex].screen as Widget,
+                body: RefreshIndicator(
+                  onRefresh: () async => await _refresh(),
+                  child: _contents[_selectedIndex].screen as Widget,
+                ),
                 // body: widget.child,
                 bottomNavigationBar: _platformIsApple()
                     ? CupertinoTabBar(

@@ -19,8 +19,10 @@ class DataProvider extends ChangeNotifier {
 
   Group? get selectedGroup => _selectedGroup;
 
+  int refreshCounter = 0;
+
   Future<void> loadData() async {
-    CloudService.instance.loadUserData();
+    await CloudService.instance.loadUserData();
     userGroups = await CloudService.instance.getUserGroups();
     knownUsers = await CloudService.instance.getKnownUsers();
     _dataHasBeenInitialized = true;
