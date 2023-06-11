@@ -46,6 +46,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
                 child: Row(
                   mainAxisAlignment: items.length <= 1 ? MainAxisAlignment.start : MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
