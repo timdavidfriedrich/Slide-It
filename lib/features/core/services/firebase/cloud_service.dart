@@ -133,6 +133,19 @@ class CloudService {
     }
   }
 
+  Future<bool> deleteUserData() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+    try {
+      await _userCollection.doc(user.uid).delete();
+      Log.hint("Deleted User (ID: ${user.uid}) from cloud.");
+      return true;
+    } catch (e) {
+      Log.error(e);
+      return false;
+    }
+  }
+
   Future<void> removeGroup(Group group) async {
     await _groupCollection.doc(group.id).delete();
     Provider.of<DataProvider>(Global.context, listen: false).removeGroup(group);

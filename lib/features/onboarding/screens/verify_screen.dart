@@ -54,6 +54,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
     });
   }
 
+  void _deleteAccount() {
+    AuthService.instance.deleteAccount();
+  }
+
   @override
   void initState() {
     _resetBlockTimer();
@@ -88,6 +92,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 ElevatedButton(
                   onPressed: _sendButtonBlocked ? null : () => _sendVerificationEmail(),
                   child: Text(_sendButtonBlocked ? "Wait $_secondsLeft seconds" : "Resend verification email"),
+                ),
+                const SizedBox(height: Constants.smallPadding),
+                TextButton(
+                  onPressed: () => _deleteAccount(),
+                  child: const Text("Account löschen"),
                 ),
               ],
             ),

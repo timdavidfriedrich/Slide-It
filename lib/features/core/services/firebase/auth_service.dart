@@ -123,4 +123,17 @@ class AuthService {
       return false;
     }
   }
+
+  Future<bool> deleteAccount() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    try {
+      CloudService.instance.deleteUserData();
+      await user!.delete();
+      Log.hint("Deleted User (ID: ${user.uid}) from Auth Service.");
+      return true;
+    } catch (error) {
+      Log.error("DELETE ACCOUNT: $error");
+      return false;
+    }
+  }
 }
