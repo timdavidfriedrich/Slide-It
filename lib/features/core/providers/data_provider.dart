@@ -107,9 +107,9 @@ class DataProvider extends ChangeNotifier {
     for (Group g in userGroups) {
       if (g.id != category.groupId) continue;
       g.categories.remove(category);
+      notifyListeners();
+      Log.hint("Removed Category \"${category.name}\" (ID: ${category.id}) from runtime storage.");
     }
-    notifyListeners();
-    Log.hint("Removed Category \"${category.name}\" (ID: ${category.id}) from runtime storage.");
   }
 
   void addItem({required Category category, required Item item}) {
@@ -118,10 +118,27 @@ class DataProvider extends ChangeNotifier {
       for (Category c in g.categories) {
         if (c.id != category.id) continue;
         c.items.add(item);
+        notifyListeners();
+        Log.hint("Added item \"${item.name}\" (ID: ${item.id}) to runtime storage.");
       }
     }
-    notifyListeners();
-    Log.hint("Added item \"${item.name}\" (ID: ${item.id}) to runtime storage.");
+  }
+
+  void editItem({required Category category, required Item item, String? name, String? imageUrl}) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
+      for (Category c in g.categories) {
+        if (c.id != category.id) continue;
+        for (Item i in c.items) {
+          if (i.id != item.id) continue;
+          Log.debug("Previous name: ${i.name}, new name: $name");
+          i.name = name ?? i.name;
+          i.firebaseImageUrl = imageUrl;
+          notifyListeners();
+          Log.hint("Edited item \"${item.name}\" (ID: ${item.id}) to runtime storage.");
+        }
+      }
+    }
   }
 
   void removeItem({required Category category, required Item item}) {
@@ -130,10 +147,10 @@ class DataProvider extends ChangeNotifier {
       for (Category c in g.categories) {
         if (c.id != category.id) continue;
         c.items.remove(item);
+        notifyListeners();
+        Log.hint("Removed item \"${item.name}\" (ID: ${item.id}) from runtime storage.");
       }
     }
-    notifyListeners();
-    Log.hint("Removed item \"${item.name}\" (ID: ${item.id}) from runtime storage.");
   }
 
   void addRating({required Category category, required Rating rating}) {
@@ -144,11 +161,31 @@ class DataProvider extends ChangeNotifier {
         for (Item i in c.items) {
           if (i.id != rating.itemId) continue;
           i.ratings.add(rating);
+          notifyListeners();
+          Log.hint("Added Rating (ID: ${rating.id}) to an item (Item ID: ${rating.itemId}) to runtime storage.");
         }
       }
     }
-    notifyListeners();
-    Log.hint("Added Rating (ID: ${rating.id}) to an item (Item ID: ${rating.itemId}) to runtime storage.");
+  }
+
+  void editRating({required Category category, required Rating rating, required double value, required String? comment}) {
+    for (Group g in userGroups) {
+      if (g.id != category.groupId) continue;
+      for (Category c in g.categories) {
+        if (c.id != category.id) continue;
+        for (Item i in c.items) {
+          if (i.id != rating.itemId) continue;
+          for (int r = 0; r < i.ratings.length; r++) {
+            if (i.ratings[r].id != rating.id) continue;
+            i.ratings[r].value = value;
+            i.ratings[r].comment = comment;
+            Log.debug("Previous Rating: ${i.ratings[r].value} | New Rating: ${rating.value}");
+            notifyListeners();
+            Log.hint("Edited Rating (ID: ${rating.id}) of an item (Item ID: ${rating.itemId}) and saved changes to runtime storage.");
+          }
+        }
+      }
+    }
   }
 
   void removeRating({required Category category, required Rating rating}) {
@@ -159,10 +196,10 @@ class DataProvider extends ChangeNotifier {
         for (Item i in c.items) {
           if (i.id != rating.itemId) continue;
           i.ratings.remove(rating);
+          notifyListeners();
+          Log.hint("Removed Rating (ID: ${rating.id}) from an item (Item ID: ${rating.itemId}) from runtime storage.");
         }
       }
     }
-    notifyListeners();
-    Log.hint("Removed Rating (ID: ${rating.id}) from an item (Item ID: ${rating.itemId}) from runtime storage.");
   }
 }

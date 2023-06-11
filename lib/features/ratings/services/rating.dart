@@ -4,8 +4,8 @@ class Rating {
   final String id;
   final String itemId;
   final String userId;
-  final String? comment;
-  final double value;
+  String? comment;
+  double value;
 
   Rating({
     required this.itemId,

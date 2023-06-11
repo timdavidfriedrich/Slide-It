@@ -132,11 +132,21 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void _saveItem({required Item item, required AppUser user}) {
+    // TODO: REFACTOR
     if (widget.itemToEdit == null) {
       if (_rating != null) item.ratings.add(_rating!);
       CloudService.instance.addItem(category: _category!, item: item);
     } else {
-      CloudService.instance.editItem(item: item);
+      String? imageUrl = item.firebaseImageUrl;
+      if (_cameraImageData != null) {
+        imageUrl = StorageService.instance.getItemImageDownloadUrl(item: item);
+      }
+      CloudService.instance.editItem(
+        category: _category!,
+        item: widget.itemToEdit!,
+        name: item.name,
+        imageUrl: imageUrl,
+      );
     }
   }
 
@@ -198,14 +208,16 @@ class _EditItemScreenState extends State<EditItemScreen> {
               onChanged: (_) => _checkIfInputValid(),
             ),
             const SizedBox(height: Constants.mediumPadding),
-            Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                onTap: () => _changeCategory(),
-                title: Text(_category?.name ?? "(Wähle eine Kategorie)"),
-                trailing: _category != null ? Text(Provider.of<DataProvider>(context).getGroupFromCategory(_category!).name) : null,
+            // TODO: Category should be editable, too
+            if (widget.itemToEdit == null)
+              Card(
+                margin: EdgeInsets.zero,
+                child: ListTile(
+                  onTap: () => _changeCategory(),
+                  title: Text(_category?.name ?? "(Wähle eine Kategorie)"),
+                  trailing: _category != null ? Text(Provider.of<DataProvider>(context).getGroupFromCategory(_category!).name) : null,
+                ),
               ),
-            ),
             const SizedBox(height: Constants.normalPadding),
             if (widget.itemToEdit == null)
               Card(

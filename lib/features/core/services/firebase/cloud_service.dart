@@ -202,9 +202,13 @@ class CloudService {
     Log.hint("Added Item \"${item.name}\" (ID: ${item.id}) to cloud.");
   }
 
-  Future<void> editItem({required Item item, String? name, String? imageUrl}) async {
-    Log.error("EDIT_ITEM NOT IMPLEMENTED");
-    return;
+  Future<void> editItem({required Category category, required Item item, String? name, String? imageUrl}) async {
+    Provider.of<DataProvider>(Global.context, listen: false).editItem(category: category, item: item, name: name, imageUrl: imageUrl);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
+    await _groupCollection.doc(category.groupId).set({
+      "categories": group.toJson()["categories"],
+    }, SetOptions(merge: true));
+    Log.hint("Edited Item \"${item.name}\" (ID: ${item.id}) and saved changes to cloud.");
   }
 
   Future<void> removeItem({required Category category, required Item item}) async {
@@ -219,16 +223,21 @@ class CloudService {
   Future<void> addRating({required Category category, required Rating rating}) async {
     Provider.of<DataProvider>(Global.context, listen: false).addRating(category: category, rating: rating);
     Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
-    await _groupCollection.doc(category.groupId).set({
+    await _groupCollection.doc(group.id).set({
       // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
       "categories": group.toJson()["categories"],
     }, SetOptions(merge: true));
     Log.hint("Added Rating (ID: ${rating.id}) to an item (Item ID: ${rating.itemId}) to cloud.");
   }
 
-  Future<void> editRating({required Rating rating, String? comment, double? value}) async {
-    Log.error("EDIT_RATING NOT IMPLEMENTED");
-    return;
+  Future<void> editRating({required Category category, required Rating rating, required double value, String? comment}) async {
+    Provider.of<DataProvider>(Global.context, listen: false).editRating(category: category, rating: rating, value: value, comment: comment);
+    Group group = Provider.of<DataProvider>(Global.context, listen: false).userGroups.firstWhere((e) => e.id == category.groupId);
+    await _groupCollection.doc(group.id).set({
+      // TODO: Refactor to save money (only update the item that was changed) => but is it necessary?
+      "categories": group.toJson()["categories"],
+    }, SetOptions(merge: true));
+    Log.hint("Edited Rating (ID: ${rating.id}) of item (Item ID: ${rating.itemId}) and save changes to cloud.");
   }
 
   Future<void> removeRating({required Category category, required Rating rating}) async {

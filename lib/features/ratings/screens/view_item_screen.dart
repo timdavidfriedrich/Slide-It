@@ -35,7 +35,12 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
     if (widget.item.ownRating == null) {
       CloudService.instance.addRating(category: widget.item.category, rating: rating);
     } else {
-      CloudService.instance.editRating(rating: rating);
+      CloudService.instance.editRating(
+        category: widget.item.category,
+        rating: widget.item.ownRating!,
+        value: rating.value,
+        comment: rating.comment,
+      );
     }
     setState(() {});
   }

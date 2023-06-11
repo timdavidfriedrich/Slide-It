@@ -15,7 +15,7 @@ import 'package:uuid/uuid.dart';
 class Item {
   final String id;
   final String categoryId;
-  final String name;
+  String name;
   String? createdByUserId;
   Timestamp createdAt;
   String? firebaseImageUrl;
