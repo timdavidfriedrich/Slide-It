@@ -65,25 +65,41 @@ class Item {
     return sum / ratings.length;
   }
 
-  ImageProvider get imageProvider {
-    return FirebaseImageProvider(
-      FirebaseUrl(firebaseImageUrl!),
-      options: const CacheOptions(
-        // TODO: Update to true, if EDIT_ITEM is implemented
-        checkForMetadataChange: false,
-        metadataRefreshInBackground: false,
-      ),
-    );
+  ImageProvider? get imageProvider {
+    try {
+      if (firebaseImageUrl == null) return null;
+      ImageProvider? provider = FirebaseImageProvider(
+        FirebaseUrl(firebaseImageUrl!),
+        options: const CacheOptions(
+          // TODO: Update to true, if EDIT_ITEM is implemented
+          checkForMetadataChange: false,
+          metadataRefreshInBackground: false,
+        ),
+      );
+      return provider;
+    } catch (e) {
+      return null;
+    }
   }
 
   Widget? get image {
     if (firebaseImageUrl == null) return null;
     try {
-      Widget itemImage = Image(
+      if (imageProvider == null) {
+        return const ErrorInfo();
+      }
+      return Image(
         fit: BoxFit.cover,
-        image: imageProvider,
+        image: imageProvider!,
+        frameBuilder: (_, child, frame, __) {
+          if (frame == null) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          return child;
+        },
       );
-      return itemImage;
     } catch (e) {
       return ErrorInfo(message: e.toString());
     }

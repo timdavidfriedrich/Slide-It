@@ -120,7 +120,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     setState(() => _rating = result);
   }
 
-  void _save() async {
+  Future<void> _save() async {
     if (_category == null) return;
     AppUser? appUser = AppUser.current;
     if (appUser == null) return context.pop();
@@ -143,7 +143,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   Future<void> _uploadImage(Item item) async {
     if (_cameraImageData == null) return;
     item.firebaseImageUrl = StorageService.instance.getItemImageDownloadUrl(item: item);
-    StorageService.instance.uploadItemImage(item: item, imageData: _cameraImageData!);
+    await StorageService.instance.uploadItemImage(item: item, imageData: _cameraImageData!);
     // item.firebaseImageUrl = await StorageService.instance.getItemImageDownloadUrl(item: item);
   }
 
@@ -229,7 +229,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
             const SizedBox(height: Constants.mediumPadding),
             ElevatedButton(
-              onPressed: _isInputValid ? () => _save() : null,
+              onPressed: _isInputValid ? () async => await _save() : null,
               child: Text(_hasRating() || widget.itemToEdit != null ? "Speichern" : "Ohne Bewertung speichern"),
             ),
             const SizedBox(height: Constants.largePadding),
