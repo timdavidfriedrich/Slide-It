@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/ratings/screens/category_screen.dart';
 import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
@@ -44,6 +45,10 @@ class _RatingsScreenState extends State<RatingsScreen> {
     context.push(ChooseGroupScreen.routeName);
   }
 
+  void _openCategory(Category category) {
+    context.push(CategoryScreen.routeName, extra: category);
+  }
+
   void _createCategory() {
     if (currentGroup == null) return;
     context.push(CreateCategoryScreen.routeName, extra: currentGroup!);
@@ -79,7 +84,18 @@ class _RatingsScreenState extends State<RatingsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(c.name, style: Theme.of(context).textTheme.headlineSmall),
+                    InkWell(
+                      onTap: () => _openCategory(c),
+                      borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(child: Text(c.name, style: Theme.of(context).textTheme.headlineSmall)),
+                          const SizedBox(width: Constants.normalPadding),
+                          Text("Alle anzeigen", style: Theme.of(context).textTheme.labelSmall),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: Constants.smallPadding),
                     if (c.items.isEmpty)
                       Text("Keine Items vorhanden", style: Theme.of(context).textTheme.bodyMedium)
