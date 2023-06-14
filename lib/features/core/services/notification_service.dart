@@ -37,6 +37,7 @@ class NotificationService {
 
   Future<void> _initWeb() async {
     if (!kIsWeb) return;
+    Log.hint("Trying to register notification token...");
     String? token = await firebaseMessaging.getToken(
       // TODO: Move to secret file.
       vapidKey: "BBGSDgHDlYCJ2CefiP4yF07XBTspRV-jh_-kGX6Ld3lmG5YPn-IUeCEpcJKgK-Hep0_58TsOyNiRb50ESb6aYWk",

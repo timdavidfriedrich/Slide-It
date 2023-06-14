@@ -8,7 +8,7 @@ class AppUser {
   String? name;
   String? avatarUrl;
   bool isBlocked;
-  List<String> firebaseMessagingTokens;
+  // List<String> firebaseMessagingTokens;
   List<String> groupIds;
 
   static AppUser? current;
@@ -18,7 +18,7 @@ class AppUser {
     this.name = "Unbenannt",
     this.avatarUrl,
     this.isBlocked = false,
-    this.firebaseMessagingTokens = const [],
+    // this.firebaseMessagingTokens = const [],
     this.groupIds = const [],
   });
 
@@ -31,7 +31,7 @@ class AppUser {
       // ! only gets called when the user is signed in for the first time (or when the user data is deleted)
       // ! => token is always the same and no newer tokens are added
       // TODO: Implement a way to update the token.
-      'firebaseMessagingTokens': firebaseMessagingTokens,
+      // 'firebaseMessagingTokens': firebaseMessagingTokens,
       'groupIds': groupIds,
     };
   }
@@ -43,7 +43,7 @@ class AppUser {
         name = json?['name'],
         avatarUrl = json?['avatarUrl'],
         isBlocked = json?['isBlocked'] ?? false,
-        firebaseMessagingTokens = ((json?['firebaseMessagingTokens'] ?? []) as List<dynamic>).map((e) => e.toString()).toList(),
+        // firebaseMessagingTokens = ((json?['firebaseMessagingTokens'] ?? []) as List<dynamic>).map((e) => e.toString()).toList(),
         groupIds = ((json?['groupIds'] ?? []) as List<dynamic>).map((e) => e.toString()).toList();
 
   Widget getAvatar({double? radius}) {
@@ -70,6 +70,6 @@ class AppUser {
 
   @override
   String toString() {
-    return "AppUser(id: $id, name: $name, avatarUrl: $avatarUrl, isBlocked: $isBlocked, firebaseMessagingTokens: $firebaseMessagingTokens, groupIds: $groupIds)";
+    return "AppUser(id: $id, name: $name, avatarUrl: $avatarUrl, isBlocked: $isBlocked, groupIds: $groupIds)";
   }
 }

@@ -43,7 +43,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   Future<void> _sendVerificationEmail() async {
-    AuthService.instance.sendVerificationEmail();
+    await AuthService.instance.sendVerificationEmail();
     setState(() => _sendButtonBlocked = true);
     _blockTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _secondsLeft -= 1);
@@ -54,8 +54,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
     });
   }
 
-  void _deleteAccount() {
-    AuthService.instance.deleteAccount();
+  void _deleteAccount() async {
+    final bool result = await AuthService.instance.deleteAccount();
+    if (!result) AuthService.instance.signOut();
   }
 
   @override
@@ -96,7 +97,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 const SizedBox(height: Constants.smallPadding),
                 TextButton(
                   onPressed: () => _deleteAccount(),
-                  child: const Text("Account löschen"),
+                  child: const Text("Abbrechen"),
                 ),
               ],
             ),

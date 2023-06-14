@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
@@ -23,13 +22,13 @@ class CloudService {
   // * Currently, only gets called when user is created, not if he changes his name, avatar or something.
   Future<void> saveUserData({String? name}) async {
     final User? user = FirebaseAuth.instance.currentUser;
-    final String? firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
+    // final String? firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
     if (user == null) return;
     AppUser.current = AppUser(
       id: user.uid,
       name: name ?? user.displayName,
       avatarUrl: user.photoURL,
-      firebaseMessagingTokens: firebaseMessagingToken == null ? [] : [firebaseMessagingToken],
+      // firebaseMessagingTokens: firebaseMessagingToken == null ? [] : [firebaseMessagingToken],
     );
     if (AppUser.current == null) return;
     await _userCollection.doc(user.uid).set(AppUser.current!.toJson(), SetOptions(merge: true));
@@ -54,6 +53,7 @@ class CloudService {
   Future<void> loadUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
+    Log.debug(user);
     DocumentSnapshot snapshot = await _userCollection.doc(user.uid).get();
     if (!snapshot.exists) {
       saveUserData();
