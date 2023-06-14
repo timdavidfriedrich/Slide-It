@@ -50,7 +50,7 @@ class RatingApp extends StatelessWidget {
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           return MaterialApp.router(
-            title: "Slide it",
+            title: "Slide It!",
             debugShowCheckedModeBanner: false,
             theme: ThemeConfig.light(context, lightDynamic),
             darkTheme: ThemeConfig.dark(context, darkDynamic),
