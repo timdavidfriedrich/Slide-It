@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -11,6 +13,7 @@ import 'package:rating/features/ratings/screens/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/create_category_screen.dart';
 import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/shell_content.dart';
+import 'package:rating/features/ratings/widget/add_item_card.dart';
 import 'package:rating/features/ratings/widget/item_card.dart';
 import 'package:rating/features/social/services/group.dart';
 
@@ -39,7 +42,8 @@ class RatingsScreen extends StatefulWidget implements ShellContent {
 }
 
 class _RatingsScreenState extends State<RatingsScreen> {
-  Group? currentGroup;
+  final int _maxItemsPerRow = 3;
+  Group? _currentGroup;
 
   void _changeGroup() {
     context.push(ChooseGroupScreen.routeName);
@@ -50,13 +54,13 @@ class _RatingsScreenState extends State<RatingsScreen> {
   }
 
   void _createCategory() {
-    if (currentGroup == null) return;
-    context.push(CreateCategoryScreen.routeName, extra: currentGroup!);
+    if (_currentGroup == null) return;
+    context.push(CreateCategoryScreen.routeName, extra: _currentGroup!);
   }
 
   @override
   Widget build(BuildContext context) {
-    currentGroup = Provider.of<DataProvider>(context).selectedGroup;
+    _currentGroup = Provider.of<DataProvider>(context).selectedGroup;
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
@@ -65,21 +69,21 @@ class _RatingsScreenState extends State<RatingsScreen> {
           Card(
             margin: EdgeInsets.zero,
             child: ListTile(
-              leading: currentGroup?.avatar,
-              title: Text(currentGroup?.name ?? "Keine Gruppe ausgewählt"),
-              subtitle: currentGroup == null ? null : const Text("(Tippen zum wechseln)"),
+              leading: _currentGroup?.avatar,
+              title: Text(_currentGroup?.name ?? "Keine Gruppe ausgewählt"),
+              subtitle: _currentGroup == null ? null : const Text("(Tippen zum wechseln)"),
               onTap: () => _changeGroup(),
             ),
           ),
           const SizedBox(height: Constants.mediumPadding),
-          if (currentGroup != null)
-            if (currentGroup!.categories.isEmpty)
+          if (_currentGroup != null)
+            if (_currentGroup!.categories.isEmpty)
               const Padding(
                 padding: EdgeInsets.only(bottom: Constants.mediumPadding),
                 child: Text("Keine Kategorien vorhanden."),
               )
             else
-              for (Category c in currentGroup!.categories)
+              for (Category c in _currentGroup!.categories)
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,14 +106,19 @@ class _RatingsScreenState extends State<RatingsScreen> {
                     else
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(
-                            c.items.length,
-                            (index) => Padding(
-                              padding: const EdgeInsets.only(right: Constants.normalPadding),
-                              child: ItemCard(item: c.items.elementAt(index)),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(
+                              min(c.items.length, _maxItemsPerRow) + 1,
+                              (index) {
+                                final bool isLast = index == min(c.items.length, _maxItemsPerRow);
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: Constants.normalPadding),
+                                  child: isLast ? const AddItemCard() : ItemCard(item: c.items.reversed.elementAt(index)),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -118,7 +127,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
                   ],
                 ),
           TextButton.icon(
-            onPressed: currentGroup == null ? null : () => _createCategory(),
+            onPressed: _currentGroup == null ? null : () => _createCategory(),
             icon: Icon(PlatformIcons(context).add),
             label: const Text("Kategorie erstellen"),
           ),
