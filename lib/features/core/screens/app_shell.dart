@@ -168,8 +168,13 @@ class _AppShellState extends State<AppShell> {
                           );
                         }),
                       ),
-                floatingActionButton:
-                    _platformIsApple() ? null : FloatingActionButton(onPressed: () => _navigateToAdd(), child: const EditItemScreen().icon),
+                floatingActionButton: _platformIsApple()
+                    ? null
+                    : FloatingActionButton.extended(
+                        onPressed: () => _navigateToAdd(),
+                        label: const Text("Objekt"),
+                        icon: const EditItemScreen().icon,
+                      ),
               ),
             ),
           );
