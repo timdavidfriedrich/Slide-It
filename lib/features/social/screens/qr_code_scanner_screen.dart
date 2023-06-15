@@ -23,7 +23,7 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   );
 
   void _popWithInvitationGroupId(String invitationGroupId) {
-    Log.debug("invitationGroupId: $invitationGroupId");
+    Log.hint("Scanned QR Code with invitationGroupId: $invitationGroupId");
     context.pop(invitationGroupId);
   }
 

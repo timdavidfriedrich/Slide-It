@@ -131,7 +131,6 @@ class DataProvider extends ChangeNotifier {
         if (c.id != category.id) continue;
         for (Item i in c.items) {
           if (i.id != item.id) continue;
-          Log.debug("Previous name: ${i.name}, new name: $name");
           i.name = name ?? i.name;
           i.firebaseImageUrl = imageUrl;
           notifyListeners();
@@ -179,7 +178,6 @@ class DataProvider extends ChangeNotifier {
             if (i.ratings[r].id != rating.id) continue;
             i.ratings[r].value = value;
             i.ratings[r].comment = comment;
-            Log.debug("Previous Rating: ${i.ratings[r].value} | New Rating: ${rating.value}");
             notifyListeners();
             Log.hint("Edited Rating (ID: ${rating.id}) of an item (Item ID: ${rating.itemId}) and saved changes to runtime storage.");
           }
