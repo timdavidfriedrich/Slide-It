@@ -32,6 +32,12 @@ class _RateItemScreenState extends State<RateItemScreen> {
   final double _minValue = Constants.noRatingValue;
   final double _maxValue = Constants.maxRatingValue;
 
+  void _initValues() {
+    _sliderValue = widget.rating?.value ?? Constants.noRatingValue;
+    _image = widget.item.image;
+    _commentController.text = widget.rating?.comment ?? "";
+  }
+
   bool _isInputValid() {
     // * value for 0 digits = 0.5, for 1 digit = 0.05, ... (catch double to int convertion)
     return _sliderValue >= (Constants.minRatingValue - 0.5) / pow(10, Constants.ratingValueDigit);
@@ -73,8 +79,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
   @override
   void initState() {
     super.initState();
-    _sliderValue = widget.rating?.value ?? Constants.noRatingValue;
-    _image = widget.item.image;
+    _initValues();
   }
 
   @override
