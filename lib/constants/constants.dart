@@ -12,7 +12,7 @@ class Constants {
   static const double noRatingValue = 0.0;
   static const double minRatingValue = 1.0;
   static const double maxRatingValue = 10.0;
-  static const int ratingValueDigit = 2; // 0-20
+  static const int ratingValueDigit = 1; // 0-20
 
   static const double defaultBorderRadius = 8.0;
 
