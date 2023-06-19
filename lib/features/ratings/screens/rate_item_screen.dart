@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,8 @@ class _RateItemScreenState extends State<RateItemScreen> {
   late final Widget? _image;
 
   double _sliderValue = Constants.noRatingValue;
+  final TextEditingController _valueController = TextEditingController();
+  final Pattern _valuePattern = RegExp(r'^((10(\.0)?)|([0-9](\.[0-9])?)|([0-9]\.))$');
 
   final double _minValue = Constants.noRatingValue;
   final double _maxValue = Constants.maxRatingValue;
@@ -36,6 +39,10 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   void _updateSliderValue(double value) {
     setState(() => _sliderValue = value);
+  }
+
+  void _clearValueController() {
+    _valueController.clear();
   }
 
   Color _getValueColor() {
@@ -112,14 +119,25 @@ class _RateItemScreenState extends State<RateItemScreen> {
                   ),
                 const SizedBox(height: Constants.mediumPadding),
                 Expanded(
-                  child: FittedBox(
-                    child: Text(
-                      "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.azeretMono(
-                        fontWeight: FontWeight.w500,
-                        fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
-                      ),
+                  child: TextField(
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(_valuePattern),
+                    ],
+                    controller: _valueController,
+                    onChanged: (value) => _updateSliderValue(double.parse(value)),
+                    onTapOutside: (_) => _clearValueController(),
+                    onSubmitted: (_) => _clearValueController(),
+                    onEditingComplete: () => _clearValueController(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                      filled: false,
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                    ),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.azeretMono(
+                      fontWeight: FontWeight.w500,
+                      fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
                     ),
                   ),
                 ),
