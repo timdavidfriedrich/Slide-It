@@ -52,7 +52,7 @@ class RatingApp extends StatelessWidget {
           return MaterialApp.router(
             title: "Slide It!",
             debugShowCheckedModeBanner: false,
-            theme: ThemeConfig.light(context, lightDynamic),
+            theme: ThemeConfig.dark(context, darkDynamic),
             darkTheme: ThemeConfig.dark(context, darkDynamic),
             routerConfig: GoRouter(
               navigatorKey: Global.navigatorState,
