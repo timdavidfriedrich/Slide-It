@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
@@ -27,7 +28,8 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   double _sliderValue = Constants.noRatingValue;
   final TextEditingController _valueController = TextEditingController();
-  final Pattern _valuePattern = RegExp(r'^((10(\.0)?)|([0-9](\.[0-9])?)|([0-9]\.))$');
+  // final Pattern _valuePattern = RegExp(r'^((10(\.0)?)|([0-9](\.[0-9])?)|([0-9]\.))$');
+  final Pattern _valuePattern = RegExp(r'^((10(\.0)?)|([0-9](\.[0-9])?)|([0-9]\.)|(10(\,0)?)|([0-9](\,[0-9])?)|([0-9]\,))$');
 
   final double _minValue = Constants.noRatingValue;
   final double _maxValue = Constants.maxRatingValue;
@@ -43,12 +45,40 @@ class _RateItemScreenState extends State<RateItemScreen> {
     return _sliderValue >= (Constants.minRatingValue - 0.5) / pow(10, Constants.ratingValueDigit);
   }
 
-  void _updateSliderValue(double value) {
-    setState(() => _sliderValue = value);
+  void _updateSliderValue(value) {
+    try {
+      double parsedValue;
+      if (value is double) {
+        parsedValue = value;
+        Log.debug("53");
+      } else if (value is String) {
+        parsedValue = double.parse(value.replaceAll(",", "."));
+        Log.debug("56");
+      } else {
+        parsedValue = double.parse(value);
+        Log.debug("59");
+      }
+      Log.debug("61");
+      if (parsedValue < _minValue || parsedValue > _maxValue) return;
+      Log.debug("63");
+      setState(() => _sliderValue = parsedValue);
+      Log.debug("65");
+    } catch (e) {
+      Log.debug("67");
+      return;
+    }
   }
 
   void _clearValueController() {
+    _dismissKeyboard();
     _valueController.clear();
+  }
+
+  void _dismissKeyboard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 
   Color _getValueColor() {
@@ -106,72 +136,72 @@ class _RateItemScreenState extends State<RateItemScreen> {
           ),
         ),
         body: SafeArea(
-          child: Padding(
+          child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-            child: Column(
-              children: [
-                const SizedBox(height: Constants.normalPadding),
-                if (_image != null)
-                  AspectRatio(
-                    aspectRatio: 3 / 2,
-                    child: Opacity(
-                      opacity: 0.9,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
-                        child: _image,
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: Constants.mediumPadding),
-                Expanded(
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(_valuePattern),
-                    ],
-                    controller: _valueController,
-                    onChanged: (value) => _updateSliderValue(double.parse(value)),
-                    onTapOutside: (_) => _clearValueController(),
-                    onSubmitted: (_) => _clearValueController(),
-                    onEditingComplete: () => _clearValueController(),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
-                      filled: false,
-                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-                    ),
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.azeretMono(
-                      fontWeight: FontWeight.w500,
-                      fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
+            children: [
+              const SizedBox(height: Constants.normalPadding),
+              if (_image != null)
+                AspectRatio(
+                  aspectRatio: 3 / 2,
+                  child: Opacity(
+                    opacity: 0.9,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                      child: _image,
                     ),
                   ),
                 ),
-                const SizedBox(height: Constants.normalPadding),
-                Slider(
-                  min: _minValue,
-                  max: _maxValue,
-                  value: _sliderValue,
-                  onChanged: (value) => _updateSliderValue(value),
+              const SizedBox(height: Constants.mediumPadding),
+              const Spacer(),
+              TextField(
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(_valuePattern),
+                ],
+                controller: _valueController,
+                onChanged: (value) => _updateSliderValue(value),
+                onTapOutside: (_) => _clearValueController(),
+                onSubmitted: (_) => _clearValueController(),
+                onEditingComplete: () => _clearValueController(),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  hintText: "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                  filled: false,
+                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
                 ),
-                const SizedBox(height: Constants.mediumPadding),
-                TextField(
-                  controller: _commentController,
-                  maxLines: 3,
-                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-                  decoration: InputDecoration(
-                    fillColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
-                    labelText: "Begründung (optional)",
-                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-                  ),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.azeretMono(
+                  fontWeight: FontWeight.w500,
+                  fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
                 ),
-                const SizedBox(height: Constants.mediumPadding),
-                ElevatedButton(
-                  onPressed: _isInputValid() ? () => _save() : null,
-                  child: const Text("Bewerten"),
+              ),
+              const Spacer(),
+              const SizedBox(height: Constants.normalPadding),
+              Slider(
+                min: _minValue,
+                max: _maxValue,
+                value: _sliderValue,
+                onChanged: (value) => _updateSliderValue(value),
+              ),
+              const SizedBox(height: Constants.mediumPadding),
+              TextField(
+                controller: _commentController,
+                maxLines: 3,
+                style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+                  labelText: "Begründung (optional)",
+                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
                 ),
-                const SizedBox(height: Constants.largePadding),
-              ],
-            ),
+              ),
+              const SizedBox(height: Constants.mediumPadding),
+              ElevatedButton(
+                onPressed: _isInputValid() ? () => _save() : null,
+                child: const Text("Bewerten"),
+              ),
+              const SizedBox(height: Constants.largePadding),
+            ],
           ),
         ),
       ),
