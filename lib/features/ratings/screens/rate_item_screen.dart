@@ -151,8 +151,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
                     ),
                   ),
                 ),
-              const SizedBox(height: Constants.mediumPadding),
-              const Spacer(),
+              const SizedBox(height: Constants.largePadding),
               TextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
@@ -176,8 +175,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
                   fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
                 ),
               ),
-              const Spacer(),
-              const SizedBox(height: Constants.normalPadding),
+              const SizedBox(height: Constants.mediumPadding),
               Slider(
                 min: _minValue,
                 max: _maxValue,
