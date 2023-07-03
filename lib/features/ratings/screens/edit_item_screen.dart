@@ -54,6 +54,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   Rating? _rating;
 
+  bool _isSaving = false;
+
   void _checkIfInputValid() {
     setState(() => _isInputValid = (_nameController.text.isNotEmpty || widget.itemToEdit != null) && _category != null);
   }
@@ -125,7 +127,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     AppUser? appUser = AppUser.current;
     if (appUser == null) return context.pop();
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
-    // TODO: Implement a loading indicator somehow
+    setState(() => _isSaving = true);
     await _uploadImage(item);
     _saveItem(item: item, user: appUser);
     if (mounted) context.pop();
@@ -241,8 +243,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
             const SizedBox(height: Constants.mediumPadding),
             ElevatedButton(
-              onPressed: _isInputValid ? () async => await _save() : null,
-              child: Text(_hasRating() || widget.itemToEdit != null ? "Speichern" : "Ohne Bewertung speichern"),
+              onPressed: _isInputValid && !_isSaving ? () async => await _save() : null,
+              child: _isSaving
+                  ? const CircularProgressIndicator.adaptive()
+                  : Text(_hasRating() || widget.itemToEdit != null ? "Speichern" : "Ohne Bewertung speichern"),
             ),
             const SizedBox(height: Constants.largePadding),
           ],
