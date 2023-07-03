@@ -63,23 +63,25 @@ class _RatingsScreenState extends State<RatingsScreen> {
     _currentGroup = Provider.of<DataProvider>(context).selectedGroup;
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
         children: [
           const SizedBox(height: Constants.normalPadding),
-          Card(
-            margin: EdgeInsets.zero,
-            child: ListTile(
-              leading: _currentGroup?.avatar,
-              title: Text(_currentGroup?.name ?? "Keine Gruppe ausgewählt"),
-              subtitle: _currentGroup == null ? null : const Text("(Tippen zum wechseln)"),
-              onTap: () => _changeGroup(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+            child: Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                leading: _currentGroup?.avatar,
+                title: Text(_currentGroup?.name ?? "Keine Gruppe ausgewählt"),
+                subtitle: _currentGroup == null ? null : const Text("(Tippen zum wechseln)"),
+                onTap: () => _changeGroup(),
+              ),
             ),
           ),
           const SizedBox(height: Constants.mediumPadding),
           if (_currentGroup != null)
             if (_currentGroup!.categories.isEmpty)
               const Padding(
-                padding: EdgeInsets.only(bottom: Constants.mediumPadding),
+                padding: EdgeInsets.fromLTRB(Constants.mediumPadding, 0, Constants.mediumPadding, Constants.mediumPadding),
                 child: Text("Keine Kategorien vorhanden."),
               )
             else
@@ -88,21 +90,27 @@ class _RatingsScreenState extends State<RatingsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InkWell(
-                      onTap: () => _openCategory(c),
-                      borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(child: Text(c.name, style: Theme.of(context).textTheme.headlineSmall)),
-                          const SizedBox(width: Constants.normalPadding),
-                          Text("Alle anzeigen", style: Theme.of(context).textTheme.labelSmall),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                      child: InkWell(
+                        onTap: () => _openCategory(c),
+                        borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(child: Text(c.name, style: Theme.of(context).textTheme.headlineSmall)),
+                            const SizedBox(width: Constants.normalPadding),
+                            Text("Alle anzeigen", style: Theme.of(context).textTheme.labelSmall),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: Constants.smallPadding),
                     if (c.items.isEmpty)
-                      Text("Keine Items vorhanden", style: Theme.of(context).textTheme.bodyMedium)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                        child: Text("Keine Items vorhanden", style: Theme.of(context).textTheme.bodyMedium),
+                      )
                     else
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -110,13 +118,17 @@ class _RatingsScreenState extends State<RatingsScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(
-                              min(c.items.length, _maxItemsPerRow) + 1,
+                            children: List<Widget>.generate(
+                              min(c.items.length, _maxItemsPerRow) + 2,
                               (index) {
-                                final bool isLast = index == min(c.items.length, _maxItemsPerRow);
+                                final bool isFirst = index == 0;
+                                final bool isLast = index == min(c.items.length, _maxItemsPerRow) + 1;
+                                if (isFirst) {
+                                  return const SizedBox(width: Constants.mediumPadding);
+                                }
                                 return Padding(
                                   padding: const EdgeInsets.only(right: Constants.normalPadding),
-                                  child: isLast ? const AddItemCard() : ItemCard(item: c.items.reversed.elementAt(index)),
+                                  child: isLast ? const AddItemCard() : ItemCard(item: c.items.reversed.elementAt(index - 1)),
                                 );
                               },
                             ),
@@ -126,10 +138,13 @@ class _RatingsScreenState extends State<RatingsScreen> {
                     const SizedBox(height: Constants.mediumPadding),
                   ],
                 ),
-          TextButton.icon(
-            onPressed: _currentGroup == null ? null : () => _createCategory(),
-            icon: Icon(PlatformIcons(context).add),
-            label: const Text("Kategorie erstellen"),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+            child: TextButton.icon(
+              onPressed: _currentGroup == null ? null : () => _createCategory(),
+              icon: Icon(PlatformIcons(context).add),
+              label: const Text("Kategorie erstellen"),
+            ),
           ),
           const SizedBox(height: Constants.largePadding),
         ],

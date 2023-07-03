@@ -10,6 +10,8 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double imageSize = 150;
+
     void showItemRatings() {
       context.push(ViewItemScreen.routeName, extra: item);
     }
@@ -22,22 +24,23 @@ class ItemCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Constants.normalPadding),
           child: SizedBox(
-            width: 100,
+            width: imageSize,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (item.image != null)
-                  SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                            Constants.defaultBorderRadius,
-                          ),
-                          child: item.image)),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                    child: Image(
+                      image: item.imageProvider!,
+                      fit: BoxFit.cover,
+                      width: imageSize,
+                      height: imageSize,
+                    ),
+                  ),
                 const SizedBox(height: Constants.smallPadding),
-                Flexible(child: Text(item.name)),
+                Flexible(child: Text(item.name, style: Theme.of(context).textTheme.labelSmall)),
                 const SizedBox(height: Constants.minimalPadding),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

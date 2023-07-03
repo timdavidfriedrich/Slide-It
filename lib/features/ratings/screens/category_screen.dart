@@ -45,27 +45,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Constants.largePadding,
                 ),
                 child: Row(
-                  mainAxisAlignment: items.length <= 1 ? MainAxisAlignment.start : MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        itemsFirstRow.length,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(bottom: Constants.normalPadding),
-                          child: ItemCard(item: itemsFirstRow.elementAt(index)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          itemsFirstRow.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: Constants.normalPadding),
+                            child: ItemCard(item: itemsFirstRow.elementAt(index)),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: Constants.normalPadding),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        itemsSecondRow.length,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(bottom: Constants.normalPadding),
-                          child: ItemCard(item: itemsSecondRow.elementAt(index)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          itemsSecondRow.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: Constants.normalPadding),
+                            child: ItemCard(item: itemsSecondRow.elementAt(index)),
+                          ),
                         ),
                       ),
                     ),
