@@ -5,12 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:log/log.dart';
-import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/ratings/services/item.dart';
 import 'package:rating/features/ratings/services/rating.dart';
+import 'package:rating/features/ratings/widget/item_app_bar.dart';
 
 class RateItemScreen extends StatefulWidget {
   static const routeName = "/Rate";
@@ -124,81 +123,77 @@ class _RateItemScreenState extends State<RateItemScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(widget.item.name, style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(
-              "${widget.item.category.name} (${Provider.of<DataProvider>(context).getGroupFromCategory(widget.item.category).name})",
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-        ),
         body: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+          child: Column(
             children: [
-              const SizedBox(height: Constants.normalPadding),
-              if (_image != null)
-                AspectRatio(
-                  aspectRatio: 3 / 2,
-                  child: Opacity(
-                    opacity: 0.9,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
-                      child: _image,
+              ItemAppBar(item: widget.item, showEditButton: false),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                  children: [
+                    const SizedBox(height: Constants.normalPadding),
+                    if (_image != null)
+                      AspectRatio(
+                        aspectRatio: 3 / 2,
+                        child: Opacity(
+                          opacity: 0.9,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                            child: _image,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: Constants.largePadding),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(_valuePattern),
+                      ],
+                      controller: _valueController,
+                      onChanged: (value) => _updateSliderValue(value),
+                      onTapOutside: (_) => _clearValueController(),
+                      onSubmitted: (_) => _clearValueController(),
+                      onEditingComplete: () => _clearValueController(),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        hintText: "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                        filled: false,
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      ),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.azeretMono(
+                        fontWeight: FontWeight.w500,
+                        fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
+                      ),
                     ),
-                  ),
-                ),
-              const SizedBox(height: Constants.largePadding),
-              TextField(
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(_valuePattern),
-                ],
-                controller: _valueController,
-                onChanged: (value) => _updateSliderValue(value),
-                onTapOutside: (_) => _clearValueController(),
-                onSubmitted: (_) => _clearValueController(),
-                onEditingComplete: () => _clearValueController(),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                  hintText: "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
-                  filled: false,
-                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-                ),
-                textAlign: TextAlign.center,
-                style: GoogleFonts.azeretMono(
-                  fontWeight: FontWeight.w500,
-                  fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
-                ),
-              ),
-              const SizedBox(height: Constants.mediumPadding),
-              Slider(
-                min: _minValue,
-                max: _maxValue,
-                value: _sliderValue,
-                onChanged: (value) => _updateSliderValue(value),
-              ),
-              const SizedBox(height: Constants.mediumPadding),
-              TextField(
-                controller: _commentController,
-                maxLines: 3,
-                style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-                decoration: InputDecoration(
-                  fillColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
-                  labelText: "Begründung (optional)",
-                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                    const SizedBox(height: Constants.mediumPadding),
+                    Slider(
+                      min: _minValue,
+                      max: _maxValue,
+                      value: _sliderValue,
+                      onChanged: (value) => _updateSliderValue(value),
+                    ),
+                    const SizedBox(height: Constants.mediumPadding),
+                    TextField(
+                      controller: _commentController,
+                      maxLines: 3,
+                      style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      decoration: InputDecoration(
+                        fillColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+                        labelText: "Begründung (optional)",
+                        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      ),
+                    ),
+                    const SizedBox(height: Constants.mediumPadding),
+                    ElevatedButton(
+                      onPressed: _isInputValid() ? () => _save() : null,
+                      child: const Text("Bewerten"),
+                    ),
+                    const SizedBox(height: Constants.largePadding),
+                  ],
                 ),
               ),
-              const SizedBox(height: Constants.mediumPadding),
-              ElevatedButton(
-                onPressed: _isInputValid() ? () => _save() : null,
-                child: const Text("Bewerten"),
-              ),
-              const SizedBox(height: Constants.largePadding),
             ],
           ),
         ),
