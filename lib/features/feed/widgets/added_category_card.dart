@@ -40,7 +40,7 @@ class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
                 const SizedBox(width: Constants.smallPadding),
                 Flexible(
                   child: Text(
-                    "${appUser?.name ?? "Unbenannt"} hat eine neue Kategorie hinzugefügt:",
+                    "${appUser?.name ?? "Unbenannt"} hat eine neue Kategorie erstellt:",
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
