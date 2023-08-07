@@ -65,6 +65,16 @@ class NotificationService {
   void _initBackgroundNotifications() {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
+
+  void subscribeToTopic(String topic) {
+    firebaseMessaging.subscribeToTopic(topic);
+    Log.hint("NOTIFICATIONS: Subscribed to $topic");
+  }
+
+  void unsubscribeFromTopic(String topic) {
+    firebaseMessaging.unsubscribeFromTopic(topic);
+    Log.hint("NOTIFICATIONS: Unsubscribed from $topic");
+  }
 }
 
 // * Must be top-level (outside of any class)
@@ -72,7 +82,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   /// Initialize the Firebase app (needed to use other Firebase services)
   // await Firebase.initializeApp();
   Log.hint(
-    "Received a background message with id=${message.messageId}."
+    "Received a background mes sage with id=${message.messageId}."
     "\n\tdata: ${message.data}"
     "\n\tnotification: ${message.notification ?? "-"}",
   );
