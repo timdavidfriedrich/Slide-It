@@ -42,7 +42,7 @@ class RatingsScreen extends StatefulWidget implements ShellContent {
 }
 
 class _RatingsScreenState extends State<RatingsScreen> {
-  final int _maxItemsPerRow = 3;
+  final int _maxItemsPerRow = 10;
   Group? _currentGroup;
 
   void _changeGroup() {
