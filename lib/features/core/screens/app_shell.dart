@@ -16,7 +16,7 @@ import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
-import 'package:rating/features/social/screens/social_screen.dart';
+import 'package:rating/features/settings/screens/settings_screen.dart';
 
 class AppShell extends StatefulWidget {
   static const routeName = "/";
@@ -32,6 +32,13 @@ class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
   Timer? _timer;
 
+  final List<({ShellContent screen, String routeName})> _contents = const [
+    (screen: FeedScreen(), routeName: FeedScreen.routeName),
+    (screen: RatingsScreen(), routeName: RatingsScreen.routeName),
+    (screen: SettingsScreen(), routeName: SettingsScreen.routeName),
+    // (SettingsScreen(), SettingsScreen.routeName),
+  ];
+
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) => _resetRefreshedCounter());
   }
@@ -45,13 +52,6 @@ class _AppShellState extends State<AppShell> {
     await Provider.of<DataProvider>(context, listen: false).reloadData();
     Log.hint("Reloaded data.");
   }
-
-  final List<({ShellContent screen, String routeName})> _contents = const [
-    (screen: FeedScreen(), routeName: FeedScreen.routeName),
-    (screen: RatingsScreen(), routeName: RatingsScreen.routeName),
-    (screen: SocialScreen(), routeName: SocialScreen.routeName),
-    // (SettingsScreen(), SettingsScreen.routeName),
-  ];
 
   bool _platformIsApple() {
     return Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.macOS;

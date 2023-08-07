@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/shell_content.dart';
+import 'package:rating/features/social/widgets/profile_card.dart';
 
 class SettingsScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/settings";
@@ -33,10 +34,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.largePadding),
+        padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
         children: const [
-          SizedBox(height: Constants.largePadding),
-          Card(child: Placeholder()),
+          ProfileCard(),
         ],
       ),
     );

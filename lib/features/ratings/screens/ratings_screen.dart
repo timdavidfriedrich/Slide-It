@@ -15,6 +15,7 @@ import 'package:rating/features/ratings/services/category.dart';
 import 'package:rating/features/core/services/shell_content.dart';
 import 'package:rating/features/ratings/widget/add_item_card.dart';
 import 'package:rating/features/ratings/widget/item_card.dart';
+import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 
 class RatingsScreen extends StatefulWidget implements ShellContent {
@@ -49,6 +50,11 @@ class _RatingsScreenState extends State<RatingsScreen> {
     context.push(ChooseGroupScreen.routeName);
   }
 
+  void _showCurrentGroupInfos() {
+    if (_currentGroup == null) return;
+    context.push(GroupScreen.routeName, extra: _currentGroup);
+  }
+
   void _openCategory(Category category) {
     context.push(CategoryScreen.routeName, extra: category);
   }
@@ -70,9 +76,18 @@ class _RatingsScreenState extends State<RatingsScreen> {
             child: Card(
               margin: EdgeInsets.zero,
               child: ListTile(
+                contentPadding: const EdgeInsets.only(
+                  left: Constants.normalPadding,
+                  right: Constants.smallPadding,
+                ),
                 leading: _currentGroup?.avatar,
                 title: Text(_currentGroup?.name ?? "Keine Gruppe ausgewählt"),
                 subtitle: _currentGroup == null ? null : const Text("(Tippen zum wechseln)"),
+                trailing: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => _showCurrentGroupInfos(),
+                  icon: Icon(PlatformIcons(context).info),
+                ),
                 onTap: () => _changeGroup(),
               ),
             ),
