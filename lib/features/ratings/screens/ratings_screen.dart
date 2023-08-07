@@ -67,12 +67,13 @@ class _RatingsScreenState extends State<RatingsScreen> {
   @override
   Widget build(BuildContext context) {
     _currentGroup = Provider.of<DataProvider>(context).selectedGroup;
+    const double screenPadding = Constants.normalPadding;
     return SafeArea(
       child: ListView(
         children: [
           const SizedBox(height: Constants.normalPadding),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+            padding: const EdgeInsets.symmetric(horizontal: screenPadding),
             child: Card(
               margin: EdgeInsets.zero,
               child: ListTile(
@@ -106,7 +107,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                      padding: const EdgeInsets.symmetric(horizontal: screenPadding),
                       child: InkWell(
                         onTap: () => _openCategory(c),
                         borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
@@ -123,7 +124,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
                     const SizedBox(height: Constants.smallPadding),
                     if (c.items.isEmpty)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                        padding: const EdgeInsets.symmetric(horizontal: screenPadding),
                         child: Text("Keine Items vorhanden", style: Theme.of(context).textTheme.bodyMedium),
                       )
                     else
@@ -139,7 +140,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
                                 final bool isFirst = index == 0;
                                 final bool isLast = index == min(c.items.length, _maxItemsPerRow) + 1;
                                 if (isFirst) {
-                                  return const SizedBox(width: Constants.mediumPadding);
+                                  return const SizedBox(width: screenPadding);
                                 }
                                 return Padding(
                                   padding: const EdgeInsets.only(right: Constants.normalPadding),

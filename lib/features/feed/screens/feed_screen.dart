@@ -91,7 +91,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                   )
                 : ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+                    padding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding),
                     children: List.generate(widgets.length + 1, (index) {
                       if (index == widgets.length) return const SizedBox(height: Constants.largePadding * 2);
                       return Padding(

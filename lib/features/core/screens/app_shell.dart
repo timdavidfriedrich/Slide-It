@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
+import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/app_user.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/screens/feed_screen.dart';
@@ -128,7 +129,7 @@ class _AppShellState extends State<AppShell> {
               child: Scaffold(
                 appBar: AppBar(
                   title: Text(_contents[_selectedIndex].screen.displayName),
-                  titleSpacing: 32,
+                  titleSpacing: Constants.normalPadding,
                   actions: [
                     if (_platformIsApple())
                       FilledButton(

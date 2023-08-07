@@ -34,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+        padding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding),
         children: [
           const ProfileCard(),
           const SizedBox(height: Constants.normalPadding),
@@ -48,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text(
             "Wenn du eine Idee hast, schreib mir.",
             style: Theme.of(context).textTheme.bodySmall,
-          )
+          ),
         ],
       ),
     );
