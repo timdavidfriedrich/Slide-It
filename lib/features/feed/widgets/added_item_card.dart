@@ -82,6 +82,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
                 padding: const EdgeInsets.all(Constants.normalPadding),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget.item.image != null)
                       AspectRatio(
