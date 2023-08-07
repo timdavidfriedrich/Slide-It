@@ -35,8 +35,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
-        children: const [
-          ProfileCard(),
+        children: [
+          const ProfileCard(),
+          const SizedBox(height: Constants.normalPadding),
+          const Text("Frage an alle:"),
+          const SizedBox(height: Constants.smallPadding),
+          Text(
+            "Welche Einstellungsmöglichkeiten wünschst du dir bzw. sind vielleicht sogar notwendig?",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: Constants.smallPadding),
+          Text(
+            "Wenn du eine Idee hast, schreib mir.",
+            style: Theme.of(context).textTheme.bodySmall,
+          )
         ],
       ),
     );
