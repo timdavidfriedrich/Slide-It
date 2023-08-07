@@ -52,34 +52,9 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
                 children: [
                   const SizedBox(height: Constants.normalPadding),
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: ClipRRect(borderRadius: BorderRadius.circular(Constants.defaultBorderRadius), child: widget.item.image)),
-                      Positioned(
-                        bottom: -Constants.mediumPadding / 2,
-                        right: -Constants.mediumPadding / 2,
-                        child: Card(
-                          elevation: 0,
-                          color: Theme.of(context).colorScheme.background,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.smallPadding),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(widget.item.averageRating.toStringAsFixed(Constants.ratingValueDigit),
-                                    style: Theme.of(context).textTheme.displaySmall),
-                                const SizedBox(width: Constants.smallPadding),
-                                const Text(Constants.ratingValueUnit),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: ClipRRect(borderRadius: BorderRadius.circular(Constants.defaultBorderRadius), child: widget.item.image)),
                   const SizedBox(height: Constants.mediumPadding),
                   Text("Meine Bewertung:", style: Theme.of(context).textTheme.headlineSmall),
                   const SizedBox(height: Constants.smallPadding),
@@ -103,7 +78,16 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                           ),
                         ),
                   const SizedBox(height: Constants.mediumPadding),
-                  Text("${widget.item.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${widget.item.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
+                      Text(
+                        "⌀ ${widget.item.averageRating.toStringAsFixed(Constants.ratingValueDigit)} ${Constants.ratingValueUnit}",
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: Constants.smallPadding),
                   if (widget.item.ratings.length == 0 + (widget.item.ownRating != null ? 1 : 0)) const Text("Noch keine Bewertungen."),
                   for (Rating r in widget.item.ratings)

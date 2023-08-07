@@ -65,6 +65,12 @@ class ThemeConfig {
         elevation: 0,
         // margin: EdgeInsets.zero,
       ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: colorScheme.background,
+        actionTextColor: colorScheme.onBackground,
+        contentTextStyle: TextStyle(color: colorScheme.onBackground),
+        elevation: 0,
+      ),
       listTileTheme: ListTileThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
