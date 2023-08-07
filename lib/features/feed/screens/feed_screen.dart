@@ -24,7 +24,7 @@ class FeedScreen extends StatefulWidget implements ShellContent {
   State<FeedScreen> createState() => _FeedScreenState();
 
   @override
-  String get displayName => "Feed";
+  String get displayName => "Aktivitäten";
 
   @override
   Icon get icon {
