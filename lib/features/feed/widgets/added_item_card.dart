@@ -55,14 +55,14 @@ class _AddedItemCardState extends State<AddedItemCard> {
     AppUser? appUser = Provider.of<DataProvider>(context, listen: false).getAppUserById(widget.item.createdByUserId);
     DateTime creationDate = widget.item.createdAt.toDate();
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(Constants.smallPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
             children: [
-              if (appUser != null) appUser.getAvatar(radius: 8),
+              if (appUser != null) appUser.getAvatar(radius: Constants.defaultBorderRadius),
               const SizedBox(width: Constants.smallPadding),
               Flexible(
                 child: Text(
@@ -78,13 +78,13 @@ class _AddedItemCardState extends State<AddedItemCard> {
             borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
             child: Card(
               margin: EdgeInsets.zero,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.item.image != null)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(Constants.normalPadding, Constants.normalPadding, Constants.normalPadding, 0),
-                      child: AspectRatio(
+              child: Padding(
+                padding: const EdgeInsets.all(Constants.normalPadding),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.item.image != null)
+                      AspectRatio(
                         aspectRatio: 1 / 1,
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(
@@ -92,14 +92,24 @@ class _AddedItemCardState extends State<AddedItemCard> {
                             ),
                             child: widget.item.image),
                       ),
+                    const SizedBox(height: Constants.normalPadding),
+                    Text(widget.item.name),
+                    const SizedBox(height: Constants.smallPadding),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${widget.item.category.name} (${widget.item.group.name})",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          "⌀ ${widget.item.averageRating.toStringAsFixed(Constants.ratingValueDigit)} ${Constants.ratingValueUnit}",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ),
-                  ListTile(
-                    // onTap: () => _viewItem(),
-                    title: Text(widget.item.name),
-                    subtitle: Text(widget.item.category.name),
-                    trailing: Text(widget.item.group.name),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

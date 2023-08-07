@@ -50,7 +50,7 @@ class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
             child: ListTile(
               onTap: () => openCategory(),
               title: Text(category.name),
-              trailing: Text(category.group.name),
+              subtitle: Text("(${category.group.name})"),
             ),
           ),
           const SizedBox(height: Constants.smallPadding),
