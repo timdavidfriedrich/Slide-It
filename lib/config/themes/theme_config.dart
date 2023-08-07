@@ -37,6 +37,7 @@ class ThemeConfig {
     ColorScheme? dynamicColorScheme = deviceColorScheme?.copyWith(
       primary: defaultColorScheme.primary,
       surface: defaultColorScheme.surface,
+      // background: defaultColorScheme.background,
     );
     ColorScheme colorScheme = dynamicColorScheme ?? defaultColorScheme;
     return ThemeData(
@@ -49,6 +50,7 @@ class ThemeConfig {
         centerTitle: false,
       ),
       scaffoldBackgroundColor: colorScheme.background,
+      cardColor: colorScheme.surface,
       sliderTheme: SliderThemeData(
         activeTrackColor: colorScheme.onBackground,
         inactiveTrackColor: colorScheme.onSurface.withOpacity(0.5),
