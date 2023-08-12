@@ -21,7 +21,7 @@ class ProfileCard extends StatelessWidget {
     }
 
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding, vertical: Constants.smallPadding),
+      contentPadding: const EdgeInsets.symmetric(horizontal: Constants.smallPadding, vertical: Constants.smallPadding),
       leading: CircleAvatar(
         backgroundImage: currentUser != null && currentUser.avatarUrl != null ? NetworkImage(currentUser.avatarUrl!) : null,
         child: currentUser != null && currentUser.avatarUrl != null ? null : Icon(PlatformIcons(context).person),

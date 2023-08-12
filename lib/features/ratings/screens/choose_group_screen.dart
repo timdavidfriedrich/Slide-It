@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/social/screens/group_screen.dart';
 import 'package:rating/features/social/services/group.dart';
 import 'package:rating/features/social/widgets/add_group_dialog.dart';
 
@@ -19,6 +20,10 @@ class ChooseGroupScreen extends StatelessWidget {
     void chooseGroup(Group group) {
       Provider.of<DataProvider>(context, listen: false).selectGroup(group);
       context.pop();
+    }
+
+    void showCurrentGroupInfos(Group group) {
+      context.push(GroupScreen.routeName, extra: group);
     }
 
     void addGroup() {
@@ -43,9 +48,18 @@ class ChooseGroupScreen extends StatelessWidget {
                   for (Group group in userGroups)
                     Card(
                       child: ListTile(
+                        contentPadding: const EdgeInsets.only(
+                          left: Constants.normalPadding,
+                          right: Constants.smallPadding,
+                        ),
                         leading: group.avatar,
                         title: Text(group.name),
                         subtitle: Text(group.users.length == 1 ? "1 Mitglied" : "${group.users.length} Mitglieder"),
+                        trailing: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => showCurrentGroupInfos(group),
+                          icon: Icon(PlatformIcons(context).info),
+                        ),
                         onTap: () => chooseGroup(group),
                       ),
                     ),
