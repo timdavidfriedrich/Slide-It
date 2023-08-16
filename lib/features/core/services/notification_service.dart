@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:log/log.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/constants/secrets/firebase_cloud_messaging_secrets.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService();
@@ -39,8 +43,7 @@ class NotificationService {
     if (!kIsWeb) return;
     Log.hint("Trying to register notification token...");
     String? token = await firebaseMessaging.getToken(
-      // TODO: Move to secret file.
-      vapidKey: "BBGSDgHDlYCJ2CefiP4yF07XBTspRV-jh_-kGX6Ld3lmG5YPn-IUeCEpcJKgK-Hep0_58TsOyNiRb50ESb6aYWk",
+      vapidKey: FirebaseCloudMessagingSecrets.webVapidKey,
     );
     Log.hint("Registrated notification token: $token");
   }
@@ -51,12 +54,19 @@ class NotificationService {
       if (message.notification != null) {
         Log.hint("Message also contained a notification: \n\t${message.notification?.body}");
       }
+      final String title = message.notification?.title ?? "";
+      final String content = message.notification?.body ?? "";
       showDialog(
         context: Global.context,
         builder: (context) => AlertDialog(
-          title: Text(message.notification?.title ?? ""),
-          content: Text(message.notification?.body ?? ""),
-          actions: [TextButton(onPressed: () => context.pop(), child: const Text("Okay"))],
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () => context.pop(),
+              child: const Text("Okay"),
+            ),
+          ],
         ),
       );
     });
@@ -66,14 +76,51 @@ class NotificationService {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
-  void subscribeToTopic(String topic) {
-    firebaseMessaging.subscribeToTopic(topic);
+  void subscribeToTopic(String topic) async {
+    await firebaseMessaging.subscribeToTopic(topic);
     Log.hint("NOTIFICATIONS: Subscribed to $topic");
   }
 
-  void unsubscribeFromTopic(String topic) {
-    firebaseMessaging.unsubscribeFromTopic(topic);
+  void unsubscribeFromTopic(String topic) async {
+    await firebaseMessaging.unsubscribeFromTopic(topic);
     Log.hint("NOTIFICATIONS: Unsubscribed from $topic");
+  }
+
+  void sendNotificationToTopic({required String topic, String? title, String? message, String? priority}) async {
+    final String notificationTitle = title ?? "Neue Nachricht";
+    final String notificationMessage = message ?? "Ohne Inhalt.";
+    final String notificationPriority = priority == 'high' ? 'high' : 'normal';
+    final data = {
+      'click action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'message': notificationMessage,
+    };
+    try {
+      http.Response response = await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "key=${FirebaseCloudMessagingSecrets.serverKey}}",
+        },
+        body: jsonEncode({
+          'notification': {
+            'title': notificationTitle,
+            'body': notificationMessage,
+          },
+          'priority': notificationPriority,
+          'data': data,
+          'to': '/topics/$topic',
+        }),
+      );
+      if (response.statusCode == 200) {
+        Log.hint("SEND NOTIFICATION: Success!");
+      } else {
+        Log.warning("SEND NOTIFICATION: Failed! (${response.statusCode})})");
+      }
+    } catch (e) {
+      Log.error("SEND NOTIFICATION: $e");
+    }
   }
 }
 
@@ -82,7 +129,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   /// Initialize the Firebase app (needed to use other Firebase services)
   // await Firebase.initializeApp();
   Log.hint(
-    "Received a background mes sage with id=${message.messageId}."
+    "Received a background message with id=${message.messageId}."
     "\n\tdata: ${message.data}"
     "\n\tnotification: ${message.notification ?? "-"}",
   );
