@@ -18,7 +18,7 @@ class GroupScreen extends StatelessWidget {
       NotificationService.instance.subscribeToTopic(group.id);
     }
 
-    void showGroupInvitation(Group group) {
+    void showGroupInvitation() {
       showDialog(context: context, builder: ((context) => GroupInvitationDialog(group: group)));
     }
 
@@ -32,7 +32,7 @@ class GroupScreen extends StatelessWidget {
           title: Text(group.name),
           actions: [
             IconButton(
-              onPressed: () => showGroupInvitation(group),
+              onPressed: () => showGroupInvitation(),
               icon: Icon(PlatformIcons(context).personAdd),
             ),
             IconButton(
