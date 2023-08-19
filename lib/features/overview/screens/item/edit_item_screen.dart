@@ -9,14 +9,14 @@ import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/storage_service.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
+import 'package:rating/features/core/services/data/storage_data_service.dart';
 import 'package:rating/features/overview/screens/category/choose_category_screen.dart';
 import 'package:rating/features/overview/screens/item/rate_item_screen.dart';
 import 'package:rating/features/overview/models/item.dart';
 import 'package:rating/features/overview/models/category.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/services/data/cloud_data_service.dart';
 import 'package:rating/features/overview/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
 

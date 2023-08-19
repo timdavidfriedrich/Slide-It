@@ -13,7 +13,7 @@ import 'package:rating/features/overview/screens/category_screen.dart';
 import 'package:rating/features/overview/screens/category/create_category_screen.dart';
 import 'package:rating/features/overview/screens/item/edit_item_screen.dart';
 import 'package:rating/features/overview/screens/category/choose_category_screen.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/widgets/app_shell.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';

@@ -6,7 +6,7 @@ import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/utils/history_widget.dart';

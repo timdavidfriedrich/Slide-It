@@ -3,7 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/social/screens/group/group_screen.dart';
 import 'package:rating/features/social/models/group.dart';
 import 'package:rating/features/social/widgets/add_group_dialog.dart';

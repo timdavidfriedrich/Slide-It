@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/onboarding/widgets/password_reset_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_in_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_up_failed_dialog.dart';

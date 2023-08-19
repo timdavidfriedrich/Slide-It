@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/services/data/cloud_data_service.dart';
 import 'package:rating/features/core/widgets/app_shell.dart';
 import 'package:rating/features/core/services/auth_service.dart';
 import 'package:rating/features/core/models/app_user.dart';

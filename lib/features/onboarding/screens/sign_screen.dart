@@ -3,7 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/auth_service.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/services/data/cloud_data_service.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
 import 'package:rating/features/onboarding/utils/email_validator.dart';

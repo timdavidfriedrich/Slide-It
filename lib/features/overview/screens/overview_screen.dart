@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/overview/screens/category_screen.dart';
 import 'package:rating/features/overview/screens/group/choose_group_screen.dart';
 import 'package:rating/features/overview/screens/category/create_category_screen.dart';

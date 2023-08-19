@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:rating/features/overview/models/category.dart';
-import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/services/data/cloud_data_service.dart';
 import 'package:rating/features/overview/models/item.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/social/models/group.dart';

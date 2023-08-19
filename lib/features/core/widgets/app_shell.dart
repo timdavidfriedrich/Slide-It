@@ -13,7 +13,7 @@ import 'package:rating/features/feed/screens/feed_screen.dart';
 import 'package:rating/features/onboarding/screens/empty_groups_screen.dart';
 import 'package:rating/features/overview/screens/item/edit_item_screen.dart';
 import 'package:rating/features/overview/screens/overview_screen.dart';
-import 'package:rating/features/core/providers/data_provider.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
