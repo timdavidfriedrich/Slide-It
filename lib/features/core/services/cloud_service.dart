@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/ratings/services/category.dart';
+import 'package:rating/features/overview/models/category.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/core/services/app_user.dart';
-import 'package:rating/features/social/services/group.dart';
-import 'package:rating/features/ratings/services/rating.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/social/models/group.dart';
+import 'package:rating/features/overview/models/rating.dart';
 
 class CloudService {
   static CloudService instance = CloudService();
@@ -20,19 +20,20 @@ class CloudService {
   QuerySnapshot<Map<String, dynamic>>? _rawGroupsData;
 
   // * Currently, only gets called when user is created, not if he changes his name, avatar or something.
-  Future<void> saveUserData({String? name}) async {
+  Future<bool> saveUserData({String? name}) async {
     final User? user = FirebaseAuth.instance.currentUser;
     // final String? firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
-    if (user == null) return;
+    if (user == null) return false;
     AppUser.current = AppUser(
       id: user.uid,
       name: name ?? user.displayName,
       avatarUrl: user.photoURL,
       // firebaseMessagingTokens: firebaseMessagingToken == null ? [] : [firebaseMessagingToken],
     );
-    if (AppUser.current == null) return;
+    if (AppUser.current == null) return false;
     await _userCollection.doc(user.uid).set(AppUser.current!.toJson(), SetOptions(merge: true));
     Log.hint("User data saved (User ID: ${user.uid}) to cloud.");
+    return true;
   }
 
   Future<void> loadRawData() async {

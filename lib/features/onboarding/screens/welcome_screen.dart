@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/firebase/auth_service.dart';
+import 'package:rating/features/core/services/auth_service.dart';
 import 'package:rating/features/onboarding/screens/sign_screen.dart';
-import 'package:rating/features/onboarding/services/sign_type.dart';
+import 'package:rating/features/onboarding/utils/sign_type.dart';
 import 'package:rive/rive.dart';
 
 class WelcomeScreen extends StatefulWidget {

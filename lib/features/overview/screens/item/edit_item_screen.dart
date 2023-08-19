@@ -10,15 +10,15 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/firebase/storage_service.dart';
-import 'package:rating/features/ratings/screens/choose_category_screen.dart';
-import 'package:rating/features/ratings/screens/rate_item_screen.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/core/services/shell_content.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/ratings/services/rating.dart';
-import 'package:rating/features/core/services/app_user.dart';
+import 'package:rating/features/core/services/storage_service.dart';
+import 'package:rating/features/overview/screens/category/choose_category_screen.dart';
+import 'package:rating/features/overview/screens/item/rate_item_screen.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/core/utils/shell_content.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/core/models/app_user.dart';
 
 class EditItemScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/Add";

@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/ratings/screens/rate_item_screen.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/rating.dart';
-import 'package:rating/features/core/services/app_user.dart';
-import 'package:rating/features/ratings/widget/item_app_bar.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/overview/screens/item/rate_item_screen.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/overview/widgets/item_app_bar.dart';
 
 class ViewItemScreen extends StatefulWidget {
   static const String routeName = "/Item";

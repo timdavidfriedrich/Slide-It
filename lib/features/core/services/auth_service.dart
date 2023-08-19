@@ -5,7 +5,6 @@ import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
 import 'package:rating/features/onboarding/widgets/password_reset_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_in_failed_dialog.dart';
 import 'package:rating/features/onboarding/widgets/sign_up_failed_dialog.dart';
@@ -59,7 +58,6 @@ class AuthService {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password);
       await sendVerificationEmail();
-      await CloudService.instance.saveUserData(name: name);
       Log.hint("Created user with email and password (User ID: ${user?.uid}).");
       return true;
     } catch (error) {
@@ -124,10 +122,9 @@ class AuthService {
     }
   }
 
-  Future<bool> deleteAccount() async {
+  Future<bool> deleteUserEntry() async {
     User? user = FirebaseAuth.instance.currentUser;
     try {
-      CloudService.instance.deleteUserData();
       await user!.delete();
       Log.hint("Deleted User (ID: ${user.uid}) from Auth Service.");
       return true;

@@ -4,13 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/feed/services/history_widget.dart';
-import 'package:rating/features/ratings/screens/rate_item_screen.dart';
-import 'package:rating/features/ratings/screens/view_item_screen.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/rating.dart';
-import 'package:rating/features/core/services/app_user.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/feed/utils/history_widget.dart';
+import 'package:rating/features/overview/screens/item/rate_item_screen.dart';
+import 'package:rating/features/overview/screens/item/view_item_screen.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/core/models/app_user.dart';
 
 class AddedItemCard extends StatefulWidget implements HistoryWidget {
   final Item item;

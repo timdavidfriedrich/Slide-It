@@ -1,7 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:log/log.dart';
-import 'package:rating/features/ratings/services/item.dart';
+import 'package:rating/features/overview/models/item.dart';
 
 class StorageService {
   static StorageService instance = StorageService();

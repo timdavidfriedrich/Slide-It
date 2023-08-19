@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:log/log.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/app_user.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/services/rating.dart';
-import 'package:rating/features/ratings/widget/item_app_bar.dart';
+import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/overview/widgets/item_app_bar.dart';
 
 class RateItemScreen extends StatefulWidget {
   static const routeName = "/Rate";

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
-import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/core/services/app_user.dart';
-import 'package:rating/features/social/services/group.dart';
-import 'package:rating/features/ratings/services/rating.dart';
+import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/social/models/group.dart';
+import 'package:rating/features/overview/models/rating.dart';
 
 /// Manages the local data for the app to minimize the amount of requests to the cloud.
 /// Note, that this is only temporary data.

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/firebase/auth_service.dart';
+import 'package:rating/features/core/services/auth_service.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
 import 'package:rating/features/onboarding/screens/forgot_password_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
-import 'package:rating/features/onboarding/services/email_validator.dart';
-import 'package:rating/features/onboarding/services/sign_type.dart';
+import 'package:rating/features/onboarding/utils/email_validator.dart';
+import 'package:rating/features/onboarding/utils/sign_type.dart';
 import 'package:rating/features/onboarding/widgets/passwords_dont_match_dialog.dart';
 
 class SignScreen extends StatefulWidget {
@@ -35,8 +36,14 @@ class _SignScreenState extends State<SignScreen> {
       showDialog(context: context, builder: (context) => const PasswordsDontMatchDialog());
       return;
     }
-    bool succeeded = await AuthService.instance.createUserWithEmailAndPassword(_name, _email, _password);
-    if (mounted && succeeded) context.pop();
+
+    final bool userHasBeenCreated = await AuthService.instance.createUserWithEmailAndPassword(_name, _email, _password);
+    if (!userHasBeenCreated) return;
+    final bool userDataHasBeenCreated = await CloudService.instance.saveUserData(name: _name);
+
+    if (!userDataHasBeenCreated) return;
+    if (!mounted) return;
+    context.pop();
   }
 
   void _updateName(String name) {

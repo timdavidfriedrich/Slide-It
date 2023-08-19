@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:log/log.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/core/services/shell_content.dart';
+import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
 class SettingsScreen extends StatefulWidget implements ShellContent {
@@ -30,6 +31,7 @@ class SettingsScreen extends StatefulWidget implements ShellContent {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool value1 = true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,6 +51,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             "Wenn du eine Idee hast, schreib mir.",
             style: Theme.of(context).textTheme.bodySmall,
           ),
+          SwitchListTile(
+            value: value1,
+            onChanged: (value) {
+              Log.debug(value);
+              setState(() {
+                value1 = value;
+              });
+            },
+          )
         ],
       ),
     );

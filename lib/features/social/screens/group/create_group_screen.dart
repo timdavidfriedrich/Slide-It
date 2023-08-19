@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   static const String routeName = "/CreateGroup";

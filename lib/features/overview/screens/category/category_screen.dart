@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/ratings/widget/item_card.dart';
+import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/overview/widgets/item_card.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const String routeName = "/Category";

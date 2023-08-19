@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/feed/services/history_widget.dart';
-import 'package:rating/features/ratings/screens/category_screen.dart';
-import 'package:rating/features/ratings/services/category.dart';
-import 'package:rating/features/core/services/app_user.dart';
+import 'package:rating/features/feed/utils/history_widget.dart';
+import 'package:rating/features/overview/screens/category_screen.dart';
+import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/core/models/app_user.dart';
 
 class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
   final Category category;

@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
-import 'package:rating/features/ratings/services/item.dart';
-import 'package:rating/features/core/services/app_user.dart';
-import 'package:rating/features/social/services/group.dart';
+import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/social/models/group.dart';
 import 'package:uuid/uuid.dart';
 
 class Category {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/firebase/auth_service.dart';
+import 'package:rating/features/core/services/auth_service.dart';
 import 'package:rating/features/social/widgets/add_group_dialog.dart';
 
 class EmptyGroupsScreen extends StatelessWidget {

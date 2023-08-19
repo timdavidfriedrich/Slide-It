@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/providers/data_provider.dart';
 import 'package:rating/features/core/services/notification_service.dart';
-import 'package:rating/features/social/services/group.dart';
+import 'package:rating/features/social/models/group.dart';
 import 'package:rating/features/social/widgets/group_invitation_dialog.dart';
 
 class GroupScreen extends StatelessWidget {

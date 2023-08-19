@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rating/features/social/screens/create_group_screen.dart';
-import 'package:rating/features/social/screens/join_group_screen.dart';
+import 'package:rating/features/social/screens/group/create_group_screen.dart';
+import 'package:rating/features/social/screens/group/join_group_screen.dart';
 
 class AddGroupDialog extends StatelessWidget {
   const AddGroupDialog({super.key});

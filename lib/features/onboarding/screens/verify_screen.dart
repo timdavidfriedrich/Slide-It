@@ -4,9 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/screens/app_shell.dart';
-import 'package:rating/features/core/services/firebase/auth_service.dart';
-import 'package:rating/features/core/services/app_user.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
+import 'package:rating/features/core/widgets/app_shell.dart';
+import 'package:rating/features/core/services/auth_service.dart';
+import 'package:rating/features/core/models/app_user.dart';
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({super.key});
@@ -54,9 +55,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
     });
   }
 
-  void _deleteAccount() async {
-    final bool result = await AuthService.instance.deleteAccount();
-    if (!result) AuthService.instance.signOut();
+  void _deleteUser() async {
+    final bool userDataHasBeenDeleted = await CloudService.instance.deleteUserData();
+    if (!userDataHasBeenDeleted) return;
+    final bool userEntryHasBeenDeleted = await AuthService.instance.deleteUserEntry();
+    if (!userEntryHasBeenDeleted) return;
+    await AuthService.instance.signOut();
   }
 
   @override
@@ -96,7 +100,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 ),
                 const SizedBox(height: Constants.smallPadding),
                 TextButton(
-                  onPressed: () => _deleteAccount(),
+                  onPressed: () => _deleteUser(),
                   child: const Text("Abbrechen"),
                 ),
               ],

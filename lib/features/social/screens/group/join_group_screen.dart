@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/core/services/firebase/cloud_service.dart';
+import 'package:rating/features/core/services/cloud_service.dart';
 import 'package:rating/features/core/widgets/error_dialog.dart';
-import 'package:rating/features/social/screens/qr_code_scanner_screen.dart';
+import 'package:rating/features/social/screens/group/qr_code_scanner_screen.dart';
 
 class JoinGroupScreen extends StatefulWidget {
   static const String routeName = "/JoinGroup";
@@ -36,9 +36,9 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
 
   void _joinGroup() async {
     if (_idController.text.isEmpty) return;
-    final bool success = await CloudService.instance.joinGroup(_idController.text);
+    final bool groupHasBeenJoined = await CloudService.instance.joinGroup(_idController.text);
     if (!mounted) return;
-    if (!success) {
+    if (!groupHasBeenJoined) {
       ErrorDialog.show(context, message: "You are already a member of this group.");
       return;
     }
