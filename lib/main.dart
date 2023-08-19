@@ -24,6 +24,7 @@ import 'package:rating/features/overview/screens/item/rate_item_screen.dart';
 import 'package:rating/features/overview/models/category.dart';
 import 'package:rating/features/overview/models/item.dart';
 import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 import 'package:rating/features/social/screens/group/create_group_screen.dart';
 import 'package:rating/features/social/screens/group/group_screen.dart';
 import 'package:rating/features/social/screens/group/join_group_screen.dart';
@@ -46,6 +47,7 @@ class RatingApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
