@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/feed/utils/history_widget.dart';
-import 'package:rating/features/overview/screens/category_screen.dart';
+import 'package:rating/features/overview/screens/category/category_screen.dart';
 import 'package:rating/features/overview/models/category.dart';
 import 'package:rating/features/core/models/app_user.dart';
 

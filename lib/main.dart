@@ -9,7 +9,7 @@ import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/onboarding/utils/sign_type.dart';
-import 'package:rating/features/overview/screens/category_screen.dart';
+import 'package:rating/features/overview/screens/category/category_screen.dart';
 import 'package:rating/features/overview/screens/category/create_category_screen.dart';
 import 'package:rating/features/overview/screens/item/edit_item_screen.dart';
 import 'package:rating/features/overview/screens/category/choose_category_screen.dart';
