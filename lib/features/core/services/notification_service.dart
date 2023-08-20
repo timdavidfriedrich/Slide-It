@@ -101,7 +101,7 @@ class NotificationService {
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": "key=${FirebaseCloudMessagingSecrets.serverKey}}",
+          "Authorization": "key=${FirebaseCloudMessagingSecrets.serverKey}",
         },
         body: jsonEncode({
           'notification': {
