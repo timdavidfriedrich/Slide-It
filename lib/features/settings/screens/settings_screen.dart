@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 import 'package:rating/features/social/widgets/profile_card.dart';
 
 class SettingsScreen extends StatefulWidget implements ShellContent {
@@ -31,35 +34,95 @@ class SettingsScreen extends StatefulWidget implements ShellContent {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool value1 = true;
+  bool hideGroups = true;
   @override
   Widget build(BuildContext context) {
+    final DataProvider data = Provider.of<DataProvider>(context);
+    final SettingsProvider settings = Provider.of<SettingsProvider>(context);
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: Constants.normalPadding),
         children: [
           const ProfileCard(),
           const SizedBox(height: Constants.normalPadding),
-          const Text("Frage an alle:"),
-          const SizedBox(height: Constants.smallPadding),
-          Text(
-            "Welche Einstellungsmöglichkeiten wünschst du dir bzw. sind vielleicht sogar notwendig?",
-            style: Theme.of(context).textTheme.bodySmall,
+          ListTile(
+            title: const Text("Dezimalstellen"),
+            trailing: DropdownButton<int>(
+              value: settings.numberOfDecimals,
+              onChanged: (value) {
+                if (value == null) return;
+                settings.numberOfDecimals = value;
+              },
+              items: List.generate(
+                Constants.maxRatingValueDecimal + 1,
+                (index) => DropdownMenuItem(
+                  value: index,
+                  child: Text(index == 0 ? "Keine" : " $index"),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: Constants.smallPadding),
-          Text(
-            "Wenn du eine Idee hast, schreib mir.",
-            style: Theme.of(context).textTheme.bodySmall,
+          ListTile(
+            title: const Text("Dynamischer Hintergrund bei Bewertungen"),
+            trailing: Switch(
+              value: settings.dynamicRatingColorEnabled,
+              onChanged: (value) => settings.dynamicRatingColorEnabled = value,
+            ),
           ),
-          SwitchListTile(
-            value: value1,
-            onChanged: (value) {
-              Log.debug(value);
-              setState(() {
-                value1 = value;
-              });
-            },
-          )
+          ListTile(
+            title: const Text("Nicht nach Standort fragen"),
+            trailing: Switch(
+              value: settings.dontAskForLocation,
+              onChanged: (value) => settings.dontAskForLocation = value,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  onTap: () => setState(() => hideGroups = !hideGroups),
+                  tileColor: hideGroups ? null : Theme.of(context).colorScheme.surface,
+                  title: const Text("Benachrichtigungen"),
+                  subtitle: Text(hideGroups ? "(Ausklappen)" : "(Einklappen)"),
+                  trailing: Switch(
+                    value: settings.allowNotifications,
+                    onChanged: (value) => settings.allowNotifications = value,
+                  ),
+                ),
+                hideGroups
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.only(left: Constants.mediumPadding),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: List.generate(data.userGroups.length, (index) {
+                            return ListTile(
+                              title: Text(data.userGroups[index].name),
+                              trailing: Switch(
+                                value: !settings.mutedGroupIds.contains(data.userGroups[index].id),
+                                onChanged: !settings.allowNotifications
+                                    ? null
+                                    : (value) {
+                                        if (value) {
+                                          settings.unmuteGroupWithId(data.userGroups[index].id);
+                                        } else {
+                                          settings.muteGroupWithId(data.userGroups[index].id);
+                                        }
+                                        Log.debug("Muted groups: ${settings.mutedGroupIds}");
+                                      },
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -20,6 +20,7 @@ dependencies:
   provider: ^6.0.5
   qr_flutter: ^4.1.0
   rive: ^0.11.3
+  shared_preferences: ^2.2.0
   uuid: ^3.0.7
 
   cloud_firestore: ^4.5.0
@@ -37,7 +38,6 @@ dependencies:
   # own packages
   log:
     path: ./packages/log
-
 
 dev_dependencies:
   flutter_test:

@@ -20,6 +20,7 @@ import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/core/services/data/cloud_data_service.dart';
 import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class EditItemScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/Add";
@@ -181,6 +182,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settings = Provider.of<SettingsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.itemToEdit == null ? widget.displayName : "Bearbeiten"),
@@ -247,7 +249,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(_rating!.value.toStringAsFixed(Constants.ratingValueDigit)),
+                            Text(_rating!.value.toStringAsFixed(settings.numberOfDecimals)),
                             const SizedBox(width: Constants.smallPadding),
                             const Text(Constants.ratingValueUnit),
                           ],

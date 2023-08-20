@@ -17,6 +17,7 @@ import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
 import 'package:rating/features/onboarding/screens/welcome_screen.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 import 'package:rating/features/settings/screens/settings_screen.dart';
 
 class AppShell extends StatefulWidget {
@@ -85,6 +86,7 @@ class _AppShellState extends State<AppShell> {
     _initSelectedIndex();
     initData();
     _startTimer();
+    Provider.of<SettingsProvider>(context, listen: false).init();
   }
 
   @override

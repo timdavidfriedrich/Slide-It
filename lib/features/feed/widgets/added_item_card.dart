@@ -11,6 +11,7 @@ import 'package:rating/features/ratings/screens/item/view_item_screen.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class AddedItemCard extends StatefulWidget implements HistoryWidget {
   final Item item;
@@ -54,6 +55,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
   Widget build(BuildContext context) {
     AppUser? appUser = Provider.of<DataProvider>(context, listen: false).getAppUserById(widget.item.createdByUserId);
     DateTime creationDate = widget.item.createdAt.toDate();
+    SettingsProvider settings = Provider.of<SettingsProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(Constants.smallPadding),
       child: Column(
@@ -104,7 +106,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          "⌀ ${widget.item.averageRating.toStringAsFixed(Constants.ratingValueDigit)} ${Constants.ratingValueUnit}",
+                          "⌀ ${widget.item.averageRating.toStringAsFixed(settings.numberOfDecimals)} ${Constants.ratingValueUnit}",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -123,7 +125,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
               subtitle: widget.item.ownRating?.comment == null ? null : Text(widget.item.ownRating!.comment!),
               trailing: widget.item.ownRating == null
                   ? null
-                  : Text("${widget.item.ownRating?.value.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}"),
+                  : Text("${widget.item.ownRating?.value.toStringAsFixed(settings.numberOfDecimals)}${Constants.ratingValueUnit}"),
             ),
           ),
           const SizedBox(height: Constants.smallPadding),

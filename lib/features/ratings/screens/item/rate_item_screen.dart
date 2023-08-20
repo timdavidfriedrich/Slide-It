@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:log/log.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/ratings/widgets/item_app_bar.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class RateItemScreen extends StatefulWidget {
   static const routeName = "/Rate";
@@ -40,8 +42,9 @@ class _RateItemScreenState extends State<RateItemScreen> {
   }
 
   bool _isInputValid() {
+    SettingsProvider settings = Provider.of<SettingsProvider>(context, listen: false);
     // * value for 0 digits = 0.5, for 1 digit = 0.05, ... (catch double to int convertion)
-    return _sliderValue >= (Constants.minRatingValue - 0.5) / pow(10, Constants.ratingValueDigit);
+    return _sliderValue >= (Constants.minRatingValue - 0.5) / pow(10, settings.numberOfDecimals);
   }
 
   void _updateSliderValue(value) {
@@ -82,6 +85,8 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   Color _getValueColor() {
     final Color defaultColor = Theme.of(context).colorScheme.background;
+    final SettingsProvider settings = Provider.of<SettingsProvider>(context, listen: false);
+    if (!settings.dynamicRatingColorEnabled) return defaultColor;
     switch (_sliderValue) {
       // * Ignore statement is bugfix for dart analyzer (Dart 3.0.2)
       // ignore: non_constant_relational_pattern_expression
@@ -113,6 +118,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settings = Provider.of<SettingsProvider>(context);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -157,7 +163,7 @@ class _RateItemScreenState extends State<RateItemScreen> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.zero,
                         border: InputBorder.none,
-                        hintText: "${_sliderValue.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                        hintText: "${_sliderValue.toStringAsFixed(settings.numberOfDecimals)}${Constants.ratingValueUnit}",
                         filled: false,
                         hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
                       ),

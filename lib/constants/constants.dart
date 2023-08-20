@@ -8,11 +8,11 @@ class Constants {
   static const Color mediumColor = Color(0xFFffd32a);
   static const Color badColor = Color(0xFFff3f34);
 
+  static const int maxRatingValueDecimal = 3; // 0-20
   static const String ratingValueUnit = ""; // 🔥
   static const double noRatingValue = 0.0;
   static const double minRatingValue = 1.0;
   static const double maxRatingValue = 10.0;
-  static const int ratingValueDigit = 1; // 0-20
 
   static const double defaultBorderRadius = 8.0;
 

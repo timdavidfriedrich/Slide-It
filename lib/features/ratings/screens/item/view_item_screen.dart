@@ -10,6 +10,7 @@ import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/ratings/widgets/item_app_bar.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class ViewItemScreen extends StatefulWidget {
   static const String routeName = "/Item";
@@ -42,6 +43,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settings = Provider.of<SettingsProvider>(context);
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -72,7 +74,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                             title: const Text("Ich"),
                             subtitle: Text(widget.item.ownRating!.comment ?? "Ohne Kommentar."),
                             trailing: Text(
-                              "${widget.item.ownRating!.value.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                              "${widget.item.ownRating!.value.toStringAsFixed(settings.numberOfDecimals)}${Constants.ratingValueUnit}",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
@@ -83,7 +85,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                     children: [
                       Text("${widget.item.group.name}:", style: Theme.of(context).textTheme.headlineSmall),
                       Text(
-                        "⌀ ${widget.item.averageRating.toStringAsFixed(Constants.ratingValueDigit)} ${Constants.ratingValueUnit}",
+                        "⌀ ${widget.item.averageRating.toStringAsFixed(settings.numberOfDecimals)} ${Constants.ratingValueUnit}",
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ],
@@ -97,7 +99,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                         title: Text(Provider.of<DataProvider>(context).getAppUserById(r.userId)?.name ?? "Unbenannt"),
                         subtitle: Text(r.comment ?? "Ohne Kommentar."),
                         trailing: Text(
-                          "${r.value.toStringAsFixed(Constants.ratingValueDigit)}${Constants.ratingValueUnit}",
+                          "${r.value.toStringAsFixed(settings.numberOfDecimals)}${Constants.ratingValueUnit}",
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),

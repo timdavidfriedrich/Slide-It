@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/ratings/screens/item/view_item_screen.dart';
 import 'package:rating/features/ratings/models/item.dart';
+import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;
@@ -11,6 +13,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double imageSize = 150;
+    SettingsProvider settings = Provider.of<SettingsProvider>(context);
 
     void showItemRatings() {
       context.push(ViewItemScreen.routeName, extra: item);
@@ -45,7 +48,7 @@ class ItemCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(item.averageRating.toStringAsFixed(Constants.ratingValueDigit)),
+                    Text(item.averageRating.toStringAsFixed(settings.numberOfDecimals)),
                     const SizedBox(width: Constants.smallPadding),
                     const Text(Constants.ratingValueUnit),
                   ],
