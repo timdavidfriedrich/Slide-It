@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:log/log.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/constants/secrets/firebase_cloud_messaging_secrets.dart';
+import 'package:rating/features/core/models/app_user.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService();
@@ -54,6 +55,7 @@ class NotificationService {
       if (message.notification != null) {
         Log.hint("Message also contained a notification: \n\t${message.notification?.body}");
       }
+      if (notificationSendByCurrentUser(message)) return;
       final String title = message.notification?.title ?? "";
       final String content = message.notification?.body ?? "";
       showDialog(
@@ -73,6 +75,11 @@ class NotificationService {
   }
 
   void _initBackgroundNotifications() {
+    // ? Ignore, if notification came from current user ?
+    // FirebaseMessaging.onBackgroundMessage((message) async {
+    //   if (notificationSendByCurrentUser(message)) return;
+    //   await _firebaseMessagingBackgroundHandler(message);
+    // });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
@@ -86,7 +93,7 @@ class NotificationService {
     Log.hint("NOTIFICATIONS: Unsubscribed from $topic");
   }
 
-  void sendNotificationToTopic({required String topic, String? title, String? message, String? priority}) async {
+  Future<bool> sendNotificationToTopic({required String topic, String? title, String? message, String? priority}) async {
     final String notificationTitle = title ?? "Neue Nachricht";
     final String notificationMessage = message ?? "Ohne Inhalt.";
     final String notificationPriority = priority == 'high' ? 'high' : 'normal';
@@ -95,6 +102,8 @@ class NotificationService {
       'id': '1',
       'status': 'done',
       'message': notificationMessage,
+      'sendBy': AppUser.current?.id ?? "no user",
+      'topic': topic,
     };
     try {
       http.Response response = await http.post(
@@ -115,12 +124,25 @@ class NotificationService {
       );
       if (response.statusCode == 200) {
         Log.hint("SEND NOTIFICATION: Success!");
+        return true;
       } else {
         Log.warning("SEND NOTIFICATION: Failed! (${response.statusCode})})");
+        return false;
       }
     } catch (e) {
       Log.error("SEND NOTIFICATION: $e");
+      return false;
     }
+  }
+
+  bool notificationSendByCurrentUser(RemoteMessage message) {
+    final String sendByUserId = message.data['sendBy'] ?? "";
+    final AppUser? currentUser = AppUser.current;
+    if (currentUser?.id == sendByUserId) {
+      Log.warning("Notification was send by current user. It will be ignored.");
+      return true;
+    }
+    return false;
   }
 }
 
