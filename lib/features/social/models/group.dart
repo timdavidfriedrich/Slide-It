@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:uuid/uuid.dart';
 

@@ -11,8 +11,8 @@ import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/screens/feed_screen.dart';
 import 'package:rating/features/onboarding/screens/empty_groups_screen.dart';
-import 'package:rating/features/overview/screens/item/edit_item_screen.dart';
-import 'package:rating/features/overview/screens/overview_screen.dart';
+import 'package:rating/features/ratings/screens/item/edit_item_screen.dart';
+import 'package:rating/features/ratings/screens/ratings_screen.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/onboarding/screens/verify_screen.dart';
@@ -35,7 +35,7 @@ class _AppShellState extends State<AppShell> {
 
   final List<({ShellContent screen, String routeName})> _contents = const [
     (screen: FeedScreen(), routeName: FeedScreen.routeName),
-    (screen: OverviewScreen(), routeName: OverviewScreen.routeName),
+    (screen: RatingsScreen(), routeName: RatingsScreen.routeName),
     (screen: SettingsScreen(), routeName: SettingsScreen.routeName),
     // (SettingsScreen(), SettingsScreen.routeName),
   ];

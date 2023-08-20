@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/overview/screens/item/view_item_screen.dart';
-import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/ratings/screens/item/view_item_screen.dart';
+import 'package:rating/features/ratings/models/item.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/overview/screens/item/edit_item_screen.dart';
+import 'package:rating/features/ratings/screens/item/edit_item_screen.dart';
 
 class AddItemCard extends StatelessWidget {
   const AddItemCard({super.key});

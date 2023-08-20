@@ -8,22 +8,22 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
-import 'package:rating/features/overview/screens/category/category_screen.dart';
-import 'package:rating/features/overview/screens/group/choose_group_screen.dart';
-import 'package:rating/features/overview/screens/category/create_category_screen.dart';
-import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/ratings/screens/category/category_screen.dart';
+import 'package:rating/features/ratings/screens/group/choose_group_screen.dart';
+import 'package:rating/features/ratings/screens/category/create_category_screen.dart';
+import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
-import 'package:rating/features/overview/widgets/add_item_card.dart';
-import 'package:rating/features/overview/widgets/item_card.dart';
+import 'package:rating/features/ratings/widgets/add_item_card.dart';
+import 'package:rating/features/ratings/widgets/item_card.dart';
 import 'package:rating/features/social/screens/group/group_screen.dart';
 import 'package:rating/features/social/models/group.dart';
 
-class OverviewScreen extends StatefulWidget implements ShellContent {
+class RatingsScreen extends StatefulWidget implements ShellContent {
   static const routeName = "/overview";
-  const OverviewScreen({Key? key}) : super(key: key);
+  const RatingsScreen({Key? key}) : super(key: key);
 
   @override
-  State<OverviewScreen> createState() => _OverviewScreenState();
+  State<RatingsScreen> createState() => _RatingsScreenState();
 
   @override
   String get displayName => "Bewertungen";
@@ -42,7 +42,7 @@ class OverviewScreen extends StatefulWidget implements ShellContent {
   Icon get cupertinoIcon => const Icon(CupertinoIcons.list_bullet);
 }
 
-class _OverviewScreenState extends State<OverviewScreen> {
+class _RatingsScreenState extends State<RatingsScreen> {
   final int _maxItemsPerRow = 10;
   Group? _currentGroup;
 

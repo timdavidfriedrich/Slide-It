@@ -12,8 +12,8 @@ import 'package:rating/features/core/widgets/error_info.dart';
 import 'package:rating/features/feed/utils/history_widget.dart';
 import 'package:rating/features/feed/widgets/added_category_card.dart';
 import 'package:rating/features/feed/widgets/added_item_card.dart';
-import 'package:rating/features/overview/models/category.dart';
-import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/ratings/models/category.dart';
+import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/social/models/group.dart';
 
 class FeedScreen extends StatefulWidget implements ShellContent {

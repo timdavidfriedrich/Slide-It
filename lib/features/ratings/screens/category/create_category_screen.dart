@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/services/data/cloud_data_service.dart';
-import 'package:rating/features/overview/screens/group/choose_group_screen.dart';
+import 'package:rating/features/ratings/screens/group/choose_group_screen.dart';
 import 'package:rating/features/social/models/group.dart';
 
 class CreateCategoryScreen extends StatefulWidget {

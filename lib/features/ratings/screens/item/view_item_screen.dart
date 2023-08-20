@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/services/data/cloud_data_service.dart';
-import 'package:rating/features/overview/screens/item/rate_item_screen.dart';
-import 'package:rating/features/overview/models/item.dart';
-import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/ratings/screens/item/rate_item_screen.dart';
+import 'package:rating/features/ratings/models/item.dart';
+import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
-import 'package:rating/features/overview/widgets/item_app_bar.dart';
+import 'package:rating/features/ratings/widgets/item_app_bar.dart';
 
 class ViewItemScreen extends StatefulWidget {
   static const String routeName = "/Item";

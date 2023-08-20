@@ -3,8 +3,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/overview/screens/category/create_category_screen.dart';
-import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/ratings/screens/category/create_category_screen.dart';
+import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/social/models/group.dart';
 

@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
-import 'package:rating/features/overview/models/category.dart';
+import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
-import 'package:rating/features/overview/models/item.dart';
+import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/social/models/group.dart';
-import 'package:rating/features/overview/models/rating.dart';
+import 'package:rating/features/ratings/models/rating.dart';
 
 class CloudService {
   static CloudService instance = CloudService();
