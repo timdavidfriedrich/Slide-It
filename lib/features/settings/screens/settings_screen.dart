@@ -35,6 +35,21 @@ class SettingsScreen extends StatefulWidget implements ShellContent {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool hideGroups = true;
+
+  Function(bool)? toggleNotificationsForGroup(String groupId) {
+    final SettingsProvider settings = Provider.of<SettingsProvider>(context, listen: false);
+    return !settings.allowNotifications
+        ? null
+        : (value) {
+            if (value) {
+              settings.unmuteGroupWithId(groupId);
+            } else {
+              settings.muteGroupWithId(groupId);
+            }
+            Log.debug("Muted groups: ${settings.mutedGroupIds}");
+          };
+  }
+
   @override
   Widget build(BuildContext context) {
     final DataProvider data = Provider.of<DataProvider>(context);
@@ -105,16 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               title: Text(data.userGroups[index].name),
                               trailing: Switch(
                                 value: !settings.mutedGroupIds.contains(data.userGroups[index].id),
-                                onChanged: !settings.allowNotifications
-                                    ? null
-                                    : (value) {
-                                        if (value) {
-                                          settings.unmuteGroupWithId(data.userGroups[index].id);
-                                        } else {
-                                          settings.muteGroupWithId(data.userGroups[index].id);
-                                        }
-                                        Log.debug("Muted groups: ${settings.mutedGroupIds}");
-                                      },
+                                onChanged: toggleNotificationsForGroup(data.userGroups[index].id),
                               ),
                             );
                           }),
