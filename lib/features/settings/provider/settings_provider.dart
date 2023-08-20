@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
+import 'package:rating/features/core/services/notification_service.dart';
+import 'package:rating/features/social/models/group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -32,6 +37,11 @@ class SettingsProvider extends ChangeNotifier {
 
   set allowNotifications(bool allowNotifications) {
     _allowNotifications = allowNotifications;
+    if (_allowNotifications) {
+      _initNotifications();
+    } else {
+      _unsubscribeFromAll();
+    }
     save();
     notifyListeners();
   }
@@ -70,6 +80,28 @@ class SettingsProvider extends ChangeNotifier {
     _dontAskForLocation = sharedPreferences.getBool('dontAskForLocation') ?? _dontAskForLocation;
     _allowNotifications = sharedPreferences.getBool('allowNotifications') ?? _allowNotifications;
     _mutedGroupIds = sharedPreferences.getStringList('mutedGroupIds') ?? _mutedGroupIds;
+    _initNotifications();
     notifyListeners();
+  }
+
+  void _initNotifications() async {
+    List<Group> userGroups = Provider.of<DataProvider>(Global.context, listen: false).userGroups;
+    if (!_allowNotifications) {
+      _unsubscribeFromAll();
+      return;
+    }
+    for (final Group group in userGroups) {
+      NotificationService.instance.subscribeToTopic(group.id);
+    }
+    for (final String groupId in _mutedGroupIds) {
+      NotificationService.instance.unsubscribeFromTopic(groupId);
+    }
+  }
+
+  void _unsubscribeFromAll() {
+    List<Group> userGroups = Provider.of<DataProvider>(Global.context, listen: false).userGroups;
+    for (final Group group in userGroups) {
+      NotificationService.instance.unsubscribeFromTopic(group.id);
+    }
   }
 }
