@@ -9,6 +9,7 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
+import 'package:rating/features/ratings/screens/item/zoomable_image_screen.dart';
 import 'package:rating/features/ratings/widgets/item_app_bar.dart';
 import 'package:rating/features/settings/provider/settings_provider.dart';
 
@@ -75,6 +76,13 @@ class _RateItemScreenState extends State<RateItemScreen> {
     }
   }
 
+  void _openZoomableImage() {
+    context.push<Widget>(
+      ZoomableImageScreen.routeName,
+      extra: _image,
+    );
+  }
+
   Color _getValueColor() {
     final Color defaultColor = Theme.of(context).colorScheme.background;
     final SettingsProvider settings = Provider.of<SettingsProvider>(context, listen: false);
@@ -137,7 +145,10 @@ class _RateItemScreenState extends State<RateItemScreen> {
                           opacity: 0.9,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
-                            child: _image,
+                            child: GestureDetector(
+                              onTap: _openZoomableImage,
+                              child: _image,
+                            ),
                           ),
                         ),
                       ),

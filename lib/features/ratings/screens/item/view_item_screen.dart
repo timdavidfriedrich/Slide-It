@@ -9,6 +9,7 @@ import 'package:rating/features/ratings/screens/item/rate_item_screen.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/ratings/screens/item/zoomable_image_screen.dart';
 import 'package:rating/features/ratings/widgets/item_app_bar.dart';
 import 'package:rating/features/settings/provider/settings_provider.dart';
 
@@ -41,6 +42,13 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
     setState(() {});
   }
 
+  void _openZoomableImage() {
+    context.push<Widget>(
+      ZoomableImageScreen.routeName,
+      extra: widget.item.image!,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     SettingsProvider settings = Provider.of<SettingsProvider>(context);
@@ -54,9 +62,17 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
                 children: [
                   const SizedBox(height: Constants.normalPadding),
-                  AspectRatio(
+                  if (widget.item.image != null)
+                    AspectRatio(
                       aspectRatio: 4 / 3,
-                      child: ClipRRect(borderRadius: BorderRadius.circular(Constants.defaultBorderRadius), child: widget.item.image)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+                        child: GestureDetector(
+                          onTap: _openZoomableImage,
+                          child: widget.item.image,
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: Constants.mediumPadding),
                   Text("Meine Bewertung:", style: Theme.of(context).textTheme.headlineSmall),
                   const SizedBox(height: Constants.smallPadding),

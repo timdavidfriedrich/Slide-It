@@ -24,6 +24,7 @@ import 'package:rating/features/ratings/screens/item/rate_item_screen.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
+import 'package:rating/features/ratings/screens/item/zoomable_image_screen.dart';
 import 'package:rating/features/settings/provider/settings_provider.dart';
 import 'package:rating/features/social/screens/group/create_group_screen.dart';
 import 'package:rating/features/social/screens/group/group_screen.dart';
@@ -150,6 +151,13 @@ class RatingApp extends StatelessWidget {
                     // TODO: Use records with named parameters, if that is possible
                     final (Item item, Rating? rating) = state.extra as (Item, Rating?);
                     return RateItemScreen(item: item, rating: rating);
+                  },
+                ),
+                GoRoute(
+                  path: ZoomableImageScreen.routeName,
+                  builder: (context, state) {
+                    final Widget image = state.extra as Widget;
+                    return ZoomableImageScreen(image: image);
                   },
                 ),
                 GoRoute(
