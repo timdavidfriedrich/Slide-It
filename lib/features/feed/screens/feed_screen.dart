@@ -34,7 +34,7 @@ class FeedScreen extends StatefulWidget implements ShellContent {
   }
 
   @override
-  Icon get materialIcon => const Icon(Icons.rocket);
+  Icon get materialIcon => const Icon(Icons.rocket_launch);
 
   @override
   Icon get cupertinoIcon => const Icon(CupertinoIcons.rocket);
