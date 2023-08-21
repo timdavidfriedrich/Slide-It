@@ -52,21 +52,14 @@ class _RateItemScreenState extends State<RateItemScreen> {
       double parsedValue;
       if (value is double) {
         parsedValue = value;
-        Log.debug("53");
       } else if (value is String) {
         parsedValue = double.parse(value.replaceAll(",", "."));
-        Log.debug("56");
       } else {
         parsedValue = double.parse(value);
-        Log.debug("59");
       }
-      Log.debug("61");
       if (parsedValue < _minValue || parsedValue > _maxValue) return;
-      Log.debug("63");
       setState(() => _sliderValue = parsedValue);
-      Log.debug("65");
     } catch (e) {
-      Log.debug("67");
       return;
     }
   }

@@ -54,7 +54,6 @@ class CloudService {
   Future<void> loadUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    Log.debug(user);
     DocumentSnapshot snapshot = await _userCollection.doc(user.uid).get();
     if (!snapshot.exists) {
       saveUserData();

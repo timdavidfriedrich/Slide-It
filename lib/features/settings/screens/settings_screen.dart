@@ -46,7 +46,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             } else {
               settings.muteGroupWithId(groupId);
             }
-            Log.debug("Muted groups: ${settings.mutedGroupIds}");
           };
   }
 
