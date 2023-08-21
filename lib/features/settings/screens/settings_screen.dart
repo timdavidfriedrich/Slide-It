@@ -59,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const ProfileCard(),
           const SizedBox(height: Constants.normalPadding),
           ListTile(
-            title: const Text("Dezimalstellen"),
+            title: const Text("Nachkommastellen"),
             trailing: DropdownButton<int>(
               value: settings.numberOfDecimals,
               onChanged: (value) {
@@ -76,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: const Text("Dynamischer Hintergrund bei Bewertungen"),
+            title: const Text("Farbiger Hintergrund beim Bewerten"),
             trailing: Switch(
               value: settings.dynamicRatingColorEnabled,
               onChanged: (value) => settings.dynamicRatingColorEnabled = value,
@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text("Nicht nach Standort fragen"),
             trailing: Switch(
               value: settings.dontAskForLocation,
-              onChanged: (value) => settings.dontAskForLocation = value,
+              onChanged: null, // (value) => settings.dontAskForLocation = value,
             ),
           ),
           Container(

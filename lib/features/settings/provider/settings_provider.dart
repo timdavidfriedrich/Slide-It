@@ -11,7 +11,7 @@ class SettingsProvider extends ChangeNotifier {
 
   int _numberOfDecimals = 1;
   bool _dynamicRatingColorEnabled = true;
-  bool _dontAskForLocation = false;
+  bool _dontAskForLocation = true;
   bool _allowNotifications = true;
   List<String> _mutedGroupIds = [];
 
