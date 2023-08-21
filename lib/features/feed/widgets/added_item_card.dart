@@ -130,7 +130,11 @@ class _AddedItemCardState extends State<AddedItemCard> {
           ),
           const SizedBox(height: Constants.smallPadding),
           Text(
-            "${creationDate.hour}:${creationDate.minute} Uhr, ${creationDate.day}.${creationDate.month}.${creationDate.year}",
+            "${creationDate.hour.toString().padLeft(2, "0")}:"
+            "${creationDate.minute.toString().padLeft(2, "0")} Uhr, "
+            "${creationDate.day.toString().padLeft(2, "0")}."
+            "${creationDate.month.toString().padLeft(2, "0")}."
+            "${creationDate.year}",
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
