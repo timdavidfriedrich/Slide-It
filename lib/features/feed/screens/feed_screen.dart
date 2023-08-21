@@ -34,10 +34,10 @@ class FeedScreen extends StatefulWidget implements ShellContent {
   }
 
   @override
-  Icon get materialIcon => const Icon(Icons.newspaper);
+  Icon get materialIcon => const Icon(Icons.rocket);
 
   @override
-  Icon get cupertinoIcon => const Icon(CupertinoIcons.news);
+  Icon get cupertinoIcon => const Icon(CupertinoIcons.rocket);
 }
 
 class _FeedScreenState extends State<FeedScreen> {

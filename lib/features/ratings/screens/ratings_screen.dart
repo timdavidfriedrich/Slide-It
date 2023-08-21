@@ -26,7 +26,7 @@ class RatingsScreen extends StatefulWidget implements ShellContent {
   State<RatingsScreen> createState() => _RatingsScreenState();
 
   @override
-  String get displayName => "Bewertungen";
+  String get displayName => "Übersicht";
 
   @override
   Icon get icon {
