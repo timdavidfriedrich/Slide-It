@@ -84,13 +84,21 @@ class NotificationService {
   }
 
   void subscribeToTopic(String topic) async {
-    await firebaseMessaging.subscribeToTopic(topic);
-    Log.hint("NOTIFICATIONS: Subscribed to $topic");
+    try {
+      await firebaseMessaging.subscribeToTopic(topic);
+      Log.hint("NOTIFICATIONS: Subscribed to $topic");
+    } catch (e) {
+      Log.warning("SUBSCRIBE: $e");
+    }
   }
 
   void unsubscribeFromTopic(String topic) async {
-    await firebaseMessaging.unsubscribeFromTopic(topic);
-    Log.hint("NOTIFICATIONS: Unsubscribed from $topic");
+    try {
+      await firebaseMessaging.unsubscribeFromTopic(topic);
+      Log.hint("NOTIFICATIONS: Unsubscribed from $topic");
+    } catch (e) {
+      Log.warning("UNSUBSCRIBE: $e");
+    }
   }
 
   Future<bool> sendNotificationToTopic({required String topic, String? title, String? message, String? priority}) async {
