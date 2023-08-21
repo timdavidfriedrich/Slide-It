@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
+import 'package:rating/features/feed/utils/data_parser.dart';
 import 'package:rating/features/feed/utils/history_widget.dart';
 import 'package:rating/features/ratings/screens/category/category_screen.dart';
 import 'package:rating/features/ratings/models/category.dart';
@@ -55,11 +56,7 @@ class AddedCategoryCard extends StatelessWidget implements HistoryWidget {
           ),
           const SizedBox(height: Constants.smallPadding),
           Text(
-            "${creationDate.hour.toString().padLeft(2, "0")}:"
-            "${creationDate.minute.toString().padLeft(2, "0")} Uhr, "
-            "${creationDate.day.toString().padLeft(2, "0")}."
-            "${creationDate.month.toString().padLeft(2, "0")}."
-            "${creationDate.year}",
+            DateParser.dateToString(creationDate),
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/services/data/cloud_data_service.dart';
+import 'package:rating/features/feed/utils/data_parser.dart';
 import 'package:rating/features/feed/utils/history_widget.dart';
 import 'package:rating/features/ratings/screens/item/rate_item_screen.dart';
 import 'package:rating/features/ratings/screens/item/view_item_screen.dart';
@@ -130,11 +131,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
           ),
           const SizedBox(height: Constants.smallPadding),
           Text(
-            "${creationDate.hour.toString().padLeft(2, "0")}:"
-            "${creationDate.minute.toString().padLeft(2, "0")} Uhr, "
-            "${creationDate.day.toString().padLeft(2, "0")}."
-            "${creationDate.month.toString().padLeft(2, "0")}."
-            "${creationDate.year}",
+            DateParser.dateToString(creationDate),
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
