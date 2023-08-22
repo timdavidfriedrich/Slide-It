@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
+import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/ratings/models/item.dart';
@@ -125,6 +126,7 @@ class CloudService {
         "groupIds": FieldValue.arrayUnion(List<String>.from([group.id])),
       }, SetOptions(merge: true));
       Provider.of<DataProvider>(Global.context, listen: false).addGroup(group);
+      NotificationService.instance.subscribeToTopic(group.id);
       Log.hint("Created Group \"${group.name}\" (ID: ${group.id}) and saved to cloud.");
       return true;
     } catch (e) {
@@ -172,6 +174,7 @@ class CloudService {
 
     // FirebaseMessaging.instance.subscribeToTopic(id);
     await Provider.of<DataProvider>(Global.context, listen: false).reloadData();
+    NotificationService.instance.subscribeToTopic(groupId);
     Log.hint("User \"${currentUser.name}\" (User ID: ${currentUser.id}) joined a group (ID: $groupId). Cloud data got saved and reloaded.");
     return true;
   }

@@ -3,7 +3,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
-import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/social/models/group.dart';
 import 'package:rating/features/social/widgets/group_invitation_dialog.dart';
 
@@ -14,16 +13,8 @@ class GroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void subscribe() {
-      NotificationService.instance.subscribeToTopic(group.id);
-    }
-
     void showGroupInvitation() {
       showDialog(context: context, builder: ((context) => GroupInvitationDialog(group: group)));
-    }
-
-    void edit() {
-      // context.push(EditGroupScreen.routeName, extra: widget.category);
     }
 
     return SafeArea(
@@ -34,14 +25,6 @@ class GroupScreen extends StatelessWidget {
             IconButton(
               onPressed: () => showGroupInvitation(),
               icon: Icon(PlatformIcons(context).personAdd),
-            ),
-            IconButton(
-              onPressed: () => subscribe(),
-              icon: Icon(PlatformIcons(context).volumeOff),
-            ),
-            IconButton(
-              onPressed: () => edit(),
-              icon: Icon(PlatformIcons(context).edit),
             ),
           ],
         ),
