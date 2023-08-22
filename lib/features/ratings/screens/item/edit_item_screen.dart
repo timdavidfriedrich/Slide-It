@@ -131,16 +131,16 @@ class _EditItemScreenState extends State<EditItemScreen> {
     Item item = Item(name: _nameController.text, categoryId: _category!.id);
     setState(() => _isSaving = true);
     await _uploadImage(item);
-    _saveItem(item: item, user: appUser);
-    await _sendNotificationToGroup();
+    await _saveItem(item: item, user: appUser);
     if (mounted) context.pop();
   }
 
-  void _saveItem({required Item item, required AppUser user}) {
+  Future<void> _saveItem({required Item item, required AppUser user}) async {
     // TODO: REFACTOR
     if (widget.itemToEdit == null) {
       if (_rating != null) item.ratings.add(_rating!);
       CloudService.instance.addItem(category: _category!, item: item);
+      await _sendNotificationToGroup();
     } else {
       String? imageUrl = item.firebaseImageUrl;
       if (_cameraImageData != null) {
@@ -169,7 +169,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     bool notificationHasBeenSend = await NotificationService.instance.sendNotificationToTopic(
       topic: groupId,
       title: currentUser != null ? "${currentUser.name} wartet auf Bewertungen!" : "Neues Objekt zum Bewerten!",
-      message: _nameController.text,
+      message: "${_nameController.text} (${_category?.name})",
     );
     return notificationHasBeenSend;
   }
