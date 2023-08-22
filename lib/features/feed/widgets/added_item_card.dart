@@ -96,7 +96,7 @@ class _AddedItemCardState extends State<AddedItemCard> {
                             ),
                             child: widget.item.image),
                       ),
-                    const SizedBox(height: Constants.normalPadding),
+                    if (widget.item.image != null) const SizedBox(height: Constants.normalPadding),
                     Text(widget.item.name),
                     const SizedBox(height: Constants.smallPadding),
                     Row(
