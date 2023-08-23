@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/geolocation/screens/category_map_screen.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/widgets/item_card.dart';
@@ -15,6 +17,10 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  void _openMap() {
+    context.push(CategoryMapScreen.routeName, extra: widget.category);
+  }
+
   void _edit() {
     // context.push(EditCategoryScreen.routeName, extra: widget.category);
   }
@@ -32,7 +38,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
             subtitle: Text(widget.category.group.name, style: Theme.of(context).textTheme.bodySmall),
           ),
           actions: [
-            IconButton(onPressed: () => _edit(), icon: Icon(PlatformIcons(context).edit)),
+            IconButton(
+              onPressed: _openMap,
+              // TODO: Replace with platform icon
+              icon: const Icon(Icons.map),
+            ),
+            IconButton(
+              onPressed: _edit,
+              icon: Icon(PlatformIcons(context).edit),
+            ),
           ],
         ),
         body: items.isEmpty

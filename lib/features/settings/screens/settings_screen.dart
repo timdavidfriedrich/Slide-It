@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text("Nicht nach Standort fragen"),
             trailing: Switch(
               value: settings.dontAskForLocation,
-              onChanged: null, // (value) => settings.dontAskForLocation = value,
+              onChanged: (value) => settings.dontAskForLocation = value,
             ),
           ),
           Container(

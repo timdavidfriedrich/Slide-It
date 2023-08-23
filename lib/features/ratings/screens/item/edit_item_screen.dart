@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 import 'package:log/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
@@ -55,11 +58,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
   Uint8List? _cameraImageData;
 
   Rating? _rating;
+  LatLng? _location;
 
+  bool _locationIsLoading = false;
   bool _isSaving = false;
 
   void _checkIfInputValid() {
     setState(() => _isInputValid = (_nameController.text.isNotEmpty || widget.itemToEdit != null) && _category != null);
+  }
+
+  bool _hasLocation() {
+    return _location != null;
   }
 
   bool _hasRating() {
@@ -71,6 +80,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   void _initValues() {
     setState(() {
       _rating = widget.itemToEdit?.ownRating;
+      _location = widget.itemToEdit?.location;
       _nameController.text = widget.itemToEdit?.name ?? "";
       _category = widget.itemToEdit?.category;
     });
@@ -124,11 +134,53 @@ class _EditItemScreenState extends State<EditItemScreen> {
     setState(() => _rating = result);
   }
 
+  void _addLocation() async {
+    setState(() => _locationIsLoading = true);
+
+    Location location = Location();
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        setState(() => _locationIsLoading = false);
+        return;
+      }
+    }
+    PermissionStatus permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        setState(() => _locationIsLoading = false);
+        return;
+      }
+    }
+    LocationData locationData = await location.getLocation();
+    if (locationData.latitude == null || locationData.longitude == null) {
+      return;
+    }
+
+    setState(() {
+      _location = LatLng(locationData.latitude!, locationData.longitude!);
+      _locationIsLoading = false;
+    });
+  }
+
+  Future<geocoding.Placemark?> _getPlacemarkFromLocation(LatLng? location) async {
+    if (location == null) return null;
+    List<geocoding.Placemark> placemarks = await geocoding.placemarkFromCoordinates(location.latitude, location.longitude);
+    return placemarks.isNotEmpty ? placemarks.first : null;
+  }
+
   Future<void> _save() async {
     if (_category == null) return;
     AppUser? appUser = AppUser.current;
     if (appUser == null) return context.pop();
-    Item item = Item(name: _nameController.text, categoryId: _category!.id);
+    Item item = Item(
+      name: _nameController.text,
+      categoryId: _category!.id,
+      location: _location,
+    );
     setState(() => _isSaving = true);
     await _uploadImage(item);
     await _saveItem(item: item, user: appUser);
@@ -232,7 +284,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 margin: EdgeInsets.zero,
                 child: ListTile(
                   onTap: () => _changeCategory(),
-                  title: Text(_category?.name ?? "(Wähle eine Kategorie)"),
+                  title: Text(_category?.name ?? "(Kategorie auswählen)"),
                   trailing: _category != null ? Text(Provider.of<DataProvider>(context).getGroupFromCategory(_category!).name) : null,
                 ),
               ),
@@ -243,7 +295,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 child: ListTile(
                   enabled: _category != null && _nameController.text.isNotEmpty,
                   onTap: () => _addRating(),
-                  title: Text(_hasRating() ? "Meine Bewertung:" : "(Klicke zum Bewerten)"),
+                  title: Text(_hasRating() ? "Meine Bewertung:" : "(Bewertung hinzufügen)"),
                   subtitle: _rating?.comment != null ? Text(_rating!.comment!) : null,
                   trailing: _hasRating()
                       ? Row(
@@ -257,6 +309,42 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       : null,
                 ),
               ),
+            const SizedBox(height: Constants.normalPadding),
+            if (!settings.dontAskForLocation)
+              _hasLocation() || _locationIsLoading
+                  ? FutureBuilder<geocoding.Placemark?>(
+                      future: _getPlacemarkFromLocation(_location),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Card(
+                            margin: EdgeInsets.zero,
+                            child: ListTile(
+                              title: Center(child: CircularProgressIndicator.adaptive()),
+                            ),
+                          );
+                        }
+                        geocoding.Placemark? placemark = snapshot.data;
+                        return Card(
+                          margin: EdgeInsets.zero,
+                          child: ListTile(
+                            enabled: _category != null && _nameController.text.isNotEmpty,
+                            onTap: () => _addLocation(),
+                            leading: Icon(PlatformIcons(context).location),
+                            title: placemark != null
+                                ? Text("\"${placemark.name}\"")
+                                : Text("${_location?.latitude ?? ""}, ${_location?.longitude ?? ""}"),
+                            subtitle: placemark != null ? Text("${placemark.locality ?? ""} (${placemark.country})") : null,
+                          ),
+                        );
+                      })
+                  : Card(
+                      margin: EdgeInsets.zero,
+                      child: ListTile(
+                        enabled: _category != null && _nameController.text.isNotEmpty,
+                        onTap: () => _addLocation(),
+                        title: const Text("(Standort hinzufügen)"),
+                      ),
+                    ),
             const SizedBox(height: Constants.mediumPadding),
             ElevatedButton(
               onPressed: _isInputValid && !_isSaving ? () async => await _save() : null,

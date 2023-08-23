@@ -8,6 +8,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
+import 'package:rating/features/geolocation/screens/category_map_screen.dart';
 import 'package:rating/features/onboarding/utils/sign_type.dart';
 import 'package:rating/features/ratings/screens/category/category_screen.dart';
 import 'package:rating/features/ratings/screens/category/create_category_screen.dart';
@@ -130,6 +131,20 @@ class RatingApp extends StatelessWidget {
                 GoRoute(
                   path: ChooseCategoryScreen.routeName,
                   builder: (context, state) => const ChooseCategoryScreen(),
+                ),
+                GoRoute(
+                  path: CategoryMapScreen.routeName,
+                  builder: (context, state) {
+                    Category category;
+                    Item? item;
+                    if (state.extra is (Category, Item?)) {
+                      (category, item) = state.extra as (Category, Item?);
+                      return CategoryMapScreen(category: category, itemToHighlight: item);
+                    } else {
+                      category = state.extra as Category;
+                      return CategoryMapScreen(category: category);
+                    }
+                  },
                 ),
                 GoRoute(
                   path: ViewItemScreen.routeName,

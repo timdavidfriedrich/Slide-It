@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_cached_image/firebase_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
@@ -20,10 +21,11 @@ class Item {
   Timestamp createdAt;
   String? firebaseImageUrl;
   List<Rating> ratings;
+  LatLng? location;
 
-  Item({required this.categoryId, required this.name, ratings, this.firebaseImageUrl})
+  Item({required this.categoryId, required this.name, List<Rating>? ratings, this.firebaseImageUrl, this.location})
       : id = "item--${const Uuid().v4()}",
-        ratings = ratings ?? [],
+        ratings = ratings ?? <Rating>[],
         createdByUserId = AppUser.current?.id,
         createdAt = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
 
@@ -44,6 +46,7 @@ class Item {
       'ratings': ratings.map((rating) => rating.toJson()).toList(),
       'createdByUserId': createdByUserId,
       'createdAt': createdAt,
+      'location': location?.toJson(),
     };
   }
 
@@ -54,7 +57,8 @@ class Item {
         firebaseImageUrl = json['firebaseImageUrl'],
         ratings = ((json['ratings'] ?? []) as List).map((rating) => Rating.fromJson(rating)).toList(),
         createdByUserId = json['createdByUserId'],
-        createdAt = json['createdAt'] ?? Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
+        createdAt = json['createdAt'] ?? Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch),
+        location = json['location'] != null ? LatLng.fromJson(json['location']) : null;
 
   double get averageRating {
     if (ratings.isEmpty) return 0.0;
