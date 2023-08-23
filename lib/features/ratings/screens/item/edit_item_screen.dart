@@ -310,7 +310,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 ),
               ),
             const SizedBox(height: Constants.normalPadding),
-            if (!settings.dontAskForLocation)
+            if (settings.askForLocation)
               _hasLocation() || _locationIsLoading
                   ? FutureBuilder<geocoding.Placemark?>(
                       future: _getPlacemarkFromLocation(_location),

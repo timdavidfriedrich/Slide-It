@@ -11,7 +11,7 @@ class SettingsProvider extends ChangeNotifier {
 
   int _numberOfDecimals = 1;
   bool _dynamicRatingColorEnabled = true;
-  bool _dontAskForLocation = false;
+  bool _askForLocation = true;
   bool _allowNotifications = true;
   List<String> _mutedGroupIds = [];
 
@@ -29,8 +29,8 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set dontAskForLocation(bool dontAskForLocation) {
-    _dontAskForLocation = dontAskForLocation;
+  set askForLocation(bool askForLocation) {
+    _askForLocation = askForLocation;
     save();
     notifyListeners();
   }
@@ -60,7 +60,7 @@ class SettingsProvider extends ChangeNotifier {
 
   int get numberOfDecimals => _numberOfDecimals;
   bool get dynamicRatingColorEnabled => _dynamicRatingColorEnabled;
-  bool get dontAskForLocation => _dontAskForLocation;
+  bool get askForLocation => _askForLocation;
   bool get allowNotifications => _allowNotifications;
   List<String> get mutedGroupIds => _mutedGroupIds;
 
@@ -68,7 +68,7 @@ class SettingsProvider extends ChangeNotifier {
     sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setInt('numberOfDecimals', _numberOfDecimals);
     await sharedPreferences.setBool('dynamicRatingColorEnabled', _dynamicRatingColorEnabled);
-    await sharedPreferences.setBool('dontAskForLocation', _dontAskForLocation);
+    await sharedPreferences.setBool('askForLocation', _askForLocation);
     await sharedPreferences.setBool('allowNotifications', _allowNotifications);
     await sharedPreferences.setStringList('mutedGroupIds', _mutedGroupIds);
   }
@@ -77,7 +77,7 @@ class SettingsProvider extends ChangeNotifier {
     sharedPreferences = await SharedPreferences.getInstance();
     _numberOfDecimals = sharedPreferences.getInt('numberOfDecimals') ?? _numberOfDecimals;
     _dynamicRatingColorEnabled = sharedPreferences.getBool('dynamicRatingColorEnabled') ?? _dynamicRatingColorEnabled;
-    _dontAskForLocation = sharedPreferences.getBool('dontAskForLocation') ?? _dontAskForLocation;
+    _askForLocation = sharedPreferences.getBool('askForLocation') ?? _askForLocation;
     _allowNotifications = sharedPreferences.getBool('allowNotifications') ?? _allowNotifications;
     _mutedGroupIds = sharedPreferences.getStringList('mutedGroupIds') ?? _mutedGroupIds;
     _initNotifications();
