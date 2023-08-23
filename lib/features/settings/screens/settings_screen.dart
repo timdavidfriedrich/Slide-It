@@ -83,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: const Text("Nicht nach Standort fragen"),
+            title: const Text("Nach Standort fragen"),
             trailing: Switch(
               value: settings.askForLocation,
               onChanged: (value) => settings.askForLocation = value,
