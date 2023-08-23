@@ -127,6 +127,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: Constants.largePadding),
+          const SizedBox(height: Constants.largePadding),
         ],
       ),
     );

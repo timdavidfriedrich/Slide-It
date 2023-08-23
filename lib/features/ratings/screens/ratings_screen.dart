@@ -163,6 +163,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
             ),
           ),
           const SizedBox(height: Constants.largePadding),
+          const SizedBox(height: Constants.largePadding),
         ],
       ),
     );
