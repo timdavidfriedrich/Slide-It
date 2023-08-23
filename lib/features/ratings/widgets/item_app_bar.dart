@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
+import 'package:rating/features/core/utils/string_parser.dart';
 import 'package:rating/features/ratings/screens/item/edit_item_screen.dart';
 import 'package:rating/features/ratings/models/item.dart';
 
@@ -34,13 +33,9 @@ class _ItemAppBarState extends State<ItemAppBar> {
     setState(() => _showFullName = !_showFullName);
   }
 
-  String _truncateIfNecessary(String name) {
-    String result;
-    if (_showFullName) return name;
-    if (name.length < _maxNameLength) return name;
-    result = name.substring(0, min(_maxNameLength, widget.item.name.length));
-    result += "...";
-    return result;
+  String _truncateIfNecessary(String string) {
+    if (_showFullName) return string;
+    return StringParser.truncate(string, _maxNameLength);
   }
 
   @override
