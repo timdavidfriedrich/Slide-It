@@ -103,9 +103,12 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: _isInputValid && !_isLoading ? _joinGroup : null,
-              child: _isLoading ? const Center(child: CircularProgressIndicator.adaptive()) : const Text("Beitreten"),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+              child: ElevatedButton(
+                onPressed: _isInputValid && !_isLoading ? _joinGroup : null,
+                child: _isLoading ? const Center(child: CircularProgressIndicator.adaptive()) : const Text("Beitreten"),
+              ),
             ),
             const SizedBox(height: Constants.smallPadding),
             TextButton(onPressed: _cancel, child: const Text("Abbrechen")),
