@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/services/data/cloud_data_service.dart';
+import 'package:rating/features/core/widgets/error_dialog.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   static const String routeName = "/CreateGroup";
@@ -13,15 +14,24 @@ class CreateGroupScreen extends StatefulWidget {
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
+
   bool _isInputValid = false;
+  bool _isLoading = false;
 
   void _checkIfInputIsValid() {
     setState(() => _isInputValid = _nameController.text.isNotEmpty);
   }
 
-  void _createGroup() {
+  void _createGroup() async {
+    setState(() => _isLoading = true);
     if (_nameController.text.isEmpty) return;
-    CloudService.instance.createGroup(_nameController.text);
+    final bool groupHasBeenCreated = await CloudService.instance.createGroup(_nameController.text);
+    if (!mounted) return;
+    if (!groupHasBeenCreated) {
+      setState(() => _isLoading = false);
+      ErrorDialog.show(context, message: "You are already a member of this group.");
+      return;
+    }
     context.pop();
   }
 
@@ -53,7 +63,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ),
             ),
             const SizedBox(height: Constants.mediumPadding),
-            ElevatedButton(onPressed: _isInputValid ? () => _createGroup() : null, child: const Text("Erstellen")),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
+              child: ElevatedButton(
+                onPressed: _isInputValid && !_isLoading ? _createGroup : null,
+                child: _isLoading ? const Center(child: CircularProgressIndicator.adaptive()) : const Text("Erstellen"),
+              ),
+            ),
             const SizedBox(height: Constants.smallPadding),
             TextButton(onPressed: () => _cancel(), child: const Text("Abbrechen")),
             const SizedBox(height: Constants.largePadding),
