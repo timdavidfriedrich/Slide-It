@@ -60,6 +60,7 @@ class GroupInvitationDialog extends StatelessWidget {
               ),
               const SizedBox(width: Constants.smallPadding),
               IconButton(
+                // TODO: Replace icon with PlatformIcon
                 icon: const Icon(Icons.copy),
                 onPressed: copyGroupId,
               ),

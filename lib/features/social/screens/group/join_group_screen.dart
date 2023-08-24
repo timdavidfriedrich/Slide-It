@@ -92,7 +92,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                       const SizedBox(width: Constants.smallPadding),
                       IconButton(
                         onPressed: _scanGroupId,
-                        // * There is no PlatformIcons(context).qrcode
+                        // TODO: Replace icon with PlatformIcon
                         icon: const Icon(CupertinoIcons.qrcode),
                       ),
                     ],
