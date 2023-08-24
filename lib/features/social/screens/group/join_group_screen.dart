@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/core/services/data/cloud_data_service.dart';
+import 'package:rating/features/core/services/data/data_provider.dart';
+import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/core/widgets/error_dialog.dart';
+import 'package:rating/features/social/models/group.dart';
 import 'package:rating/features/social/screens/group/qr_code_scanner_screen.dart';
 
 class JoinGroupScreen extends StatefulWidget {
@@ -35,14 +40,29 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
   }
 
   void _joinGroup() async {
-    if (_idController.text.isEmpty) return;
-    final bool groupHasBeenJoined = await CloudService.instance.joinGroup(_idController.text);
+    final String groupId = _idController.text;
+    if (groupId.isEmpty) return;
+    final bool groupHasBeenJoined = await CloudService.instance.joinGroup(groupId);
     if (!mounted) return;
     if (!groupHasBeenJoined) {
       ErrorDialog.show(context, message: "You are already a member of this group.");
       return;
     }
+    await Provider.of<DataProvider>(context, listen: false).reloadData();
+    await _sendNotificationToGroup(groupId);
+    if (!mounted) return;
     context.pop();
+  }
+
+  Future<bool> _sendNotificationToGroup(String groupId) async {
+    AppUser? currentUser = AppUser.current;
+    Group group = Provider.of<DataProvider>(context, listen: false).getGroupById(groupId);
+    bool notificationHasBeenSend = await NotificationService.instance.sendNotificationToTopic(
+      topic: groupId,
+      title: "Neues Gruppenmitglied!",
+      message: "${currentUser?.name ?? "Jemand"} ist \"${group.name}\" beigetreten.",
+    );
+    return notificationHasBeenSend;
   }
 
   @override
@@ -71,7 +91,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                       ),
                       const SizedBox(width: Constants.smallPadding),
                       IconButton(
-                        onPressed: () => _scanGroupId(),
+                        onPressed: _scanGroupId,
                         // * There is no PlatformIcons(context).qrcode
                         icon: const Icon(CupertinoIcons.qrcode),
                       ),
@@ -80,9 +100,9 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                 ],
               ),
             ),
-            ElevatedButton(onPressed: _isInputValid ? () => _joinGroup() : null, child: const Text("Beitreten")),
+            ElevatedButton(onPressed: _isInputValid ? _joinGroup : null, child: const Text("Beitreten")),
             const SizedBox(height: Constants.smallPadding),
-            TextButton(onPressed: () => _cancel(), child: const Text("Abbrechen")),
+            TextButton(onPressed: _cancel, child: const Text("Abbrechen")),
             const SizedBox(height: Constants.largePadding),
           ],
         ),
