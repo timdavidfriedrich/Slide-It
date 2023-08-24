@@ -10,7 +10,8 @@ import 'package:rating/features/settings/provider/settings_provider.dart';
 class MapItem extends StatelessWidget {
   final Item item;
   final bool highlighted;
-  const MapItem({super.key, required this.item, this.highlighted = false});
+  final Function()? onTap;
+  const MapItem({super.key, required this.item, this.highlighted = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +27,12 @@ class MapItem extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: showItem,
+      onTap: onTap ?? showItem,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Container(
+            margin: const EdgeInsets.all(Constants.smallPadding),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
               borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
