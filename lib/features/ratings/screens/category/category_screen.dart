@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/geolocation/screens/category_map_screen.dart';
+import 'package:rating/features/map/screens/category_map_screen.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/widgets/item_card.dart';

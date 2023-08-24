@@ -4,7 +4,7 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rating/constants/constants.dart';
-import 'package:rating/features/geolocation/widgets/map_item.dart';
+import 'package:rating/features/map/widgets/map_item.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:url_launcher/url_launcher.dart';

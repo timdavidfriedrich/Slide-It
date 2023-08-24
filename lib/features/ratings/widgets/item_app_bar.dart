@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/core/utils/string_parser.dart';
-import 'package:rating/features/geolocation/screens/category_map_screen.dart';
+import 'package:rating/features/map/screens/category_map_screen.dart';
 import 'package:rating/features/ratings/screens/item/edit_item_screen.dart';
 import 'package:rating/features/ratings/models/item.dart';
 
