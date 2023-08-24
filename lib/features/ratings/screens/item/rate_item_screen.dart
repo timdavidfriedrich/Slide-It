@@ -132,7 +132,11 @@ class _RateItemScreenState extends State<RateItemScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              ItemAppBar(item: widget.item, showEditButton: false),
+              ItemAppBar(
+                item: widget.item,
+                showEditButton: false,
+                showMapButton: false,
+              ),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: Constants.mediumPadding),
