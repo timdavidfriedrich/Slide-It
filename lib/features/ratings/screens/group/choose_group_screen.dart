@@ -67,7 +67,7 @@ class ChooseGroupScreen extends StatelessWidget {
                   TextButton.icon(
                     onPressed: () => addGroup(),
                     icon: Icon(PlatformIcons(context).add),
-                    label: const Text("Neue Gruppe erstellen"),
+                    label: const Text("Gruppe hinzufügen"),
                   ),
                 ],
               ),
