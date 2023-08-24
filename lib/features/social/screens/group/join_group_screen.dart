@@ -23,6 +23,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
   final TextEditingController _idController = TextEditingController();
 
   bool _isInputValid = false;
+  bool _isLoading = false;
 
   void _checkIfInputIsValid() {
     setState(() => _isInputValid = _idController.text.isNotEmpty);
@@ -40,11 +41,13 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
   }
 
   void _joinGroup() async {
+    setState(() => _isLoading = true);
     final String groupId = _idController.text;
     if (groupId.isEmpty) return;
     final bool groupHasBeenJoined = await CloudService.instance.joinGroup(groupId);
     if (!mounted) return;
     if (!groupHasBeenJoined) {
+      setState(() => _isLoading = false);
       ErrorDialog.show(context, message: "You are already a member of this group.");
       return;
     }
@@ -100,7 +103,10 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                 ],
               ),
             ),
-            ElevatedButton(onPressed: _isInputValid ? _joinGroup : null, child: const Text("Beitreten")),
+            ElevatedButton(
+              onPressed: _isInputValid && !_isLoading ? _joinGroup : null,
+              child: _isLoading ? const Center(child: CircularProgressIndicator.adaptive()) : const Text("Beitreten"),
+            ),
             const SizedBox(height: Constants.smallPadding),
             TextButton(onPressed: _cancel, child: const Text("Abbrechen")),
             const SizedBox(height: Constants.largePadding),
