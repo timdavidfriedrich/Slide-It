@@ -27,7 +27,7 @@ class SignInFailedDialog extends StatelessWidget {
       }
     }
 
-    return PlatformAlertDialog(
+    return AlertDialog.adaptive(
       title: const Text("Sign in failed"),
       content: Text(errorMessage()),
       actions: [

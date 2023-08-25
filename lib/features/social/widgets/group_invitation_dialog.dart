@@ -27,7 +27,7 @@ class GroupInvitationDialog extends StatelessWidget {
       context.pop();
     }
 
-    return PlatformAlertDialog(
+    return AlertDialog.adaptive(
       title: const Text("Einladen"),
       content: Column(
         mainAxisSize: MainAxisSize.min,

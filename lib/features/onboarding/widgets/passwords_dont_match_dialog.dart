@@ -11,7 +11,7 @@ class PasswordsDontMatchDialog extends StatelessWidget {
       context.pop();
     }
 
-    return PlatformAlertDialog(
+    return AlertDialog.adaptive(
       title: const Text("Sign up failed"),
       content: const Text("The passwords don't match. Please try again."),
       actions: [

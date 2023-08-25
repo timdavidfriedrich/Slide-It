@@ -63,7 +63,7 @@ class AuthService {
     } catch (error) {
       Log.error("EMAIL SIGN UP: $error");
       if (error is! FirebaseAuthException) return false;
-      showDialog(context: Global.context, builder: (context) => SignUpFailedDialog(error: error));
+      showAdaptiveDialog(context: Global.context, builder: (context) => SignUpFailedDialog(error: error));
       return false;
     }
   }
@@ -92,7 +92,7 @@ class AuthService {
     } catch (error) {
       Log.error("EMAIL SIGN IN: $error");
       if (error is! FirebaseAuthException) return false;
-      showDialog(context: Global.context, builder: (context) => SignInFailedDialog(error: error));
+      showAdaptiveDialog(context: Global.context, builder: (context) => SignInFailedDialog(error: error));
       return false;
     }
   }
@@ -117,7 +117,7 @@ class AuthService {
     } catch (error) {
       Log.error("PASSWORD RESET EMAIL: $error");
       if (error is! FirebaseAuthException) return false;
-      showDialog(context: Global.context, builder: (context) => PasswordResetFailedDialog(error: error));
+      showAdaptiveDialog(context: Global.context, builder: (context) => PasswordResetFailedDialog(error: error));
       return false;
     }
   }

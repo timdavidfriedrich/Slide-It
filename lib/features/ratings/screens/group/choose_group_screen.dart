@@ -27,7 +27,7 @@ class ChooseGroupScreen extends StatelessWidget {
     }
 
     void addGroup() {
-      showDialog(context: context, builder: (context) => const AddGroupDialog());
+      showAdaptiveDialog(context: context, builder: (context) => const AddGroupDialog());
     }
 
     void cancel() {

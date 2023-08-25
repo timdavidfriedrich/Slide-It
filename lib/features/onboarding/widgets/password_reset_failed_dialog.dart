@@ -29,7 +29,7 @@ class PasswordResetFailedDialog extends StatelessWidget {
       }
     }
 
-    return PlatformAlertDialog(
+    return AlertDialog.adaptive(
       title: const Text('Password reset failed'),
       content: Text(errorMessage()),
       actions: [

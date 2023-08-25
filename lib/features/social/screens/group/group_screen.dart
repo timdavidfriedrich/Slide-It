@@ -14,7 +14,7 @@ class GroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void showGroupInvitation() {
-      showDialog(context: context, builder: ((context) => GroupInvitationDialog(group: group)));
+      showAdaptiveDialog(context: context, builder: ((context) => GroupInvitationDialog(group: group)));
     }
 
     return SafeArea(

@@ -42,7 +42,7 @@ class _SocialScreenState extends State<SocialScreen> {
   }
 
   void _addGroup() {
-    showDialog(context: context, builder: (context) => const AddGroupDialog());
+    showAdaptiveDialog(context: context, builder: (context) => const AddGroupDialog());
   }
 
   @override

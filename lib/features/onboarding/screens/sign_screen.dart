@@ -33,7 +33,7 @@ class _SignScreenState extends State<SignScreen> {
 
   void _signUp() async {
     if (_password != _repeatedPassword) {
-      showDialog(context: context, builder: (context) => const PasswordsDontMatchDialog());
+      showAdaptiveDialog(context: context, builder: (context) => const PasswordsDontMatchDialog());
       return;
     }
 

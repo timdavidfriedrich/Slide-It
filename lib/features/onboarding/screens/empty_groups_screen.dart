@@ -9,7 +9,7 @@ class EmptyGroupsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void addGroup() {
-      showDialog(context: context, builder: (context) => const AddGroupDialog());
+      showAdaptiveDialog(context: context, builder: (context) => const AddGroupDialog());
     }
 
     void signOut() {

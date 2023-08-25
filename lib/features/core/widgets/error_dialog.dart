@@ -6,12 +6,12 @@ class ErrorDialog extends StatelessWidget {
   const ErrorDialog({super.key, this.message});
 
   static void show(BuildContext context, {String? message}) {
-    showDialog(context: context, builder: (context) => ErrorDialog(message: message));
+    showAdaptiveDialog(context: context, builder: (context) => ErrorDialog(message: message));
   }
 
   @override
   Widget build(BuildContext context) {
-    return PlatformAlertDialog(
+    return AlertDialog.adaptive(
       title: Align(
           alignment: Alignment.topCenter,
           child: Icon(

@@ -23,7 +23,7 @@ class AddGroupDialog extends StatelessWidget {
       context.push(JoinGroupScreen.routeName);
     }
 
-    return PlatformAlertDialog(
+    return AlertDialog.adaptive(
       title: const Text("Gruppe hinzufügen"),
       content: const Text("Möchtest du einer Gruppe beitreten oder eine neue erstellen?"),
       actions: [

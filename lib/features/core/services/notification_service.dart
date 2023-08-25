@@ -58,7 +58,7 @@ class NotificationService {
       if (notificationSendByCurrentUser(message)) return;
       final String title = message.notification?.title ?? "";
       final String content = message.notification?.body ?? "";
-      showDialog(
+      showAdaptiveDialog(
         context: Global.context,
         builder: (context) => AlertDialog(
           title: Text(title),
