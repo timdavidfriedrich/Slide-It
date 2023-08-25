@@ -284,7 +284,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 margin: EdgeInsets.zero,
                 child: ListTile(
                   onTap: () => _changeCategory(),
-                  title: Text(_category?.name ?? "(Kategorie auswählen)"),
+                  title: Text(_category?.name ?? "Kategorie auswählen"),
+                  titleAlignment: _category != null ? null : ListTileTitleAlignment.center,
                   trailing: _category != null ? Text(Provider.of<DataProvider>(context).getGroupFromCategory(_category!).name) : null,
                 ),
               ),
@@ -295,7 +296,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 child: ListTile(
                   enabled: _category != null && _nameController.text.isNotEmpty,
                   onTap: () => _addRating(),
-                  title: Text(_hasRating() ? "Meine Bewertung:" : "(Bewertung hinzufügen)"),
+                  title: Text(_hasRating() ? "Meine Bewertung:" : "Bewertung hinzufügen"),
+                  titleAlignment: _hasRating() ? null : ListTileTitleAlignment.center,
                   subtitle: _rating?.comment != null ? Text(_rating!.comment!) : null,
                   trailing: _hasRating()
                       ? Row(
@@ -342,7 +344,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       child: ListTile(
                         enabled: _category != null && _nameController.text.isNotEmpty,
                         onTap: () => _addLocation(),
-                        title: const Text("(Standort hinzufügen)"),
+                        title: const Text("Standort hinzufügen"),
+                        titleAlignment: ListTileTitleAlignment.center,
                       ),
                     ),
             const SizedBox(height: Constants.mediumPadding),
