@@ -6,10 +6,13 @@ import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/core/models/app_user.dart';
 import 'package:rating/features/social/models/group.dart';
 import 'package:rating/features/ratings/models/rating.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manages the local data for the app to minimize the amount of requests to the cloud.
 /// Note, that this is only temporary data.
 class DataProvider extends ChangeNotifier {
+  late SharedPreferences sharedPreferences;
+
   Group? _selectedGroup;
   List<Group> userGroups = [];
   List<AppUser> knownUsers = [];
@@ -26,9 +29,19 @@ class DataProvider extends ChangeNotifier {
     userGroups = await CloudService.instance.getUserGroups();
     knownUsers = await CloudService.instance.getKnownUsers();
     _dataHasBeenInitialized = true;
+    initSelectedGroup();
     notifyListeners();
     Log.hint("Loaded ${userGroups.length} groups to runtime storage.");
+  }
+
+  void initSelectedGroup() async {
     if (userGroups.isEmpty) return;
+    sharedPreferences = await SharedPreferences.getInstance();
+    String? selectedGroupId = sharedPreferences.getString("selectedGroup");
+    if (selectedGroupId != null) {
+      selectGroup(getGroupById(selectedGroupId));
+      return;
+    }
     selectGroup(userGroups.first);
   }
 
@@ -38,9 +51,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectGroup(Group group) {
+  void selectGroup(Group group) async {
     _selectedGroup = group;
     notifyListeners();
+    sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString("selectedGroup", _selectedGroup?.id ?? "");
     Log.hint("Selected Group \"${group.name}\" (ID: ${group.id}).");
   }
 
