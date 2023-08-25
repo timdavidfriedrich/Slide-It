@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
+import 'package:rating/features/map/provider/map_provider.dart';
+import 'package:rating/features/map/widgets/highlight_marker_layer.dart';
+import 'package:rating/features/map/widgets/item_sheet.dart';
 import 'package:rating/features/map/widgets/map_item.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/ratings/models/item.dart';
@@ -22,10 +27,13 @@ class CategoryMapScreen extends StatelessWidget {
     const double maxZoomLevel = 18;
     const double imageHeight = 80;
     const double imageWidth = 60;
+    const int spiderfyCircleRadius = 48;
     const EdgeInsets fitBoundsPadding = EdgeInsets.all(50);
     const int maxClusterRadius = 45;
     const Size clusterSize = Size(40, 40);
+
     final MapController mapContronller = MapController();
+    MapProvider map = Provider.of<MapProvider>(context);
 
     final List<Item> itemsWithLocation = category.items.where((item) {
       return item.location != null;
@@ -42,6 +50,37 @@ class CategoryMapScreen extends StatelessWidget {
       return LatLng(medianLatitude, medianLongitude);
     }
 
+    void moveToItem(Item item) {
+      mapContronller.move(
+        LatLng(item.location!.latitude - 0.0005, item.location!.longitude),
+        maxZoomLevel,
+      );
+    }
+
+    void openItemSheet(BuildContext context) {
+      showBottomSheet(
+        context: context,
+        builder: (context) => ItemSheet(
+          onHorizontalSwipe: (details) {
+            if (details.primaryVelocity?.isNegative ?? false) {
+              map.selectNextItemWithLocation(itemsWithLocation.reversed.toList());
+            } else {
+              map.selectNextItemWithLocation(itemsWithLocation);
+            }
+            if (map.selectedItem?.location == null) return;
+            moveToItem(map.selectedItem!);
+          },
+          onClose: () {
+            map.selectedItem = null;
+            context.pop();
+            mapContronller.move(medianLatLng(), zoomLevel);
+          },
+        ),
+      );
+      if (map.selectedItem?.location == null) return;
+      moveToItem(map.selectedItem!);
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -49,87 +88,90 @@ class CategoryMapScreen extends StatelessWidget {
         ),
         body: Stack(
           children: [
-            FlutterMap(
-              mapController: mapContronller,
-              options: MapOptions(
-                center: itemToHighlight?.location ?? medianLatLng(),
-                zoom: itemsWithLocation.isNotEmpty ? zoomLevel : minZoomLevel,
-                minZoom: minZoomLevel,
-                maxZoom: itemsWithLocation.isNotEmpty ? maxZoomLevel : minZoomLevel,
-                interactiveFlags: ~InteractiveFlag.rotate & (itemsWithLocation.isEmpty ? ~InteractiveFlag.all : InteractiveFlag.all),
-                onMapReady: () => mapContronller.centerZoomFitBounds(
-                  LatLngBounds(mapContronller.bounds!.northWest, mapContronller.bounds!.southEast),
+            Builder(builder: (context) {
+              return FlutterMap(
+                mapController: mapContronller,
+                options: MapOptions(
+                  center: itemToHighlight?.location ?? medianLatLng(),
+                  zoom: itemsWithLocation.isNotEmpty ? zoomLevel : minZoomLevel,
+                  minZoom: minZoomLevel,
+                  maxZoom: itemsWithLocation.isNotEmpty ? maxZoomLevel : minZoomLevel,
+                  interactiveFlags: ~InteractiveFlag.rotate & (itemsWithLocation.isEmpty ? ~InteractiveFlag.all : InteractiveFlag.all),
+                  onMapReady: () {
+                    if (itemToHighlight != null) {
+                      map.selectedItem = itemToHighlight;
+                      moveToItem(map.selectedItem!);
+                      openItemSheet(context);
+                      return;
+                    }
+                    mapContronller.centerZoomFitBounds(
+                      LatLngBounds(mapContronller.bounds!.northWest, mapContronller.bounds!.southEast),
+                    );
+                  },
                 ),
-              ),
-              nonRotatedChildren: [
-                RichAttributionWidget(
-                  attributions: [
-                    TextSourceAttribution(
-                      'OpenStreetMap contributors',
-                      onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-                    ),
-                  ],
-                ),
-              ],
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                ),
-                MarkerClusterLayerWidget(
-                  options: MarkerClusterLayerOptions(
-                    maxClusterRadius: maxClusterRadius,
-                    size: clusterSize,
-                    anchor: AnchorPos.align(AnchorAlign.center),
-                    fitBoundsOptions: const FitBoundsOptions(
-                      padding: fitBoundsPadding,
-                      maxZoom: maxZoomLevel,
-                    ),
-                    markers: List.generate(itemsWithLocation.length, (index) {
-                      return Marker(
-                        point: itemsWithLocation[index].location!,
-                        height: imageHeight,
-                        width: imageWidth,
-                        builder: (context) {
-                          if (itemsWithLocation[index].id == itemToHighlight?.id) {
-                            return Container();
-                          }
-                          return MapItem(item: itemsWithLocation[index]);
-                        },
-                      );
-                    }),
-                    builder: (context, markers) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            "${markers.length}",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onBackground,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                if (itemToHighlight != null && itemToHighlight!.location != null)
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: itemToHighlight!.location!,
-                        height: imageHeight,
-                        width: imageWidth,
-                        builder: ((context) {
-                          return MapItem(item: itemToHighlight!, highlighted: true);
-                        }),
+                nonRotatedChildren: [
+                  RichAttributionWidget(
+                    attributions: [
+                      TextSourceAttribution(
+                        'OpenStreetMap contributors',
+                        onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
                       ),
                     ],
-                  )
-              ],
-            ),
+                  ),
+                ],
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  ),
+                  MarkerClusterLayerWidget(
+                    options: MarkerClusterLayerOptions(
+                      maxClusterRadius: maxClusterRadius,
+                      size: clusterSize,
+                      anchor: AnchorPos.align(AnchorAlign.center),
+                      spiderfyCluster: map.selectedItem == null,
+                      spiderfyCircleRadius: spiderfyCircleRadius,
+                      fitBoundsOptions: const FitBoundsOptions(
+                        padding: fitBoundsPadding,
+                        maxZoom: maxZoomLevel,
+                      ),
+                      markers: List<Marker>.generate(itemsWithLocation.length, (index) {
+                        return Marker(
+                          point: itemsWithLocation[index].location!,
+                          height: imageHeight,
+                          width: imageWidth,
+                          builder: (context) {
+                            return MapItem(
+                              item: itemsWithLocation[index],
+                              onTap: () {
+                                map.selectedItem = itemsWithLocation[index];
+                                openItemSheet(context);
+                              },
+                            );
+                          },
+                        );
+                      }),
+                      builder: (context, markers) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "${markers.length}",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  HighlightMarkerLayer(category: category),
+                ],
+              );
+            }),
             if (itemsWithLocation.isEmpty)
               Center(
                 child: Container(
@@ -147,7 +189,7 @@ class CategoryMapScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: Constants.normalPadding),
                       Text(
-                        "Keines der Objekte in\ndieser Kategorie enthält\nStandort-Angaben.",
+                        "Kein Objekt in\ndieser Kategorie enthält\nStandort-Angaben.",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),

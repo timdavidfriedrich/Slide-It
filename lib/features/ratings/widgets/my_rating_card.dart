@@ -44,12 +44,20 @@ class _MyRatingCardState extends State<MyRatingCard> {
 
     return widget.item.ownRating == null
         ? Card(
+            margin: EdgeInsets.zero,
             child: ListTile(
-              title: const Text("(Klicken zum Bewerten)"),
+              tileColor: Theme.of(context).colorScheme.secondary,
+              titleAlignment: ListTileTitleAlignment.center,
+              title: Text(
+                "Bewerten",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
               onTap: () => _editOwnRating(),
             ),
           )
         : Card(
+            margin: EdgeInsets.zero,
             child: ListTile(
               onTap: () => _editOwnRating(),
               leading: AppUser.currentAvatar,

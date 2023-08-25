@@ -12,6 +12,7 @@ import 'package:rating/features/ratings/screens/item/view_item_screen.dart';
 import 'package:rating/features/ratings/models/item.dart';
 import 'package:rating/features/ratings/models/rating.dart';
 import 'package:rating/features/core/models/app_user.dart';
+import 'package:rating/features/ratings/widgets/my_rating_card.dart';
 import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class AddedItemCard extends StatefulWidget implements HistoryWidget {
@@ -118,17 +119,18 @@ class _AddedItemCardState extends State<AddedItemCard> {
             ),
           ),
           const SizedBox(height: Constants.smallPadding),
-          Card(
-            margin: EdgeInsets.zero,
-            child: ListTile(
-              onTap: () => _editOwnRating(),
-              title: Text(widget.item.ownRating == null ? "(Tippe zum Bewerten)" : "Meine Bewertung"),
-              subtitle: widget.item.ownRating?.comment == null ? null : Text(widget.item.ownRating!.comment!),
-              trailing: widget.item.ownRating == null
-                  ? null
-                  : Text("${widget.item.ownRating?.value.toStringAsFixed(settings.numberOfDecimals)}${Constants.ratingValueUnit}"),
-            ),
-          ),
+          // Card(
+          //   margin: EdgeInsets.zero,
+          //   child: ListTile(
+          //     onTap: () => _editOwnRating(),
+          //     title: Text(widget.item.ownRating == null ? "(Tippe zum Bewerten)" : "Meine Bewertung"),
+          //     subtitle: widget.item.ownRating?.comment == null ? null : Text(widget.item.ownRating!.comment!),
+          //     trailing: widget.item.ownRating == null
+          //         ? null
+          //         : Text("${widget.item.ownRating?.value.toStringAsFixed(settings.numberOfDecimals)}${Constants.ratingValueUnit}"),
+          //   ),
+          // ),
+          MyRatingCard(item: widget.item),
           const SizedBox(height: Constants.smallPadding),
           Text(
             StringParser.dateToString(creationDate),

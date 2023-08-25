@@ -8,6 +8,7 @@ import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/notification_service.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/core/widgets/error_info.dart';
+import 'package:rating/features/map/provider/map_provider.dart';
 import 'package:rating/features/map/screens/category_map_screen.dart';
 import 'package:rating/features/onboarding/utils/sign_type.dart';
 import 'package:rating/features/ratings/screens/category/category_screen.dart';
@@ -50,6 +51,7 @@ class RatingApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DataProvider()),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => MapProvider()),
       ],
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {

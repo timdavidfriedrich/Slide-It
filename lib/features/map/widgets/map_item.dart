@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rating/constants/constants.dart';
 import 'package:rating/features/core/utils/string_parser.dart';
 import 'package:rating/features/ratings/models/item.dart';
-import 'package:rating/features/ratings/screens/item/view_item_screen.dart';
 import 'package:rating/features/settings/provider/settings_provider.dart';
 
 class MapItem extends StatelessWidget {
@@ -18,16 +16,8 @@ class MapItem extends StatelessWidget {
     const int maxNameLength = 16;
     SettingsProvider settings = Provider.of<SettingsProvider>(context);
 
-    void showItem() {
-      if (highlighted) {
-        context.pop();
-        return;
-      }
-      context.push(ViewItemScreen.routeName, extra: item);
-    }
-
     return InkWell(
-      onTap: onTap ?? showItem,
+      onTap: onTap,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -39,10 +29,17 @@ class MapItem extends StatelessWidget {
               border: Border.all(
                 color: highlighted ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.background,
                 width: Constants.minimalPadding,
+                strokeAlign: BorderSide.strokeAlignOutside,
               ),
             ),
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: item.image ?? Text(StringParser.truncate(item.name, maxNameLength)),
+            child: AspectRatio(
+              aspectRatio: 3 / 4,
+              child: item.image ??
+                  Center(
+                    child: Text(StringParser.truncate(item.name, maxNameLength)),
+                  ),
+            ),
           ),
           Positioned(
             top: -Constants.minimalPadding,
