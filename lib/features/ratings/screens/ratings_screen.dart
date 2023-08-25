@@ -9,13 +9,12 @@ import 'package:rating/constants/constants.dart';
 import 'package:rating/constants/global.dart';
 import 'package:rating/features/core/services/data/data_provider.dart';
 import 'package:rating/features/ratings/screens/category/category_screen.dart';
-import 'package:rating/features/ratings/screens/group/choose_group_screen.dart';
 import 'package:rating/features/ratings/screens/category/create_category_screen.dart';
 import 'package:rating/features/ratings/models/category.dart';
 import 'package:rating/features/core/utils/shell_content.dart';
 import 'package:rating/features/ratings/widgets/add_item_card.dart';
+import 'package:rating/features/ratings/widgets/current_group_card.dart';
 import 'package:rating/features/ratings/widgets/item_card.dart';
-import 'package:rating/features/social/screens/group/group_screen.dart';
 import 'package:rating/features/social/models/group.dart';
 
 class RatingsScreen extends StatefulWidget implements ShellContent {
@@ -46,15 +45,6 @@ class _RatingsScreenState extends State<RatingsScreen> {
   final int _maxItemsPerRow = 10;
   Group? _currentGroup;
 
-  void _changeGroup() {
-    context.push(ChooseGroupScreen.routeName);
-  }
-
-  void _showCurrentGroupInfos() {
-    if (_currentGroup == null) return;
-    context.push(GroupScreen.routeName, extra: _currentGroup);
-  }
-
   void _openCategory(Category category) {
     context.push(CategoryScreen.routeName, extra: category);
   }
@@ -72,26 +62,9 @@ class _RatingsScreenState extends State<RatingsScreen> {
       child: ListView(
         children: [
           const SizedBox(height: Constants.normalPadding),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-            child: Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                contentPadding: const EdgeInsets.only(
-                  left: Constants.normalPadding,
-                  right: Constants.smallPadding,
-                ),
-                leading: _currentGroup?.avatar,
-                title: Text(_currentGroup?.name ?? "Keine Gruppe ausgewählt"),
-                subtitle: _currentGroup == null ? null : const Text("(Tippen zum wechseln)"),
-                trailing: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => _showCurrentGroupInfos(),
-                  icon: Icon(PlatformIcons(context).info),
-                ),
-                onTap: () => _changeGroup(),
-              ),
-            ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenPadding),
+            child: CurrentGroupCard(),
           ),
           const SizedBox(height: Constants.mediumPadding),
           if (_currentGroup != null)
